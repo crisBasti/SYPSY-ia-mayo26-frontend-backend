@@ -1,12 +1,14 @@
-import { useEffect, useState } from "react";
+import {
+  useContext,
+  useEffect,
+  useState
+} from "react";
+
+import "../styles/admin.css";
 
 import ProductCard from "../components/ProductCard";
 
 import ProductForm from "../components/ProductForm";
-
-import {
-  useContext
-} from "react";
 
 import {
   ProductsContext
@@ -24,11 +26,27 @@ import {
 
 } from "../services/productService";
 
-
-
 function Admin() {
 
-  const { productos, setProductos, agregarProducto, eliminarProducto, editarProducto } = useContext(ProductsContext);
+  const {
+
+    productos,
+
+    setProductos,
+
+    agregarProducto,
+
+    eliminarProducto,
+
+    editarProducto
+
+  } = useContext(
+    ProductsContext
+  );
+
+  // =========================
+  // EDIT STATE
+  // =========================
 
   const [editingId, setEditingId] =
     useState(null);
@@ -42,161 +60,306 @@ function Admin() {
 
       precio: "",
 
-      categoria: ""
+      categoria: "",
+
+      imagen: ""
+
     });
 
+  // =========================
+  // LOAD PRODUCTS
+  // =========================
 
+  useEffect(() => {
 
-useEffect(() => {
+    loadProducts();
 
-  getProducts()
-    .then((data) => {
+  }, []);
+
+  const loadProducts = async () => {
+
+    try {
+
+      const data =
+        await getProducts();
 
       setProductos(data);
 
-    })
-    .catch((error) => {
+    } catch (error) {
 
-      console.error(error);
-    });
+      console.error(
+        "Error loading products:",
+        error
+      );
+    }
+  };
 
-}, []);
+  // =========================
+  // ADD PRODUCT
+  // =========================
 
+  const addProduct = async (
+    productData
+  ) => {
 
+    try {
 
+      const newProduct =
+        await createProductService(
+          productData
+        );
 
+      agregarProducto(
+        newProduct
+      );
 
+    } catch (error) {
 
-const deleteProduct = async (id) => {
+      console.error(
+        "Error creating product:",
+        error
+      );
+    }
+  };
 
-  const confirmar =
-    window.confirm(
-      "¿Eliminar producto?"
-    );
+  // =========================
+  // DELETE PRODUCT
+  // =========================
 
-  if (!confirmar) return;
+  const deleteProduct =
+    async (id) => {
 
-  try {
+    const confirmar =
+      window.confirm(
+        "¿Eliminar producto?"
+      );
 
-    await deleteProductService(id);
+    if (!confirmar) return;
 
-    eliminarProducto(id);
+    try {
 
-  } catch (error) {
+      await deleteProductService(
+        id
+      );
 
-    console.error(error);
-  }
-};
+      eliminarProducto(id);
 
+    } catch (error) {
 
+      console.error(
+        "Error deleting product:",
+        error
+      );
+    }
+  };
 
+  // =========================
+  // START EDIT
+  // =========================
 
-  const startEdit = (product) => {
+  const startEdit = (
+    product
+  ) => {
 
     setEditingId(product._id);
 
     setEditForm({
 
-      nombre: product.nombre,
+      nombre:
+        product.nombre,
 
       descripcion:
         product.descripcion,
 
-      precio: product.precio,
+      precio:
+        product.precio,
 
       categoria:
-        product.categoria
+        product.categoria,
+
+      imagen:
+        product.imagen
     });
   };
 
+  // =========================
+  // UPDATE PRODUCT
+  // =========================
 
+  const updateProduct =
+    async () => {
 
+    try {
 
-const updateProduct = async () => {
+      const updatedProduct =
+        await updateProductService(
 
-  try {
+          editingId,
 
-    const updatedProduct =
-      await updateProductService(
+          editForm
+        );
+
+      editarProducto(
+
         editingId,
-        editForm
+
+        updatedProduct
       );
 
-    editarProducto(
-      editingId,
-      updatedProduct
-    );
+      setEditingId(null);
 
-    setEditingId(null);
+    } catch (error) {
 
-  } catch (error) {
-
-    console.error(error);
-  }
-};
-
-const addProduct = async (
-  productData
-) => {
-
-  try {
-
-    const newProduct =
-      await createProductService(
-        productData
+      console.error(
+        "Error updating product:",
+        error
       );
+    }
+  };
 
-    agregarProducto(newProduct);
+return (
 
-  } catch (error) {
+  <div className="admin-container">
 
-    console.error(error);
-  }
-};
+    {/* HERO ADMIN */}
 
+    <div className="admin-hero">
 
+      <img
+        src="/logo-sypsy.png"
+        alt="SYPSY Logo"
+        className="admin-logo"
+      />
 
-  return (
+      <div>
 
-    <div style={{ padding: "20px" }}>
+        <h1 className="admin-title">
+          CEO Dashboard
+        </h1>
 
-      <h1>
-        Panel Admin SYPSY
-      </h1>
+        <p className="admin-subtitle">
+          Gestión premium de productos SYPSY
+        </p>
 
-      <ProductForm addProduct={addProduct} />
-
-      {
-
-        productos.map((product) => (
-
-          <ProductCard
-
-            key={product._id}
-
-            product={product}
-
-            deleteProduct={
-              deleteProduct
-            }
-
-            startEdit={startEdit}
-
-            editingId={editingId}
-
-            editForm={editForm}
-
-            setEditForm={setEditForm}
-
-            updateProduct={
-              updateProduct
-            }
-          />
-        ))
-      }
+      </div>
 
     </div>
-  );
+
+    {/* STATS */}
+
+    <div className="admin-stats">
+
+      <div className="stat-card">
+
+        <h3>
+          Productos
+        </h3>
+
+        <p>
+          {productos.length}
+        </p>
+
+      </div>
+
+      <div className="stat-card">
+
+        <h3>
+          Categorías
+        </h3>
+
+        <p>
+          {
+            new Set(
+              productos.map(
+                p => p.categoria
+              )
+            ).size
+          }
+        </p>
+
+      </div>
+
+      <div className="stat-card">
+
+        <h3>
+          Marca
+        </h3>
+
+        <p>
+          SYPSY IA
+        </p>
+
+      </div>
+
+    </div>
+
+    {/* FORM */}
+
+    <div className="admin-form-section">
+
+      <h2>
+        Crear nuevo producto
+      </h2>
+
+      <ProductForm
+        addProduct={addProduct}
+      />
+
+    </div>
+
+    {/* PRODUCTS */}
+
+    <div className="products-section">
+
+      <h2>
+        Productos publicados
+      </h2>
+
+      <div className="products-grid">
+
+        {
+
+          productos.map(
+            (product) => (
+
+            <ProductCard
+
+              key={product._id}
+
+              product={product}
+
+              deleteProduct={
+                deleteProduct
+              }
+
+              startEdit={
+                startEdit
+              }
+
+              editingId={
+                editingId
+              }
+
+              editForm={editForm}
+
+              setEditForm={
+                setEditForm
+              }
+
+              updateProduct={
+                updateProduct
+              }
+            />
+          ))
+        }
+
+      </div>
+
+    </div>
+
+  </div>
+);
+
 }
 
 export default Admin;

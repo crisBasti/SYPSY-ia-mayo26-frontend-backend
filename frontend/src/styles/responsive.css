@@ -1,0 +1,34 @@
+/* TABLET */
+@media (max-width: 1024px) {
+
+  .products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+}
+
+/* MOBILE */
+@media (max-width: 768px) {
+
+  .products-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .navbar {
+    padding: 15px;
+  }
+
+  .hero-title {
+    font-size: 2rem;
+  }
+
+}
+
+/* SMALL MOBILE */
+@media (max-width: 480px) {
+
+  .hero-title {
+    font-size: 1.5rem;
+  }
+
+}

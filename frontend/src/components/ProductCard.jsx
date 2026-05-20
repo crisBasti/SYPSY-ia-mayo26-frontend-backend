@@ -1,3 +1,5 @@
+import "../styles/products.css";
+
 function ProductCard({
   product,
   deleteProduct,
@@ -10,271 +12,127 @@ function ProductCard({
 
   return (
 
-    <div style={styles.card}>
+    <div className="product-card">
 
-      {
-  product.image && (
+      <img
+  src={
+    product.image ||
+    "https://placehold.co/600x400/0f172a/ffffff?text=SYPSY"
+  }
+  alt={product.nombre}
+  className="product-image"
+/>
 
-    <img
-      src={product.image}
+      <div className="product-info">
 
-      alt={product.nombre}
+        <h2 className="product-title">
+          {product.nombre}
+        </h2>
 
-      style={styles.image}
-    />
-  )
-}
+        <p className="product-description">
+          {product.descripcion}
+        </p>
 
-      <h2 style={styles.title}>
-        {product.nombre}
-      </h2>
+        <p className="price">
+          ${product.precio}
+        </p>
 
-      <p style={styles.description}>
-        {product.descripcion}
-      </p>
+        <p className="product-category">
+          {product.categoria}
+        </p>
 
-      <p style={styles.price}>
-        ${product.precio}
-      </p>
+        <div className="product-buttons">
 
-      <p style={styles.category}>
-        {product.categoria}
-      </p>
+          <button
+            className="delete-btn"
+            onClick={() =>
+              deleteProduct(product._id)
+            }
+          >
+            Eliminar
+          </button>
 
-      <div style={styles.buttons}>
+          <button
+            className="edit-btn"
+            onClick={() =>
+              startEdit(product)
+            }
+          >
+            Editar
+          </button>
 
-        <button
-          style={styles.deleteBtn}
+        </div>
 
-          onClick={() =>
-            deleteProduct(product._id)
-          }
-        >
-          Eliminar
-        </button>
+        {
+          editingId === product._id && (
 
-        <button
-          style={styles.editBtn}
+            <div className="edit-box">
 
-          onClick={() =>
-            startEdit(product)
-          }
-        >
-          Editar
-        </button>
+              <input
+                className="edit-input"
+                type="text"
+                value={editForm.nombre}
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    nombre: e.target.value
+                  })
+                }
+              />
+
+              <input
+                className="edit-input"
+                type="text"
+                value={editForm.descripcion}
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    descripcion:
+                      e.target.value
+                  })
+                }
+              />
+
+              <input
+                className="edit-input"
+                type="number"
+                value={editForm.precio}
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    precio: e.target.value
+                  })
+                }
+              />
+
+              <input
+                className="edit-input"
+                type="text"
+                value={editForm.categoria}
+                onChange={(e) =>
+                  setEditForm({
+                    ...editForm,
+                    categoria:
+                      e.target.value
+                  })
+                }
+              />
+
+              <button
+                className="save-btn"
+                onClick={updateProduct}
+              >
+                Guardar cambios
+              </button>
+
+            </div>
+          )
+        }
 
       </div>
-
-      {
-        editingId === product._id && (
-
-          <div style={styles.editBox}>
-
-            <input
-              style={styles.input}
-
-              type="text"
-
-              value={editForm.nombre}
-
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  nombre: e.target.value
-                })
-              }
-            />
-
-            <input
-              style={styles.input}
-
-              type="text"
-
-              value={editForm.descripcion}
-
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  descripcion:
-                    e.target.value
-                })
-              }
-            />
-
-            <input
-              style={styles.input}
-
-              type="number"
-
-              value={editForm.precio}
-
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  precio: e.target.value
-                })
-              }
-            />
-
-            <input
-              style={styles.input}
-
-              type="text"
-
-              value={editForm.categoria}
-
-              onChange={(e) =>
-                setEditForm({
-                  ...editForm,
-                  categoria:
-                    e.target.value
-                })
-              }
-            />
-
-            <button
-              style={styles.saveBtn}
-
-              onClick={updateProduct}
-            >
-              Guardar cambios
-            </button>
-
-          </div>
-        )
-      }
 
     </div>
   );
 }
-
-
-
-const styles = {
-
-  card: {
-
-    background: "var(--bg)",
-
-    border:
-      "1px solid var(--border)",
-
-    borderRadius: "16px",
-
-    padding: "20px",
-
-    marginBottom: "20px",
-
-    boxShadow:
-      "var(--shadow)",
-
-    textAlign: "left"
-  },
-
-  image: {
-
-  width: "100%",
-
-  height: "250px",
-
-  objectFit: "cover",
-
-  borderRadius: "12px",
-
-  marginBottom: "15px"
-},
-
-  title: {
-
-    marginBottom: "10px"
-  },
-
-  description: {
-
-    marginBottom: "15px",
-
-    color: "var(--text)"
-  },
-
-  price: {
-
-    fontSize: "22px",
-
-    fontWeight: "bold",
-
-    color: "var(--accent)",
-
-    marginBottom: "10px"
-  },
-
-  category: {
-
-    marginBottom: "20px",
-
-    opacity: 0.8
-  },
-
-  buttons: {
-
-    display: "flex",
-
-    gap: "10px"
-  },
-
-  deleteBtn: {
-
-    background: "#ff4d4f",
-
-    color: "white",
-
-    padding: "10px 15px",
-
-    borderRadius: "8px"
-  },
-
-  editBtn: {
-
-    background:
-      "var(--accent)",
-
-    color: "white",
-
-    padding: "10px 15px",
-
-    borderRadius: "8px"
-  },
-
-  editBox: {
-
-    marginTop: "20px",
-
-    display: "flex",
-
-    flexDirection: "column",
-
-    gap: "10px"
-  },
-
-  input: {
-
-    padding: "10px",
-
-    borderRadius: "8px",
-
-    border:
-      "1px solid var(--border)"
-  },
-
-  saveBtn: {
-
-    background: "#22c55e",
-
-    color: "white",
-
-    padding: "12px",
-
-    borderRadius: "8px"
-  }
-};
 
 export default ProductCard;

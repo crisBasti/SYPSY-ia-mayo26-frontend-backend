@@ -1,0 +1,30 @@
+:root {
+
+  /* COLORS */
+  --bg-primary: #050505;
+  --bg-secondary: #111111;
+  --bg-card: #181818;
+
+  --primary: #00bfff;
+  --secondary: #ff00ff;
+
+  --text-primary: #ffffff;
+  --text-secondary: #cfcfcf;
+
+  --success: #00ff88;
+  --danger: #ff4d4d;
+
+  /* SHADOWS */
+  --shadow-neon:
+    0 0 10px rgba(0,191,255,.4),
+    0 0 20px rgba(255,0,255,.2);
+
+  /* BORDERS */
+  --radius: 18px;
+
+  /* TRANSITIONS */
+  --transition: all .3s ease;
+
+  /* CONTAINER */
+  --container-width: 1400px;
+}
