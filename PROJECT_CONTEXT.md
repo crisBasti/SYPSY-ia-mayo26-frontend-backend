@@ -1,56 +1,79 @@
-# 📌 PROJECT_CONTEXT.md — SYPSY
+# SYPSY — PROJECT CONTEXT
 
-## 🧠 Resumen del proyecto
+## 🧠 Qué es SYPSY
+SYPSY es una plataforma de compra y venta online enfocada en velocidad de entrega y experiencia simple de usuario.
 
-SYPSY es una plataforma web de compra y venta online con enfoque en velocidad de entrega, simplicidad operativa y escalabilidad, orientada a competir con marketplaces tradicionales mediante mejoras en logística y experiencia de usuario.
-
-Lema: “LO QUE QUERES YA!”
+Objetivo: permitir que un usuario encuentre y solicite productos de forma rápida (“LO QUE QUERES YA!”).
 
 ---
 
-## 🏗️ Arquitectura general
+## 🏗️ Arquitectura actual
 
-El proyecto está dividido en dos partes principales:
-
-### 🔵 Frontend
-- Tecnologías: HTML, CSS/SASS, JavaScript, React (Vite)
-- Estructura basada en componentes
-- Context API para manejo de estado global (productos)
-- Páginas principales:
+### Frontend
+- React (Vite)
+- JavaScript
+- Context API (ProductsContext)
+- Pages:
   - Home
-  - Catálogo de productos
-  - Secciones por categoría
+  - Productos por categoría
+- Formulario de carga de productos
 
-### 🟢 Backend
+### Backend
 - Node.js + Express
-- API REST para productos
+- API REST básica
+- Manejo de productos
 
 ---
 
-## 🗄️ Modelo de datos
+## 🗄️ Modelo de producto
 
-- id
+- id (único)
 - nombre
 - descripcion
 - precio
 - stock
 - categoria
-- imagen
+- imagen (opcional)
 
 ---
 
-## ⚙️ Funcionalidades actuales
+## ⚙️ Estado actual real
 
-- Listado de productos
-- Formulario de carga
-- Backend básico
-- Comunicación frontend/backend
+✔ Listado de productos funcionando  
+✔ Formulario de carga operativo  
+✔ Comunicación frontend → backend  
+✔ Estructura de páginas React creada  
+
+⚠ Falta:
+- Base de datos real (actualmente persistencia simple)
+- Sistema de pedidos formal
+- Panel admin seguro
+- Deploy estable
 
 ---
 
-## 🚧 Próximos pasos
+## 🔁 Flujo actual del sistema
 
-- Base de datos real (MongoDB o SQLite)
-- Sistema de pedidos WhatsApp
-- Panel admin
-- Deploy
+Admin → carga producto → backend → frontend lo muestra → usuario lo ve
+
+---
+
+## 🚚 Logística (visión)
+- Pedidos deben llegar por WhatsApp
+- Enfoque en entrega rápida tipo express
+- Sin sistema complejo de usuarios por ahora
+
+---
+
+## 💰 Monetización
+- Publicidad directa
+- Productos destacados en el futuro
+- Servicios premium
+
+---
+
+## 🎯 Objetivo técnico inmediato
+Convertir el sistema en un MVP funcional con:
+- base de datos real
+- pedidos automatizados
+- deploy online estable
