@@ -1,3 +1,10 @@
+import Login from "./pages/Login";
+
+import Register from "./pages/Register";
+
+import ProtectedRoute from "./components/ProtectedRoute";
+
+
 import {
   BrowserRouter,
   Routes,
@@ -11,6 +18,8 @@ import Home from "./pages/Home";
 import Admin from "./pages/Admin";
 
 import Navbar from "./components/Navbar";
+
+import SellerProfile from "./pages/SellerProfile";
 
 import {
   ProductsProvider
@@ -49,10 +58,31 @@ function App() {
           />
 
           <Route
-
+            
             path="/admin"
+  
+            element={
+    
+              <ProtectedRoute>
+                <Admin />
+              </ProtectedRoute>
+            }
+          />
 
-            element={<Admin />}
+          <Route
+
+            path="/seller/:id"
+            element={<SellerProfile />}
+          />
+
+          <Route
+           path="/login"
+           element={<Login />}
+          />
+
+          <Route
+           path="/register"
+           element={<Register />}
           />
 
         </Routes>

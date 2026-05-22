@@ -4,11 +4,16 @@ import {
   useState
 } from "react";
 
+import { AuthContext } from "../context/AuthContext";
+
 import "../styles/admin.css";
 
 import ProductCard from "../components/ProductCard";
 
 import ProductForm from "../components/ProductForm";
+
+
+
 
 import {
   ProductsContext
@@ -50,6 +55,8 @@ function Admin() {
 
   const [editingId, setEditingId] =
     useState(null);
+
+  const { user } = useContext(AuthContext);
 
   const [editForm, setEditForm] =
     useState({

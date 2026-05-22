@@ -4,6 +4,11 @@ import logo from "../assets/logo.png";
 
 import "../styles/navbar.css";
 
+import { useContext } from "react";
+import { AuthContext } from "../context/AuthContext";
+
+import { Link } from "react-router-dom";
+
 function Navbar({
   search,
   setSearch
@@ -11,6 +16,10 @@ function Navbar({
 
   const [menuOpen, setMenuOpen] =
     useState(false);
+
+    const { user, logout } = useContext(AuthContext);
+
+  console.log(user);
 
   return (
 
@@ -21,16 +30,49 @@ function Navbar({
         <div className="navbar-logo">
 
           <img
-  src={logo}
-  alt="SYPSY Logo"
-  className="logo-img"
-/>
+            src={logo}
+            alt="SYPSY Logo"
+            className="logo-img"
+          />
 
           <span>
             LO QUE QUERES YA!
           </span>
 
         </div>
+
+
+                <div className="auth-section">
+
+  {user ? (
+
+    <>
+      <span>
+        {user.email}
+      </span>
+
+      <button onClick={logout}>
+        Cerrar sesión
+      </button>
+    </>
+
+  ) : (
+
+    <>
+
+      <Link to="/login">
+        Login
+      </Link>
+
+      <Link to="/register">
+        Registro
+      </Link>
+
+    </>
+
+  )}
+
+</div>
 
         <div
           className={`navbar-links ${
@@ -95,6 +137,8 @@ function Navbar({
           ☰
 
         </button>
+
+
 
       </nav>
 

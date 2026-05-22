@@ -443,3 +443,153 @@ VIEW BUTTON
     0 10px 25px
     rgba(37,99,235,0.35);
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 420px;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+  animation: fadeIn 0.2s ease;
+}
+
+.modal-content img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 10px;
+}
+
+.price {
+  display: block;
+  font-size: 22px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+@keyframes fadeIn {
+  from { transform: scale(0.95); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.contact-btn {
+  display: block;
+  width: 100%;
+  text-align: center;
+  background: linear-gradient(90deg, #25D366, #128C7E);
+  color: white;
+  padding: 14px;
+  border-radius: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: 0.3s ease;
+}
+
+.contact-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(37, 211, 102, 0.3);
+}
+
+.card-image {
+  position: relative;
+  width: 100%;
+}
+
+.card-image img {
+  width: 100%;
+  height: 220px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.img-controls {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  transform: translateY(-50%);
+  padding: 0 8px;
+}
+
+.img-controls button {
+  background: rgba(0,0,0,0.5);
+  border: none;
+  color: white;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+.seller-info {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  margin: 8px 0;
+  color: #666;
+}
+
+.seller-name {
+  font-weight: 600;
+}
+
+.seller-rating {
+  color: #f5a623;
+}
+
+.seller-badge {
+  background: #e8f5e9;
+  color: #2e7d32;
+  font-size: 11px;
+  padding: 4px 8px;
+  border-radius: 8px;
+  display: inline-block;
+  margin-bottom: 6px;
+}
+
+.seller-profile {
+  padding: 20px;
+}
+
+.seller-header {
+  background: #f5f7ff;
+  padding: 20px;
+  border-radius: 16px;
+  margin-bottom: 20px;
+}
+
+.seller-header h2 {
+  margin: 0;
+}
+
+.seller-header p {
+  color: #666;
+  margin: 8px 0;
+}
+.seller-badge{
+  margin-top: 10px;
+}
+
+.seller-link{
+  color: #38bdf8;
+  font-weight: bold;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.seller-link:hover{
+  text-decoration: underline;
+}

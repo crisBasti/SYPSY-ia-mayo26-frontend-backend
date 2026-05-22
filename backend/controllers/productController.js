@@ -12,65 +12,44 @@ export const getProducts = async (req, res) => {
   }
 };
 
-export const createProduct =
-  async (req, res) => {
+export const createProduct = async (req, res) => {
+  try {
+    const {
+  nombre,
+  precio,
+  descripcion,
+  categoria,
+  stock,
+  vendedor
+} = req.body;
 
-    try {
+const parsedSeller = vendedor ? JSON.parse(vendedor) : null;
 
-      const {
-        nombre,
-        precio,
-        descripcion,
-        categoria,
-        stock
-      } = req.body;
+const newProduct = new Product({
+  nombre,
+  precio,
+  descripcion,
+  categoria,
+  stock: stock || 0,
 
-      console.log("BODY:", req.body);
-        
-      console.log("FILE:", req.file);
+  vendedor: {
+    uid: parsedSeller.uid,
+    email: parsedSeller.email,
+    name: parsedSeller.name
+  },
 
-      const newProduct =
-        new Product({
+  image: req.file?.path || ""
+});
 
-          nombre,
+    await newProduct.save();
 
-          precio,
-
-          descripcion,
-
-          categoria,
-
-          stock: stock || 0,
-
-          image:
-            req.file?.path || "",
-        });
-
-      await newProduct.save();
-
-      res.status(201).json(
-        newProduct
-      );
-
-    } catch (error) {
-
-  console.log(
-    "ERROR COMPLETO:",
-    JSON.stringify(
+    res.status(201).json(newProduct);
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
       error,
-      null,
-      2
-    )
-  );
-
-  res.status(500).json({
-
-    message:
-      error.message,
-
-    error
-  });
-}
+    });
+  }
 };
 
 export const deleteProduct = async (req, res) => {

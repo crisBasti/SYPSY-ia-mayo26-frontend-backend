@@ -1,4 +1,5 @@
 import "../styles/products.css";
+import SellerBadge from "./SellerBadge";
 
 function ProductCard({
   product,
@@ -40,6 +41,8 @@ function ProductCard({
         <p className="product-category">
           {product.categoria}
         </p>
+
+        <SellerBadge sellerId={product.vendedor?._id || "1"} />
 
         <div className="product-buttons">
 

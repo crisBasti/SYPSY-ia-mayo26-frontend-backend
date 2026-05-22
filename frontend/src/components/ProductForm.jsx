@@ -1,8 +1,14 @@
 import { useState } from "react";
 
 
+import { useAuth } from "../context/AuthContext";
+
+
 
 function ProductForm({ addProduct }) {
+
+
+  const { user } = useAuth();
 
   const [formData, setFormData] =
     useState({
@@ -82,6 +88,17 @@ const handleSubmit = (e) => {
     "categoria",
     formData.categoria
   );
+
+  console.log(user);
+
+  productData.append(
+  "vendedor",
+  JSON.stringify({
+    uid: user.uid,
+    email: user.email,
+    name: user.displayName || "Usuario"
+  })
+);
 
   productData.append(
     "image",
