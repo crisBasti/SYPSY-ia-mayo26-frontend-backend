@@ -4,12 +4,7 @@ import Register from "./pages/Register";
 
 import ProtectedRoute from "./components/ProtectedRoute";
 
-
-import {
-  BrowserRouter,
-  Routes,
-  Route
-} from "react-router-dom";
+import CategoryPage from "./pages/CategoryPage";
 
 import { useState } from "react";
 
@@ -20,6 +15,12 @@ import Admin from "./pages/Admin";
 import Navbar from "./components/Navbar";
 
 import SellerProfile from "./pages/SellerProfile";
+
+import {
+  BrowserRouter,
+  Routes,
+  Route
+} from "react-router-dom";
 
 import {
   ProductsProvider
@@ -55,6 +56,11 @@ function App() {
                 search={search}
               />
             }
+          />
+
+          <Route
+           path="/categoria/:categoria"
+           element={<CategoryPage />}
           />
 
           <Route

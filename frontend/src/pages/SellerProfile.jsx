@@ -47,7 +47,7 @@ const seller = sellerProducts[0]?.vendedor;
           <div key={product._id} className="product-card">
 
             <img
-              src={product.image}
+              src={product.images?.[0]}
               alt={product.nombre}
             />
 

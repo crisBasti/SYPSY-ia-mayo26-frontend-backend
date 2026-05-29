@@ -15,12 +15,12 @@ export const getProducts = async (req, res) => {
 export const createProduct = async (req, res) => {
   try {
     const {
-  nombre,
-  precio,
-  descripcion,
-  categoria,
-  stock,
-  vendedor
+      nombre,
+      precio,
+      descripcion,    
+      categoria,
+      stock,
+      vendedor
 } = req.body;
 
 const parsedSeller = vendedor ? JSON.parse(vendedor) : null;
@@ -38,7 +38,7 @@ const newProduct = new Product({
     name: parsedSeller.name
   },
 
-  image: req.file?.path || ""
+  images: req.files?.map(file => file.path) || []
 });
 
     await newProduct.save();

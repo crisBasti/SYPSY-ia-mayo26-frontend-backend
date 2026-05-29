@@ -185,7 +185,7 @@ function Admin() {
         product.categoria,
 
       imagen:
-        product.imagen
+        product.images?.[0]
     });
   };
 

@@ -1,5 +1,7 @@
 import { useState } from "react";
 
+import { auth } from "../firebase";
+
 
 import { useAuth } from "../context/AuthContext";
 
@@ -11,18 +13,19 @@ function ProductForm({ addProduct }) {
   const { user } = useAuth();
 
   const [formData, setFormData] =
-    useState({
+  useState({
 
-      nombre: "",
+    nombre: "",
 
-      descripcion: "",
+    descripcion: "",
 
-      precio: "",
+    precio: "",
 
-      categoria: ""
-    });
+    categoria: "",
 
-    const [image, setImage] = useState(null);
+    images: []
+
+});
 
 
 
@@ -41,7 +44,7 @@ function ProductForm({ addProduct }) {
 
 
 
-const handleSubmit = (e) => {
+const handleSubmit = async (e) => {
 
   e.preventDefault();
 
@@ -49,7 +52,7 @@ const handleSubmit = (e) => {
 
     !formData.nombre.trim() ||
 
-    !formData.descripcion.trim() ||
+    !formData.descripcion.trim() || 
 
     !formData.precio ||
 
@@ -100,12 +103,18 @@ const handleSubmit = (e) => {
   })
 );
 
+  formData.images?.forEach((file) => {
+
   productData.append(
-    "image",
-    image
+    "images",
+    file
   );
 
-  addProduct(productData);
+});
+
+  const token = await auth.currentUser.getIdToken();
+
+  await addProduct(productData, token);
 
   setFormData({
 
@@ -192,20 +201,50 @@ const handleSubmit = (e) => {
 
       <input
         type="file"
-        
+        multiple
         accept="image/*"
-        
-        onChange={(e) =>
-        
-          setImage(
-      
-            e.target.files[0]
-    
-          )
-  
-        }
 
+          onChange={(e) => {
+
+  const files =
+    Array.from(e.target.files);
+
+  setFormData((prev) => ({
+
+  ...prev,
+
+  images: [
+
+    ...(prev.images || []),
+
+    ...files
+
+  ]
+
+}));
+}}
+/>
+
+<div className="preview-grid">
+
+  {formData.images?.map((file, index) => (
+
+    <div
+      key={index}
+      className="preview-card"
+    >
+
+      <img
+        src={URL.createObjectURL(file)}
+        alt={`preview-${index}`}
+        className="preview-image"
       />
+
+    </div>
+
+  ))}
+
+</div>
 
       <button
         type="submit"

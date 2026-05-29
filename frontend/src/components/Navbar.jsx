@@ -82,25 +82,33 @@ function Navbar({
           }`}
         >
 
-          <a href="#">
-            Inicio
-          </a>
+          <li>
+            <Link to="/">Home</Link>
+          </li>
 
-          <a href="#">
-            Electro
-          </a>
+          <li>
+           <Link to="/categoria/Electro">
+              Electro
+            </Link>
+          </li>
 
-          <a href="#">
-            Indumentaria
-          </a>
+          <li>
+           <Link to="/categoria/Indumentaria">
+             Indumentaria
+           </Link>
+          </li>
 
-          <a href="#">
-            Calzado
-          </a>
+          <li>
+           <Link to="/categoria/Servicios">
+             Servicios
+           </Link>
+          </li>
 
-          <a href="#">
-            Servicios
-          </a>
+          <li>
+           <Link to="/categoria/Varios">
+             Varios
+           </Link>
+          </li>
 
         </div>
 

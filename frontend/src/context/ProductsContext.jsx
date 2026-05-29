@@ -11,193 +11,174 @@ export function ProductsProvider({
   children
 }) {
 
-  // =========================
-  // PRODUCTOS DEMO
-  // =========================
-
-const demoProducts = [
-
-  {
-    id: 1,
-
-    nombre:
-      "Notebook Gamer",
-
-    descripcion:
-      "Potencia extrema para gaming y trabajo.",
-
-    precio: 2500,
-
-    categoria:
-      "Electrónica",
-
-    imagen:
-      "https://picsum.photos/500/500?1"
-  },
-
-  {
-    id: 2,
-
-    nombre:
-      "Auriculares RGB",
-
-    descripcion:
-      "Sonido envolvente profesional.",
-
-    precio: 320,
-
-    categoria:
-      "Tecnología",
-
-    imagen:
-      "https://picsum.photos/500/500?2"
-  },
-
-  {
-    id: 3,
-
-    nombre:
-      "Smartphone Premium",
-
-    descripcion:
-      "Velocidad y cámara increíble.",
-
-    precio: 1800,
-
-    categoria:
-      "Tecnología",
-
-    imagen:
-      "https://picsum.photos/500/500?3"
-  },
-
-  {
-    id: 4,
-
-    nombre:
-      "Zapatillas Urban",
-
-    descripcion:
-      "Comodidad y estilo moderno.",
-
-    precio: 220,
-
-    categoria:
-      "Moda",
-
-    imagen:
-      "https://picsum.photos/500/500?4"
-  }
-
-];
-
-  // =========================
-  // STATE
-  // =========================
-
   const [productos, setProductos] =
-    useState(() => {
+    useState([]);
 
-      const savedProducts =
-        localStorage.getItem(
-          "productos"
+  // =========================
+  // OBTENER PRODUCTOS
+  // =========================
+
+  const fetchProducts =
+    async () => {
+
+      try {
+
+        const res =
+          await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
+
+        const data =
+          await res.json();
+
+        setProductos(data);
+
+      } catch (error) {
+
+        console.log(
+          "Error obteniendo productos:",
+          error
+        );
+      }
+    };
+
+  // =========================
+  // CREAR PRODUCTO
+  // =========================
+
+  const addProduct =
+    async (
+      productData,
+      token
+    ) => {
+
+      try {
+
+        const res =
+          await fetch( `${import.meta.env.VITE_API_URL}/api/products`,
+            {
+              method: "POST",
+
+              headers: {
+                Authorization:
+                  `Bearer ${token}`
+              },
+
+              body: productData
+            }
+          );
+
+        const data =
+          await res.json();
+
+        setProductos(
+          (prev) => [
+            data,
+            ...prev
+          ]
         );
 
-      return savedProducts
-        ? JSON.parse(savedProducts)
-        : demoProducts;
+      } catch (error) {
+
+        console.log(
+          "Error creando producto:",
+          error
+        );
+      }
+    };
+
+    const agregarProducto = async (producto) => {
+  try {
+    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(producto),
     });
 
+    if (!response.ok) {
+      throw new Error("Error al crear producto");
+    }
+
+    const nuevoProducto = await response.json();
+
+    setProductos((prev) => [...prev, nuevoProducto]);
+
+    return nuevoProducto;
+
+  } catch (error) {
+    console.error("Error creando producto:", error);
+  }
+};
+
+const actualizarProducto = async (id, productoActualizado) => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+      {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(productoActualizado),
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Error actualizando producto");
+    }
+
+    const data = await response.json();
+
+    setProductos((prev) =>
+      prev.map((p) => (p._id === id ? data : p))
+    );
+
+    return data;
+
+  } catch (error) {
+    console.error("Error actualizando producto:", error);
+  }
+};
+
+
+
   // =========================
-  // LOCAL STORAGE
+  // ELIMINAR PRODUCTO
+  // =========================
+
+  const eliminarProducto = async (id) => {
+
+      try {
+
+        await fetch(
+          `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+  {
+    method: "DELETE"
+  }
+);
+
+        setProductos(
+          (prev) =>
+            prev.filter(
+              (p) => p._id !== id
+            )
+        );
+
+      } catch (error) {
+
+        console.log(error);
+      }
+    };
+
+  // =========================
+  // CARGAR AL INICIAR
   // =========================
 
   useEffect(() => {
 
-    localStorage.setItem(
-      "productos",
+    fetchProducts();
 
-      JSON.stringify(productos)
-    );
-
-  }, [productos]);
-
-  // =========================
-  // AGREGAR
-  // =========================
-
-  const agregarProducto = (
-    nuevoProducto
-  ) => {
-
-    setProductos((prev) => [
-
-      ...prev,
-
-      {
-        ...nuevoProducto,
-
-        id: Date.now()
-      }
-
-    ]);
-  };
-
-  // =========================
-  // ELIMINAR
-  // =========================
-
-  const eliminarProducto = (
-    id
-  ) => {
-
-    const nuevosProductos =
-      productos.filter(
-        (producto) =>
-          producto.id !== id
-      );
-
-    setProductos(
-      nuevosProductos
-    );
-  };
-
-  // =========================
-  // EDITAR
-  // =========================
-
-  const editarProducto = (
-
-    id,
-
-    productoActualizado
-
-  ) => {
-
-    const nuevosProductos =
-      productos.map(
-        (producto) => {
-
-          if (
-            producto.id === id
-          ) {
-
-            return {
-
-              ...productoActualizado,
-
-              id
-            };
-          }
-
-          return producto;
-        }
-      );
-
-    setProductos(
-      nuevosProductos
-    );
-  };
+  }, []);
 
   return (
 
@@ -209,11 +190,17 @@ const demoProducts = [
 
         setProductos,
 
+        fetchProducts,      
+
+        addProduct,
+
         agregarProducto,
 
-        eliminarProducto,
+        actualizarProducto,
 
-        editarProducto
+        editarProducto: actualizarProducto,
+
+        eliminarProducto
 
       }}
     >

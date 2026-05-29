@@ -1,5 +1,6 @@
 import "../styles/products.css";
 import SellerBadge from "./SellerBadge";
+import { useState } from "react";
 
 function ProductCard({
   product,
@@ -11,18 +12,67 @@ function ProductCard({
   updateProduct
 }) {
 
+  const [currentImage, setCurrentImage] =
+  useState(0);
+
+const images =
+  product.images?.length > 0
+    ? product.images
+    : [product.image];
+
   return (
 
     <div className="product-card">
 
-      <img
-  src={
-    product.image ||
-    "https://placehold.co/600x400/0f172a/ffffff?text=SYPSY"
-  }
-  alt={product.nombre}
-  className="product-image"
-/>
+      <div className="product-carousel">
+
+  <img
+    src={
+      images[currentImage]
+    }
+    alt={product.nombre}
+    className="product-image"
+  />
+
+  {images.length > 1 && (
+
+    <>
+
+      <button
+        className="carousel-btn left"
+        onClick={() =>
+
+          setCurrentImage(
+
+            currentImage === 0
+              ? images.length - 1
+              : currentImage - 1
+          )
+        }
+      >
+        ‹
+      </button>
+
+      <button
+        className="carousel-btn right"
+        onClick={() =>
+
+          setCurrentImage(
+
+            currentImage === images.length - 1
+              ? 0
+              : currentImage + 1
+          )
+        }
+      >
+        ›
+      </button>
+
+    </>
+
+  )}
+
+</div>
 
       <div className="product-info">
 
@@ -63,6 +113,21 @@ function ProductCard({
           >
             Editar
           </button>
+
+          <a href={`https://wa.me/541164521118?text=${encodeURIComponent(
+                   `Hola SYPSY! Quiero consultar por este producto:
+
+                  📦 Producto: ${product.nombre}
+                  💲 Precio: $${product.precio}
+                  🆔 ID: ${product._id}`
+          )}`}
+                target="_blank"
+                rel="noopener noreferrer"
+        >
+        <button className="buy-btn">
+            Comprar por WhatsApp
+        </button>
+        </a>
 
         </div>
 

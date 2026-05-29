@@ -15,6 +15,18 @@ function Register() {
 
     e.preventDefault();
 
+    const passwordRegex =
+      /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,}$/;
+
+    if (!passwordRegex.test(password)) {
+
+    alert(
+      "La contraseña debe tener mínimo 8 caracteres, una mayúscula, un número y un símbolo."
+    );
+
+    return;
+    }
+
     try {
 
       await createUserWithEmailAndPassword(
@@ -60,6 +72,12 @@ function Register() {
         <button type="submit">
           Registrarse
         </button>
+        <br />
+        <small>
+  La contraseña debe tener:
+  8 caracteres, una mayúscula,
+  un número y un símbolo.
+</small>
 
       </form>
 

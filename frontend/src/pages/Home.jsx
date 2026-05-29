@@ -1,14 +1,31 @@
-import { useContext, useState } from "react";
+import { useContext, useState, useEffect } from "react";
 import { ProductsContext } from "../context/ProductsContext";
 import SellerBadge from "../components/SellerBadge";
 import { Link } from "react-router-dom";
+import { FaWhatsapp } from "react-icons/fa";
 
 function Home({ search }) {
-  const { productos } = useContext(ProductsContext);
+  const { productos, fetchProducts } = useContext(ProductsContext);
+  useEffect(() => { fetchProducts(); }, []);
 
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
-  const [imgIndex, setImgIndex] = useState({});
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [imgIndex, setImgIndex] = useState({});
+  const nextImage = (productId, total) => {
+  setImgIndex((prev) => ({
+    ...prev,
+    [productId]:
+      ((prev[productId] || 0) + 1) % total
+  }));
+};
+
+const prevImage = (productId, total) => {
+  setImgIndex((prev) => ({
+    ...prev,
+    [productId]:
+      ((prev[productId] || 0) - 1 + total) % total
+  }));
+};
 
   // =========================
   // CATEGORÍAS
@@ -66,18 +83,59 @@ function Home({ search }) {
 
             {/* IMAGEN */}
             <div className="card-image">
-              <img
-                src={product.image}
-                alt={product.nombre}
-              />
-            </div>
 
-            <span className="seller-name">
-  👤 {product.vendedor?.nombre || "Vendedor"}
+  {/* FLECHA IZQUIERDA */}
+  {product.images?.length > 1 && (
+    <button
+      className="carousel-btn left"
+      onClick={() =>
+        prevImage(
+          product._id,
+          product.images.length
+        )
+      }
+    >
+      ◀
+    </button>
+  )}
+
+  {/* IMAGEN */}
+  <img
+    src={
+      product.images?.[
+        imgIndex[product._id] || 0
+      ]
+    }
+    alt={product.nombre}
+  />
+
+  {/* FLECHA DERECHA */}
+  {product.images?.length > 1 && (
+    <button
+      className="carousel-btn right"
+      onClick={() =>
+        nextImage(
+          product._id,
+          product.images.length
+        )
+      }
+    >
+      ▶
+    </button>
+  )}
+
+</div>
+
+<span className="seller-name">
+  👤 {
+    product.vendedor?.name ||
+    product.vendedor?.email?.split("@")[0] ||
+    "Usuario"
+  }
 </span>
 
 <span className="seller-rating">
-  ⭐ {product.vendedor?.rating || "Nuevo"}
+  ⭐ Vendedor activo
 </span>
 
             {/* INFO */}
@@ -101,11 +159,14 @@ function Home({ search }) {
               {/* WHATSAPP */}
               <a
                 className="contact-btn"
-                href={`https://wa.me/${product.vendedor?.phone || "5490000000000"}`}
+                href={`https://wa.me/${product.vendedor?.phone || "5491164521118"}`}
                 target="_blank"
                 rel="noreferrer"
               >
-                Contactar vendedor
+                <>
+                   <FaWhatsapp />
+                    Contactar vendedor
+                </>
               </a>
 
               {/* VER PRODUCTO */}
@@ -131,10 +192,46 @@ function Home({ search }) {
             className="modal-content"
             onClick={(e) => e.stopPropagation()}
           >
-            <img
-              src={selectedProduct.image}
-              alt={selectedProduct.nombre}
-            />
+            <div className="modal-carousel">
+
+  {selectedProduct.images?.length > 1 && (
+    <button
+      className="carousel-btn left"
+      onClick={() =>
+        prevImage(
+          "modal",
+          selectedProduct.images.length
+        )
+      }
+    >
+      ◀
+    </button>
+  )}
+
+  <img
+    src={
+      selectedProduct.images?.[
+        imgIndex["modal"] || 0
+      ]
+    }
+    alt={selectedProduct.nombre}
+  />
+
+  {selectedProduct.images?.length > 1 && (
+    <button
+      className="carousel-btn right"
+      onClick={() =>
+        nextImage(
+          "modal",
+          selectedProduct.images.length
+        )
+      }
+    >
+      ▶
+    </button>
+  )}
+
+</div>
 
             <h2>{selectedProduct.nombre}</h2>
             <p>{selectedProduct.descripcion}</p>

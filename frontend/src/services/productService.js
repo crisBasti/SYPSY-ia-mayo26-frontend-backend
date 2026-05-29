@@ -1,9 +1,13 @@
 import axios from "axios";
 
 const API_URL =
-  "http://localhost:3000/api/products";
+  `${import.meta.env.VITE_API_URL}/api/products`;
 
 
+
+// =========================
+// OBTENER PRODUCTOS
+// =========================
 
 export const getProducts =
   async () => {
@@ -16,9 +20,15 @@ export const getProducts =
 
 
 
+// =========================
+// CREAR PRODUCTO
+// =========================
 
 export const createProductService =
-  async (productData) => {
+  async (
+    productData,
+    token
+  ) => {
 
     const response =
       await axios.post(
@@ -29,8 +39,10 @@ export const createProductService =
 
         {
           headers: {
-            "Content-Type":
-              "multipart/form-data",
+
+            Authorization:
+              `Bearer ${token}`
+
           },
         }
       );
@@ -40,6 +52,9 @@ export const createProductService =
 
 
 
+// =========================
+// ELIMINAR PRODUCTO
+// =========================
 
 export const deleteProductService =
   async (id) => {
@@ -54,17 +69,32 @@ export const deleteProductService =
 
 
 
+// =========================
+// ACTUALIZAR PRODUCTO
+// =========================
 
 export const updateProductService =
   async (
     id,
-    updatedData
+    updatedData,
+    token
   ) => {
 
     const response =
       await axios.put(
+
         `${API_URL}/${id}`,
-        updatedData
+
+        updatedData,
+
+        {
+          headers: {
+
+            Authorization:
+              `Bearer ${token}`
+
+          },
+        }
       );
 
     return response.data;

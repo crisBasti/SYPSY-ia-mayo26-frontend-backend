@@ -8,7 +8,7 @@ const productSchema = new mongoose.Schema(
     stock: { type: Number, default: 0 },
     categoria: { type: String, required: true },
 
-    image: { type: String },
+    images: { type: [String], default: [] },
 
     // 🔥 NUEVO: vendedor real
     vendedor: {

@@ -15,7 +15,7 @@ router.get("/", getProducts);
 
 router.delete("/:id", deleteProduct);
 
-router.post("/", upload.single("image"), createProduct);
+router.post("/", upload.array("images", 5), createProduct);
 
 router.put("/:id", updateProduct);
 
