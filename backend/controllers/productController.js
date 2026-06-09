@@ -14,6 +14,10 @@ export const getProducts = async (req, res) => {
 
 export const createProduct = async (req, res) => {
   try {
+
+        console.log("BODY:", req.body);
+        console.log("FILES:", req.files);
+
     const {
       nombre,
       precio,
@@ -23,7 +27,10 @@ export const createProduct = async (req, res) => {
       vendedor
 } = req.body;
 
-const parsedSeller = vendedor ? JSON.parse(vendedor) : null;
+const parsedSeller =
+  typeof vendedor === "string"
+    ? JSON.parse(vendedor)
+    : vendedor;
 
 const newProduct = new Product({
   nombre,
@@ -33,15 +40,16 @@ const newProduct = new Product({
   stock: stock || 0,
 
   vendedor: {
-    uid: parsedSeller.uid,
-    email: parsedSeller.email,
-    name: parsedSeller.name
+    uid: parsedSeller?.uid || "",
+    email: parsedSeller?.email || "",
+    name: parsedSeller?.name || "Usuario"
   },
 
   images: req.files?.map(file => file.path) || []
 });
 
     await newProduct.save();
+
 
     res.status(201).json(newProduct);
   } catch (error) {
@@ -53,9 +61,7 @@ const newProduct = new Product({
 };
 
 export const deleteProduct = async (req, res) => {
-
   try {
-
     const deletedProduct = await Product.findByIdAndDelete(
       req.params.id
     );
@@ -71,7 +77,6 @@ export const deleteProduct = async (req, res) => {
     });
 
   } catch (error) {
-
   console.log(
     "ERROR COMPLETO:",
     JSON.stringify(
@@ -82,10 +87,8 @@ export const deleteProduct = async (req, res) => {
   );
 
   res.status(500).json({
-
     message:
       error.message,
-
     error
   });
 }
@@ -93,21 +96,15 @@ export const deleteProduct = async (req, res) => {
 
 
 export const updateProduct = async (req, res) => {
-
   try {
-
     const updatedProduct =
       await Product.findByIdAndUpdate(
-
         req.params.id,
-
         req.body,
-
         {
           new: true
         }
       );
-
     res.json(updatedProduct);
 
   } catch (error) {
@@ -122,10 +119,8 @@ export const updateProduct = async (req, res) => {
   );
 
   res.status(500).json({
-
     message:
       error.message,
-
     error
   });
 }

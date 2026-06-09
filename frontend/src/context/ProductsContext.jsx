@@ -1,18 +1,12 @@
-import {
-  createContext,
-  useEffect,
-  useState
-} from "react";
+import { createContext, useEffect, useState } from "react";
 
-export const ProductsContext =
-  createContext();
+export const ProductsContext = createContext();
 
 export function ProductsProvider({
   children
 }) {
 
-  const [productos, setProductos] =
-    useState([]);
+  const [productos, setProductos] = useState([]);
 
   // =========================
   // OBTENER PRODUCTOS
@@ -23,11 +17,9 @@ export function ProductsProvider({
 
       try {
 
-        const res =
-          await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
 
-        const data =
-          await res.json();
+        const data = await res.json();
 
         setProductos(data);
 
@@ -44,71 +36,25 @@ export function ProductsProvider({
   // CREAR PRODUCTO
   // =========================
 
-  const addProduct =
-    async (
-      productData,
-      token
-    ) => {
-
-      try {
-
-        const res =
-          await fetch( `${import.meta.env.VITE_API_URL}/api/products`,
-            {
-              method: "POST",
-
-              headers: {
-                Authorization:
-                  `Bearer ${token}`
-              },
-
-              body: productData
-            }
-          );
-
-        const data =
-          await res.json();
-
-        setProductos(
-          (prev) => [
-            data,
-            ...prev
-          ]
-        );
-
-      } catch (error) {
-
-        console.log(
-          "Error creando producto:",
-          error
-        );
-      }
-    };
-
-    const agregarProducto = async (producto) => {
+const addProduct = async (productData, token) => {
   try {
-    const response = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
       method: "POST",
       headers: {
-        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`
       },
-      body: JSON.stringify(producto),
+      body: productData
     });
 
-    if (!response.ok) {
-      throw new Error("Error al crear producto");
-    }
+    const data = await res.json();
 
-    const nuevoProducto = await response.json();
-
-    setProductos((prev) => [...prev, nuevoProducto]);
-
-    return nuevoProducto;
+    setProductos((prev) => [data, ...prev]);
 
   } catch (error) {
-    console.error("Error creando producto:", error);
+    console.log("Error creando producto:", error);
   }
 };
+
 
 const actualizarProducto = async (id, productoActualizado) => {
   try {
@@ -127,86 +73,76 @@ const actualizarProducto = async (id, productoActualizado) => {
       throw new Error("Error actualizando producto");
     }
 
+    console.log("STATUS:", res.status);
+
     const data = await response.json();
 
+    console.log("RESPUESTA:", data);
+    
     setProductos((prev) =>
       prev.map((p) => (p._id === id ? data : p))
     );
-
     return data;
-
   } catch (error) {
     console.error("Error actualizando producto:", error);
   }
 };
 
-
-
   // =========================
   // ELIMINAR PRODUCTO
   // =========================
 
-  const eliminarProducto = async (id) => {
-
-      try {
-
-        await fetch(
-          `${import.meta.env.VITE_API_URL}/api/products/${id}`,
-  {
-    method: "DELETE"
-  }
-);
-
-        setProductos(
-          (prev) =>
-            prev.filter(
-              (p) => p._id !== id
-            )
-        );
-
-      } catch (error) {
-
-        console.log(error);
+const eliminarProducto = async (id) => {
+  try {
+    const response = await fetch(
+      `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+      {
+        method: "DELETE"
       }
-    };
+    );
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.log("ERROR BACKEND:", errorData);
+      throw new Error("No se pudo eliminar");
+    }
+
+    setProductos(
+      (prev) =>
+        prev.filter(
+          (p) => p._id !== id
+        )
+    );
+
+  } catch (error) {
+    console.log(
+      "Error eliminando producto:",
+      error
+    );
+  }
+};
 
   // =========================
   // CARGAR AL INICIAR
   // =========================
 
   useEffect(() => {
-
     fetchProducts();
-
   }, []);
 
   return (
-
     <ProductsContext.Provider
-
       value={{
-
         productos,
-
         setProductos,
-
         fetchProducts,      
-
         addProduct,
-
-        agregarProducto,
-
         actualizarProducto,
-
         editarProducto: actualizarProducto,
-
         eliminarProducto
-
       }}
     >
-
       {children}
-
     </ProductsContext.Provider>
   );
 }

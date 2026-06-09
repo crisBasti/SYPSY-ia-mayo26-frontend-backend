@@ -56,11 +56,9 @@ export const createProductService =
 // ELIMINAR PRODUCTO
 // =========================
 
-export const deleteProductService =
-  async (id) => {
+export const deleteProductService = async (id) => {
 
-    const response =
-      await axios.delete(
+    const response = await axios.delete(
         `${API_URL}/${id}`
       );
 
