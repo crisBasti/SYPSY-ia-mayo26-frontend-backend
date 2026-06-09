@@ -1,12 +1,8 @@
 import { useState } from "react";
-
 import logo from "../assets/logo.png";
-
 import "../styles/navbar.css";
-
 import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
-
 import { Link } from "react-router-dom";
 
 function Navbar({
@@ -24,28 +20,20 @@ function Navbar({
   return (
 
     <>
-
       <nav className="navbar">
-
         <div className="navbar-logo">
-
           <img
             src={logo}
             alt="SYPSY Logo"
             className="logo-img"
           />
-
           <span>
             LO QUE QUERES YA!
           </span>
-
         </div>
-
-
-                <div className="auth-section">
+        <div className="auth-section">
 
   {user ? (
-
     <>
       <span>
         {user.email}
@@ -55,11 +43,9 @@ function Navbar({
         Cerrar sesión
       </button>
     </>
-
   ) : (
 
     <>
-
       <Link to="/login">
         Login
       </Link>
@@ -69,11 +55,9 @@ function Navbar({
       </Link>
 
     </>
-
   )}
 
 </div>
-
         <div
           className={`navbar-links ${
             menuOpen
@@ -85,6 +69,14 @@ function Navbar({
           <li>
             <Link to="/">Home</Link>
           </li>
+
+          {user && (
+           <li>
+            <Link to="/admin">
+              Admin
+            </Link>
+           </li>
+          )}
 
           <li>
            <Link to="/categoria/Electro">
@@ -113,13 +105,9 @@ function Navbar({
         </div>
 
         <div className="navbar-search">
-
           <input
-
             type="text"
-
             placeholder="Buscar productos..."
-
             value={search}
 
             onChange={(e) =>
@@ -128,11 +116,9 @@ function Navbar({
               )
             }
           />
-
         </div>
 
         <button
-
           className="menu-btn"
 
           onClick={() =>
@@ -147,11 +133,8 @@ function Navbar({
         </button>
 
 
-
       </nav>
-
       <section className="hero">
-
         <div className="hero-content">
 
           <h2>
@@ -168,11 +151,8 @@ function Navbar({
           <button>
             Explorar ahora
           </button>
-
         </div>
-
       </section>
-
     </>
   );
 }
