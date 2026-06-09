@@ -1,6 +1,6 @@
 .navbar {
   width: 100%;
-  height: 80px;
+  height: 120px;
   background: #0f172a;
   color: white;
 
@@ -64,7 +64,7 @@
 
 .hero {
   width: 100%;
-  min-height: 400px;
+  min-height: 200px;
 
   background: linear-gradient(
     135deg,
@@ -78,7 +78,7 @@
   justify-content: center;
 
   text-align: center;
-  padding: 40px 20px;
+  padding:10px;
 }
 
 .hero-content h2 {
@@ -193,21 +193,17 @@ LOGO IMAGE
 
 .logo-img {
 
-  width: 70px;
-
-  height: 70px;
-
+  width: 60px;
+  height: 60px;
   object-fit: contain;
-
+  display: block;
   filter:
     drop-shadow(
       0 0 10px rgba(0,191,255,0.35)
     );
-
   transition: 0.3s ease;
 }
 
 .logo-img:hover {
-
   transform: scale(1.05);
 }

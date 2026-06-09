@@ -188,7 +188,7 @@ return (
           Marca
         </h3>
         <p>
-          SYPSY IA
+          SYPSY
         </p>
       </div>
     </div>

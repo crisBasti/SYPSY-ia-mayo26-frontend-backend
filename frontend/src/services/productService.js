@@ -65,6 +65,10 @@ export const deleteProductService = async (id) => {
     return response.data;
 };
 
+console.log(
+  "API URL:",
+  import.meta.env.VITE_API_URL
+);
 
 
 // =========================

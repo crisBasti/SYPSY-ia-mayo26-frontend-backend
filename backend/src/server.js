@@ -13,7 +13,14 @@ connectDB();
 
 const app = express();
 
-app.use(cors());
+app.use(
+  cors({
+    origin: [
+      "https://sypsy-ia-mayo26-frontend-backend-amgz3v9nd-crisbastis-projects.vercel.app"
+    ],
+    credentials: true
+  })
+);
 app.use(express.json());
 app.use("/api/products", productRoutes);
 

@@ -55,7 +55,7 @@ function Navbar({
       </Link>
 
     </>
-  )}
+  )} <br />
 
 </div>
         <div
