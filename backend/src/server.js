@@ -16,11 +16,16 @@ const app = express();
 app.use(
   cors({
     origin: [
-      "https://sypsy-ia-mayo26-frontend-backend-amgz3v9nd-crisbastis-projects.vercel.app"
+      "https://sypsy-ia-mayo26-frontend-backend.vercel.app",
+      "http://localhost:5173"
     ],
-    credentials: true
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
   })
 );
+
+app.options("*", cors());
+
 app.use(express.json());
 app.use("/api/products", productRoutes);
 
