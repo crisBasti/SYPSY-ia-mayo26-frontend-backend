@@ -24,13 +24,9 @@ export const createProduct = async (req, res) => {
       descripcion,    
       categoria,
       stock,
-      vendedor
 } = req.body;
 
-const parsedSeller =
-  typeof vendedor === "string"
-    ? JSON.parse(vendedor)
-    : vendedor;
+
 
 const newProduct = new Product({
   nombre,
@@ -39,11 +35,11 @@ const newProduct = new Product({
   categoria,
   stock: stock || 0,
 
-  vendedor: {
-    uid: parsedSeller?.uid || "",
-    email: parsedSeller?.email || "",
-    name: parsedSeller?.name || "Usuario"
-  },
+vendedor: {
+  uid: req.user.uid,
+  email: req.user.email || "",
+  name: req.user.name || "Usuario"
+},
 
   images: req.files?.map(file => file.path) || []
 });
@@ -60,68 +56,118 @@ const newProduct = new Product({
   }
 };
 
-export const deleteProduct = async (req, res) => {
+export const deleteProduct = async ( req, res ) => {
   try {
-    const deletedProduct = await Product.findByIdAndDelete(
-      req.params.id
-    );
 
-    if (!deletedProduct) {
+    const product =
+      await Product.findById(
+        req.params.id
+      );
+
+    if (!product) {
       return res.status(404).json({
-        mensaje: "Producto no encontrado"
+        mensaje:
+          "Producto no encontrado"
       });
     }
 
+    if (
+      product.vendedor.uid !==
+      req.user.uid
+    ) {
+      return res.status(403).json({
+        mensaje:
+          "No autorizado"
+      });
+    }
+
+    await product.deleteOne();
+
     res.json({
-      mensaje: "Producto eliminado"
+      mensaje:
+        "Producto eliminado"
     });
 
   } catch (error) {
-  console.log(
-    "ERROR COMPLETO:",
-    JSON.stringify(
-      error,
-      null,
-      2
-    )
-  );
 
-  res.status(500).json({
-    message:
-      error.message,
-    error
-  });
-}
+    res.status(500).json({
+      message:
+        error.message
+    });
+
+  }
 };
 
 
-export const updateProduct = async (req, res) => {
+export const updateProduct = async (
+  req,
+  res
+) => {
   try {
+
+    const product =
+      await Product.findById(
+        req.params.id
+      );
+
+    if (!product) {
+      return res.status(404).json({
+        mensaje:
+          "Producto no encontrado"
+      });
+    }
+
+    if (
+      product.vendedor.uid !==
+      req.user.uid
+    ) {
+      return res.status(403).json({
+        mensaje:
+          "No autorizado"
+      });
+    }
+
     const updatedProduct =
       await Product.findByIdAndUpdate(
         req.params.id,
         req.body,
-        {
-          new: true
-        }
+        { new: true }
       );
-    res.json(updatedProduct);
+
+    res.json(
+      updatedProduct
+    );
 
   } catch (error) {
 
-  console.log(
-    "ERROR COMPLETO:",
-    JSON.stringify(
-      error,
-      null,
-      2
-    )
-  );
+    res.status(500).json({
+      message:
+        error.message
+    });
 
-  res.status(500).json({
-    message:
-      error.message,
-    error
-  });
-}
+  }
+};
+
+export const getMyProducts = async (
+  req,
+  res
+) => {
+  try {
+
+    const products =
+      await Product.find({
+        "vendedor.uid":
+          req.user.uid
+      });
+
+    res.json(products);
+
+  } catch (error) {
+
+    res.status(500).json({
+      mensaje:
+        "Error obteniendo productos"
+    });
+
+  }
 };

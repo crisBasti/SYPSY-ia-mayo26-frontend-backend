@@ -114,7 +114,7 @@ const images =
             Editar
           </button>
 
-          <a href={`https://wa.me/541164521118?text=${encodeURIComponent(
+          <a href={`https://wa.me/5491164521118?text=${encodeURIComponent(
                    `Hola SYPSY! Quiero consultar por este producto:
 
                   📦 Producto: ${product.nombre}

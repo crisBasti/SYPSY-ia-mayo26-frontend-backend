@@ -56,10 +56,19 @@ export const createProductService =
 // ELIMINAR PRODUCTO
 // =========================
 
-export const deleteProductService = async (id) => {
+export const deleteProductService = async ( id, token ) => {
 
-    const response = await axios.delete(
-        `${API_URL}/${id}`
+    const response =
+      await axios.delete(
+
+        `${API_URL}/${id}`,
+
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`
+          }
+        }
       );
 
     return response.data;
@@ -96,6 +105,25 @@ export const updateProductService =
               `Bearer ${token}`
 
           },
+        }
+      );
+
+    return response.data;
+};
+
+export const getMyProducts =
+  async (token) => {
+
+    const response =
+      await axios.get(
+
+        `${API_URL}/mine`,
+
+        {
+          headers: {
+            Authorization:
+              `Bearer ${token}`
+          }
         }
       );
 

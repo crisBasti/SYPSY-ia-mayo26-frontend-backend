@@ -36,107 +36,69 @@ export function ProductsProvider({
   // CREAR PRODUCTO
   // =========================
 
-const addProduct = async (productData, token) => {
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${token}`
-      },
-      body: productData
-    });
+//const addProduct = async (productData, token) => {
+//  try {
+//    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
+//     method: "POST",
+//      headers: {
+//        Authorization: `Bearer ${token}`
+//      },
+//      body: productData
+//    });
 
-    const data = await res.json();
+//    const data = await res.json();
 
-    setProductos((prev) => [data, ...prev]);
+//    setProductos((prev) => [data, ...prev]);
+//
+//  } catch (error) {
+//    console.log("Error creando producto:", error);
+//  }
+//};
 
-  } catch (error) {
-    console.log("Error creando producto:", error);
-  }
-};
 
+const actualizarProducto = (
+  id,
+  productoActualizado
+) => {
 
-const actualizarProducto = async (id, productoActualizado) => {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/products/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(productoActualizado),
-      }
-    );
+  setProductos(prev =>
+    prev.map(p =>
+      p._id === id
+        ? productoActualizado
+        : p
+    )
+  );
 
-    if (!response.ok) {
-      throw new Error("Error actualizando producto");
-    }
-
-    console.log("STATUS:", res.status);
-
-    const data = await response.json();
-
-    console.log("RESPUESTA:", data);
-    
-    setProductos((prev) =>
-      prev.map((p) => (p._id === id ? data : p))
-    );
-    return data;
-  } catch (error) {
-    console.error("Error actualizando producto:", error);
-  }
 };
 
   // =========================
   // ELIMINAR PRODUCTO
   // =========================
 
-const eliminarProducto = async (id) => {
-  try {
-    const response = await fetch(
-      `${import.meta.env.VITE_API_URL}/api/products/${id}`,
-      {
-        method: "DELETE"
-      }
-    );
+const eliminarProducto = (id) => {
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.log("ERROR BACKEND:", errorData);
-      throw new Error("No se pudo eliminar");
-    }
+  setProductos(prev =>
+    prev.filter(
+      p => p._id !== id
+    )
+  );
 
-    setProductos(
-      (prev) =>
-        prev.filter(
-          (p) => p._id !== id
-        )
-    );
-
-  } catch (error) {
-    console.log(
-      "Error eliminando producto:",
-      error
-    );
-  }
 };
 
   // =========================
   // CARGAR AL INICIAR
   // =========================
 
-  useEffect(() => {
-    fetchProducts();
-  }, []);
+//  useEffect(() => {
+//    fetchProducts();
+//  }, []);
 
   return (
     <ProductsContext.Provider
       value={{
         productos,
         setProductos,
-        fetchProducts,      
-        addProduct,
+        fetchProducts,
         actualizarProducto,
         editarProducto: actualizarProducto,
         eliminarProducto

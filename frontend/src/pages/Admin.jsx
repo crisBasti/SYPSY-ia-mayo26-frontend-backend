@@ -4,13 +4,13 @@ import "../styles/admin.css";
 import ProductCard from "../components/ProductCard";
 import ProductForm from "../components/ProductForm";
 import { ProductsContext } from "../context/ProductsContext";
-import { getProducts, deleteProductService, updateProductService, createProductService } from "../services/productService";
+import { getMyProducts, deleteProductService, updateProductService, createProductService } from "../services/productService";
+import { auth } from "../firebase";
 
 function Admin() {
   const {
     productos,
     setProductos,
-    addProduct: addProductContext,
     eliminarProducto,
     editarProducto
   } = useContext(ProductsContext);
@@ -37,31 +37,58 @@ function Admin() {
   // =========================
 
   useEffect(() => {
-    loadProducts();
-  }, []);
 
-  const loadProducts = async () => {
+  if (user) {
+    loadProducts();
+  }
+
+}, [user]);
+
+console.log(user);
+
+const loadProducts = async () => {
+
     try {
-      const data =
-        await getProducts();
+
+      const token = 
+      await auth.currentUser.getIdToken();
+
+      const data = 
+      await getMyProducts(token);
+
       setProductos(data);
+
     } catch (error) {
+
       console.error(
         "Error loading products:",
         error
       );
+
+      console.log("USER:", user);
+      console.log("TOKEN:", user?.token);
+
     }
-  };
+};
 
-  // =========================
-  // ADD PRODUCT
-  // =========================
+// =========================
+// ADD PRODUCT
+// =========================
 
-  const addProduct = async (productData) => {
-    try {
-      const newProduct =
-        await createProductService(productData, user.token);
-      addProductContext(newProduct);
+const addProduct = async (productData, token) => {
+  try {
+    const newProduct =
+    await createProductService(
+      productData,
+      token
+    );
+    
+    console.log("NUEVO PRODUCTO", newProduct);
+    
+setProductos(prev => [
+  newProduct,
+  ...prev
+]);
     } catch (error) {
       console.error(
         "Error creating product:",
@@ -76,12 +103,15 @@ function Admin() {
   // =========================
 
   const deleteProduct = async (id) => {
+     const token =
+    await auth.currentUser.getIdToken();
+
     console.log("ID recibido:", id);
     const confirmar =
       window.confirm("¿Eliminar producto?");
     if (!confirmar) return;
     try {
-      await deleteProductService(id);
+      await deleteProductService( id, token );
       eliminarProducto(id);
     } catch (error) {
       console.error(
@@ -120,12 +150,15 @@ function Admin() {
   const updateProduct =
     async () => {
     try {
-      const updatedProduct =
-        await updateProductService(
-          editingId,
-          editForm,
-          user.token
-        );
+        const token =
+  await auth.currentUser.getIdToken();
+
+const updatedProduct =
+  await updateProductService(
+    editingId,
+    editForm,
+    token
+  );
       editarProducto(
         editingId,
         updatedProduct
