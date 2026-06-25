@@ -22,9 +22,6 @@ const authFirebase = async (req, res, next) => {
 
     req.user = decodedToken;
 
-    console.log("TOKEN:", token);
-    console.log("DECODED:", decodedToken);
-
     next();
 
   } catch (error) {

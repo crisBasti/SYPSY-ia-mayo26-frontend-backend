@@ -44,7 +44,7 @@ function Admin() {
 
 }, [user]);
 
-console.log(user);
+//console.log(user);
 
 const loadProducts = async () => {
 
@@ -172,7 +172,7 @@ const updatedProduct =
     }
   };
 
-  console.log("PRODUCTOS ADMIN", productos);
+//  console.log("PRODUCTOS ADMIN", productos);
 
 return (
   <div className="admin-container">

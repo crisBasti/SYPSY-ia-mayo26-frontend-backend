@@ -15,9 +15,6 @@ export const getProducts = async (req, res) => {
 export const createProduct = async (req, res) => {
   try {
 
-        console.log("BODY:", req.body);
-        console.log("FILES:", req.files);
-
     const {
       nombre,
       precio,

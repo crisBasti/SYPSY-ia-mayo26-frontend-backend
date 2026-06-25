@@ -15,7 +15,7 @@ function Navbar({
 
     const { user, logout } = useContext(AuthContext);
 
-  console.log(user);
+//  console.log(user);
 
   return (
 
