@@ -83,7 +83,7 @@ const addProduct = async (productData, token) => {
       token
     );
     
-    console.log("NUEVO PRODUCTO", newProduct);
+//    console.log("NUEVO PRODUCTO", newProduct);
     
 setProductos(prev => [
   newProduct,
@@ -106,7 +106,7 @@ setProductos(prev => [
      const token =
     await auth.currentUser.getIdToken();
 
-    console.log("ID recibido:", id);
+//    console.log("ID recibido:", id);
     const confirmar =
       window.confirm("¿Eliminar producto?");
     if (!confirmar) return;
