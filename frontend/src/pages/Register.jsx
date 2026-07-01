@@ -6,6 +6,11 @@ function Register() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+
+const [nombre, setNombre] = useState("");
+const [apellido, setApellido] = useState("");
+const [telefono, setTelefono] = useState("");
+
   const handleRegister = async (e) => {
 
     e.preventDefault();
@@ -24,11 +29,33 @@ function Register() {
 
     try {
 
-      await createUserWithEmailAndPassword(
-        auth,
-        email,
-        password
-      );
+      const userCredential =
+  await createUserWithEmailAndPassword(
+    auth,
+    email,
+    password
+  );
+
+const user =
+  userCredential.user;
+
+  await fetch(
+  "https://sypsy-ia-mayo26-frontend-backend.onrender.com/api/users",
+  {
+    method: "POST",
+    headers: {
+      "Content-Type":
+        "application/json",
+    },
+    body: JSON.stringify({
+      uid: user.uid,
+      nombre,
+      apellido,
+      email,
+      telefono,
+    }),
+  }
+);
 
       alert("Usuario creado correctamente");
 
@@ -46,6 +73,24 @@ function Register() {
         onSubmit={handleRegister}
       >
         <h2>Crear cuenta</h2>
+        <input
+          type="text"
+          placeholder="Nombre"
+          value={nombre}
+          onChange={(e) => setNombre(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Apellido"
+          value={apellido}
+          onChange={(e) => setApellido(e.target.value)}
+        />
+        <input
+          type="text"
+          placeholder="Teléfono"
+          value={telefono}
+          onChange={(e) => setTelefono(e.target.value)}
+        />
         <input
           type="email"
           placeholder="Correo"
