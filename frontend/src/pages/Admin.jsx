@@ -7,6 +7,9 @@ import { ProductsContext } from "../context/ProductsContext";
 import { getMyProducts, deleteProductService, updateProductService, createProductService } from "../services/productService";
 import { auth } from "../firebase";
 
+import { useAuth } from "../context/AuthContext";
+
+
 function Admin() {
   const {
     productos,
@@ -18,6 +21,8 @@ function Admin() {
   // =========================
   // EDIT STATE
   // =========================
+
+  const { profile } = useAuth();
 
   const [editingId, setEditingId] = useState(null);
 
@@ -176,6 +181,13 @@ const updatedProduct =
 
 return (
   <div className="admin-container">
+    <div className="admin-user-info">
+  
+  <div>
+    👤<strong>{profile?.nombre}</strong>
+    <p>{profile?.email}</p>
+  </div>
+</div>
     {/* HERO ADMIN */}
     <div className="admin-hero">
       <img

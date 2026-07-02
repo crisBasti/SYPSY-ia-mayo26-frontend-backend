@@ -4,18 +4,61 @@ import { onAuthStateChanged, signOut } from "firebase/auth";
 
 export const AuthContext = createContext();
 
+
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [profile, setProfile] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
-  setUser(currentUser);
-  setLoading(false);
-});
+useEffect(() => {
 
-    return () => unsubscribe();
-  }, []);
+  const unsubscribe = onAuthStateChanged(
+    auth,
+    async (currentUser) => {
+
+      setUser(currentUser);
+
+      if (currentUser) {
+
+        try {
+
+          const response = await fetch(
+            `https://sypsy-ia-mayo26-frontend-backend.onrender.com/api/users/${currentUser.uid}`
+          );
+
+          console.log("STATUS:", response.status);
+
+          const data = await response.json();
+
+          console.log("PROFILE:", data);
+
+          console.log("UID FIREBASE:", currentUser.uid);
+
+          setProfile(data);
+
+        } catch (error) {
+
+          console.error(
+            "Error obteniendo perfil:",
+            error
+          );
+
+        }
+
+      } else {
+
+        setProfile(null);
+
+      }
+
+      setLoading(false);
+
+    }
+  );
+
+  return () => unsubscribe();
+
+}, []);
 
   const logout = () => signOut(auth);
 
@@ -23,6 +66,7 @@ export function AuthProvider({ children }) {
     <AuthContext.Provider
       value={{
         user,
+        profile,
         logout,
         loading
       }}
