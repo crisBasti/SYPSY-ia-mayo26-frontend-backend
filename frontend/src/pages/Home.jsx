@@ -156,18 +156,29 @@ const prevImage = (productId, total) => {
                 ${product.precio}
               </span>
 
+               
               {console.log(product.vendedor)}
               {/* WHATSAPP */}
               <a
                 className="contact-btn"
-                href={`https://wa.me/${product.vendedor?.phone || "5491164521118"}`}
-                target="_blank"
-                rel="noreferrer"
+                href={`https://wa.me/54${product.vendedor?.telefono}?text=${encodeURIComponent(
+                `Hola ${product.vendedor?.name} 👋
+
+                Estoy interesado en este producto de SYPSY:
+
+                📦 Producto: ${product.nombre}
+                💰 Precio: $${product.precio}
+
+                ¿Sigue disponible?`
+              )}`}
+              
+              target="_blank"
+              rel="noreferrer"
               >
-                <>
-                   <FaWhatsapp />
-                    Contactar vendedor
-                </>
+              <>
+              <FaWhatsapp />
+                Contactar vendedor
+              </>
               </a>
 
               {/* VER PRODUCTO */}
