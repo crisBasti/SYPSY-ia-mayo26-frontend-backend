@@ -31,10 +31,18 @@ const seller = sellerProducts[0]?.vendedor;
 
         <h1>👤 {seller?.name || "Vendedor"}</h1>
         <p>{seller?.email}</p>
-
         <p>
           ID: {id}
         </p>
+        <p>
+  <a
+    href="https://www.sypsy.com.ar"
+    target="_blank"
+    rel="noreferrer"
+  >
+    🌐 www.sypsy.com.ar
+  </a>
+</p>
 
       </div>
 
@@ -67,13 +75,24 @@ const seller = sellerProducts[0]?.vendedor;
 
               {/* WHATSAPP */}
               <a
-                className="contact-btn"
-                href={`https://wa.me/1164521118`}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Contactar vendedor
-              </a>
+  className="contact-btn"
+  href={`https://wa.me/54${seller?.telefono}?text=${encodeURIComponent(
+    `Hola ${seller?.name} 👋
+
+Vi este producto en SYPSY:
+
+📦 ${product.nombre}
+💰 $${product.precio}
+
+🌐 https://www.sypsy.com.ar
+
+¿Sigue disponible?`
+  )}`}
+  target="_blank"
+  rel="noreferrer"
+>
+  Contactar vendedor
+</a>
 
             </div>
           </div>
