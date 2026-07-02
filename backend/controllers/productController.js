@@ -1,4 +1,5 @@
 import Product from "../models/Product.js";
+import User from "../models/User.js";
 
 export const getProducts = async (req, res) => {
   try {
@@ -23,6 +24,16 @@ export const createProduct = async (req, res) => {
       stock,
 } = req.body;
 
+const usuario = await User.findOne({
+  uid: req.user.uid,
+});
+
+if (!usuario) {
+  return res.status(404).json({
+    message: "Usuario no encontrado",
+  });
+}
+
 
 
 const newProduct = new Product({
@@ -33,9 +44,10 @@ const newProduct = new Product({
   stock: stock || 0,
 
 vendedor: {
-  uid: req.user.uid,
-  email: req.user.email || "",
-  name: req.user.name || "Usuario"
+  uid: usuario.uid,
+  email: usuario.email,
+  name: `${usuario.nombre} ${usuario.apellido}`,
+  telefono: usuario.telefono
 },
 
   images: req.files?.map(file => file.path) || []

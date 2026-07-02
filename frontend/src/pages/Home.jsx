@@ -156,6 +156,7 @@ const prevImage = (productId, total) => {
                 ${product.precio}
               </span>
 
+              {console.log(product.vendedor)}
               {/* WHATSAPP */}
               <a
                 className="contact-btn"

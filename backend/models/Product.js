@@ -14,7 +14,8 @@ const productSchema = new mongoose.Schema(
     vendedor: {
   uid: { type: String, required: true },
   email: { type: String },
-  name: { type: String }
+  name: { type: String },
+  telefono: { type: String }
 }
   },
   { timestamps: true }
