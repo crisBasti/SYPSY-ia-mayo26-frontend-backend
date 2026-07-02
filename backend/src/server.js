@@ -17,6 +17,8 @@ app.use(
     origin: [
       "https://sypsy-ia-mayo26-frontend-backend.vercel.app",
       "http://localhost:5173",
+      "https://www.sypsy.com.ar",
+      "https://sypsy.com.ar",
     ],
     methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
