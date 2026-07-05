@@ -1,6 +1,10 @@
 import { useState } from "react";
-import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
+import {
+  createUserWithEmailAndPassword,
+  updateProfile,
+  sendEmailVerification
+} from "firebase/auth";
 
 function Register() {
 
@@ -39,6 +43,14 @@ const [telefono, setTelefono] = useState("");
 const user =
   userCredential.user;
 
+await updateProfile(user, {
+  displayName: `${nombre} ${apellido}`,
+});
+
+await sendEmailVerification(user);
+
+await auth.signOut();
+
   await fetch(
   "https://sypsy-ia-mayo26-frontend-backend.onrender.com/api/users",
   {
@@ -57,7 +69,10 @@ const user =
   }
 );
 
-      alert("Usuario creado correctamente");
+      alert(
+            "Cuenta creada correctamente. Revisá tu correo y verificá tu email antes de iniciar sesión."
+      );
+      
 
     } catch (error) {
 

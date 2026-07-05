@@ -1,156 +1,126 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import logo from "../assets/logo.png";
 import "../styles/navbar.css";
-import { useContext } from "react";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
-function Navbar({
-  search,
-  setSearch
-}) {
+function Navbar({ search, setSearch }) {
+  const [menuOpen, setMenuOpen] = useState(false);
 
-  const [menuOpen, setMenuOpen] =
-    useState(false);
-
-    const { user, logout } = useContext(AuthContext);
-
-//  console.log(user);
+  const { user, logout } = useContext(AuthContext);
+  console.log(user);
 
   return (
-
     <>
+      {/* NAV SUPERIOR */}
       <nav className="navbar">
+
         <div className="navbar-logo">
           <img
             src={logo}
             alt="SYPSY Logo"
             className="logo-img"
           />
+
           <span>
             LO QUE QUERES YA!
           </span>
-        </div>
-        <div className="auth-section">
-
-  {user ? (
-    <>
-      <span>
-        {user.email}
-      </span>
-
-      <button onClick={logout}>
-        Cerrar sesión
-      </button>
-    </>
-  ) : (
-
-    <>
-      <Link to="/login">
-        Login
-      </Link>
-
-      <Link to="/register">
-        Registro
-      </Link>
-
-    </>
-  )} <br />
-
-</div>
-        <div
-          className={`navbar-links ${
-            menuOpen
-              ? "active"
-              : ""
-          }`}
-        >
-
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-
-          {user && (
-           <li>
-            <Link to="/admin">
-              Admin
-            </Link>
-           </li>
-          )}
-
-          <li>
-           <Link to="/categoria/Electro">
-              Electro
-            </Link>
-          </li>
-
-          <li>
-           <Link to="/categoria/Indumentaria">
-             Indumentaria
-           </Link>
-          </li>
-
-          <li>
-           <Link to="/categoria/Servicios">
-             Servicios
-           </Link>
-          </li>
-
-          <li>
-           <Link to="/categoria/Varios">
-             Varios
-           </Link>
-          </li>
-
         </div>
 
         <div className="navbar-search">
           <input
             type="text"
-            placeholder="Buscar productos..."
+            placeholder="🔍 Buscar productos..."
             value={search}
-
             onChange={(e) =>
-              setSearch(
-                e.target.value
-              )
+              setSearch(e.target.value)
             }
           />
         </div>
 
+        <div className="auth-section">
+          {user ? (
+            <>
+              <span className="user-name">
+                👋 {user.displayName || "Usuario"}
+              </span>
+
+              <button onClick={logout}>
+                Salir
+              </button>
+            </>
+          ) : (
+            <>
+              <Link to="/login">
+                Login
+              </Link>
+
+              <Link to="/register">
+                Registro
+              </Link>
+            </>
+          )}
+        </div>
+
         <button
           className="menu-btn"
-
           onClick={() =>
-            setMenuOpen(
-              !menuOpen
-            )
+            setMenuOpen(!menuOpen)
           }
         >
-
           ☰
-
         </button>
 
-
       </nav>
+
+      {/* BARRA DE CATEGORÍAS */}
+      <div
+        className={`categories-bar ${
+          menuOpen ? "active" : ""
+        }`}
+      >
+        <Link to="/">🏠 Home</Link>
+
+        <Link to="/categoria/Indumentaria">
+          👕 Indumentaria
+        </Link>
+
+        <Link to="/categoria/Electro">
+          📺 Electro
+        </Link>
+
+        <Link to="/categoria/Servicios">
+          🔧 Servicios
+        </Link>
+
+        <Link to="/categoria/Varios">
+          📦 Varios
+        </Link>
+
+        {user && (
+          <Link to="/admin">
+            ⚙️ Admin
+          </Link>
+        )}
+      </div>
+
+      {/* HERO */}
       <section className="hero">
         <div className="hero-content">
 
           <h2>
-            Comprá rápido,
-            simple y seguro
+            Comprá rápido, simple y seguro
           </h2>
 
           <p>
-            Productos,
-            servicios y soluciones
+            Productos, servicios y soluciones
             en un solo lugar.
           </p>
 
           <button>
             Explorar ahora
           </button>
+
         </div>
       </section>
     </>

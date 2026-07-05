@@ -30,7 +30,7 @@ const handleSubmit = async (e) => {
     !formData.descripcion.trim() || 
     !formData.precio ||
     Number(formData.precio) <= 0 ||
-    !formData.categoria.trim()
+    !formData.categoria
   ) {
     alert(
       "Completa correctamente todos los campos"
@@ -87,7 +87,8 @@ const handleSubmit = async (e) => {
     nombre: "",
     descripcion: "",
     precio: "",
-    categoria: ""
+    categoria: "",
+    images: []
   });
 };
 
@@ -126,14 +127,32 @@ const handleSubmit = async (e) => {
         onChange={handleChange}
       />
 
-      <input
-        style={styles.input}
-        type="text"
-        name="categoria"
-        placeholder="Categoría"
-        value={formData.categoria}
-        onChange={handleChange}
-      />
+      <select
+  style={styles.input}
+  name="categoria"
+  value={formData.categoria}
+  onChange={handleChange}
+>
+  <option value="">
+    Seleccionar categoría
+  </option>
+
+  <option value="Indumentaria">
+    👕 Indumentaria
+  </option>
+
+  <option value="Electro">
+    📺 Electro
+  </option>
+
+  <option value="Servicios">
+    🔧 Servicios
+  </option>
+
+  <option value="Varios">
+    📦 Varios
+  </option>
+</select>
 
       <input
         type="file"

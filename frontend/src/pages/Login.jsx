@@ -7,22 +7,44 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const handleLogin = async (e) => {
+const handleLogin = async (e) => {
 
-    e.preventDefault();
+  e.preventDefault();
 
-    try {
+  try {
+
+    const userCredential =
       await signInWithEmailAndPassword(
         auth,
         email,
         password
       );
-      alert("Sesión iniciada");
-    } catch (error) {
-      console.log(error);
-      alert("Error al iniciar sesión");
+
+    const user =
+      userCredential.user;
+
+    if (!user.emailVerified) {
+
+      alert(
+        "Debes verificar tu correo electrónico antes de ingresar."
+      );
+
+      await auth.signOut();
+
+      return;
     }
-  };
+
+    alert("Sesión iniciada");
+
+  } catch (error) {
+
+    console.log(error);
+
+    alert(
+      "Correo o contraseña incorrectos."
+    );
+  }
+};
 
   return (
     <div className="auth-container">

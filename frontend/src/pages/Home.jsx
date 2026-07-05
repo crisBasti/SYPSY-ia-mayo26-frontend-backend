@@ -164,12 +164,14 @@ const prevImage = (productId, total) => {
                 href={`https://wa.me/54${product.vendedor?.telefono}?text=${encodeURIComponent(
                 `Hola ${product.vendedor?.name} 👋
 
-                Estoy interesado en este producto de SYPSY:
+Estoy interesado en este producto de SYPSY:
 
-                📦 Producto: ${product.nombre}
-                💰 Precio: $${product.precio}
+ 📦 Producto: ${product.nombre}
+ 💰 Precio: $${product.precio}
 
-                ¿Sigue disponible?`
+ 🌐 https://www.sypsy.com.ar
+
+ ¿Sigue disponible?`
               )}`}
               
               target="_blank"
