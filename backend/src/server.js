@@ -46,19 +46,19 @@ app.get("/sitemap.xml", async (req, res) => {
     const urls = [];
 
     urls.push(`
-      <url>
-        <loc>https://www.sypsy.com.ar/</loc>
-      </url>
-    `);
+  <url>
+    <loc>https://www.sypsy.com.ar/</loc>
+    <priority>1.0</priority>
+  </url>
+`);
 
     const categorias = [
-      "Electro",
-      "Servicios",
-      "Hogar",
-      "Tecnologia",
-      "Vehiculos",
-      "Moda"
-    ];
+  ...new Set(
+    products
+      .map(p => p.categoria)
+      .filter(Boolean)
+  )
+];
 
     categorias.forEach(cat => {
       urls.push(`
@@ -73,17 +73,12 @@ app.get("/sitemap.xml", async (req, res) => {
     products.forEach(product => {
 
       urls.push(`
-        <url>
-          <loc>
-            https://www.sypsy.com.ar/producto/${product._id}
-          </loc>
-          <lastmod>
-            ${new Date(
-              product.updatedAt || Date.now()
-            ).toISOString()}
-          </lastmod>
-        </url>
-      `);
+  <url>
+    <loc>https://www.sypsy.com.ar/producto/${product._id}</loc>
+    <lastmod>${new Date(product.updatedAt).toISOString()}</lastmod>
+    <priority>0.8</priority>
+  </url>
+`);
 
     });
 
