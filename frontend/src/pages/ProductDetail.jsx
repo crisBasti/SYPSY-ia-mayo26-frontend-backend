@@ -3,10 +3,15 @@ import { useParams } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
 import { Helmet } from "react-helmet-async";
 import { FaWhatsapp } from "react-icons/fa";
+import { slugify } from "../utils/slugify";
 
 function ProductDetail() {
 
   const { id } = useParams();
+
+  const realId = id.includes("-")
+  ? id.split("-").pop()
+  : id;
 
   const {
     productos,
@@ -19,12 +24,15 @@ function ProductDetail() {
     }
   }, []);
 
-  const producto = productos.find(
-    (p) => p._id === id
-  );
+ const producto = productos.find(
+  (p) => p._id === realId
+);
 
-  const productUrl =
-  `https://www.sypsy.com.ar/producto/${producto?._id}`;
+  const productUrl = producto
+  ? `https://www.sypsy.com.ar/producto/${slugify(
+      producto.nombre
+    )}-${producto._id}`
+  : "";
 
 const productImage =
   producto?.images?.[0] ||
@@ -171,7 +179,7 @@ Estoy interesado en este producto:
 
 💰 $${producto.precio}
 
-🌐 https://www.sypsy.com.ar/producto/${producto._id}`
+🌐 https://www.sypsy.com.ar/producto/${slugify(producto.nombre)}-${producto._id}`
           )}`}
           target="_blank"
           rel="noreferrer"

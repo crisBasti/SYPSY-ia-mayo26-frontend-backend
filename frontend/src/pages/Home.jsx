@@ -4,6 +4,7 @@ import SellerBadge from "../components/SellerBadge";
 import { Link } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
+import { slugify } from "../utils/slugify";
 
 
 function Home({ search }) {
@@ -226,10 +227,10 @@ Estoy interesado en este producto de SYPSY:
 
               {/* VER PRODUCTO */}
               <Link
-                to={`/producto/${product._id}`}
+                to={`/producto/${slugify(product.nombre)}-${product._id}`}
                 className="view-btn"
               >
-                Ver producto
+              Ver producto
               </Link>
 
             </div>

@@ -11,6 +11,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProductsProvider } from "./context/ProductsContext";
 import { HelmetProvider } from "react-helmet-async";
 import ProductDetail from "./pages/ProductDetail";
+import NotFound from "./pages/NotFound";
 
 function App() {
 
@@ -70,6 +71,8 @@ function App() {
             path="/register"
             element={<Register />}
           />
+
+          <Route path="*" element={<NotFound />} />
 
         </Routes>
 
