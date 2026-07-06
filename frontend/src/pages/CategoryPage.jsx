@@ -1,10 +1,14 @@
 import { useContext } from "react";
 import { useParams } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
+import { Helmet } from "react-helmet-async";
 
 function CategoryPage() {
 
   const { categoria } = useParams();
+
+  const descripcionCategoria =
+  `Explorá productos y servicios de ${categoria} en SYPSY. Comprá y vendé con vendedores verificados y contacto directo.`;
 
   const { productos } =
     useContext(ProductsContext);
@@ -16,7 +20,41 @@ function CategoryPage() {
         categoria.toLowerCase()
     );
 
-  return (
+return (
+  <>
+    <Helmet>
+
+      <title>
+        {categoria} | SYPSY Marketplace
+      </title>
+
+      <meta
+        name="description"
+        content={descripcionCategoria}
+      />
+
+      <meta
+        property="og:title"
+        content={`${categoria} | SYPSY Marketplace`}
+      />
+
+      <meta
+        property="og:description"
+        content={descripcionCategoria}
+      />
+
+      <meta
+        property="og:url"
+        content={`https://www.sypsy.com.ar/categoria/${categoria}`}
+      />
+
+      <meta
+        property="og:type"
+        content="website"
+      />
+
+    </Helmet>
+
     <div className="home-container">
 
       <h1 className="category-title">
@@ -65,6 +103,7 @@ function CategoryPage() {
       </div>
 
     </div>
+     </>
   );
 }
 

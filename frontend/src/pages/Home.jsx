@@ -3,6 +3,8 @@ import { ProductsContext } from "../context/ProductsContext";
 import SellerBadge from "../components/SellerBadge";
 import { Link } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
+import { Helmet } from "react-helmet-async";
+
 
 function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
@@ -50,7 +52,47 @@ const prevImage = (productId, total) => {
         product.categoria === categoriaActiva);
   });
 
-  return (
+
+    return (
+  <>
+    <Helmet>
+
+      <title>
+        SYPSY | Marketplace de productos y servicios en Argentina
+      </title>
+
+      <meta
+        name="description"
+        content="Comprá y vendé productos, servicios y oportunidades en SYPSY. Marketplace argentino con vendedores verificados y contacto directo por WhatsApp."
+      />
+
+      <meta
+        name="keywords"
+        content="marketplace, ecommerce, argentina, comprar, vender, productos, servicios, whatsapp, sypsy"
+      />
+
+      <meta
+        property="og:title"
+        content="SYPSY | Marketplace de productos y servicios"
+      />
+
+      <meta
+        property="og:description"
+        content="Comprá y vendé productos y servicios con contacto directo por WhatsApp."
+      />
+
+      <meta
+        property="og:url"
+        content="https://www.sypsy.com.ar"
+      />
+
+      <meta
+        property="og:type"
+        content="website"
+      />
+
+    </Helmet>
+
     <div className="products-container">
 
       <div className="section-title">
@@ -157,7 +199,6 @@ const prevImage = (productId, total) => {
               </span>
 
                
-              {console.log(product.vendedor)}
               {/* WHATSAPP */}
               <a
                 className="contact-btn"
@@ -184,12 +225,12 @@ Estoy interesado en este producto de SYPSY:
               </a>
 
               {/* VER PRODUCTO */}
-              <button
+              <Link
+                to={`/producto/${product._id}`}
                 className="view-btn"
-                onClick={() => setSelectedProduct(product)}
               >
                 Ver producto
-              </button>
+              </Link>
 
             </div>
           </div>
@@ -255,6 +296,7 @@ Estoy interesado en este producto de SYPSY:
       )}
 
     </div>
+    </>
   );
 }
 

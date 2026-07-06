@@ -9,20 +9,25 @@ import Navbar from "./components/Navbar";
 import SellerProfile from "./pages/SellerProfile";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { ProductsProvider } from "./context/ProductsContext";
+import { HelmetProvider } from "react-helmet-async";
+import ProductDetail from "./pages/ProductDetail";
 
 function App() {
 
   const [search, setSearch] = useState("");
 
   return (
+  <HelmetProvider>
     <ProductsProvider>
       <BrowserRouter>
+
         <Navbar
           search={search}
-
           setSearch={setSearch}
         />
+
         <Routes>
+
           <Route
             path="/"
             element={
@@ -31,10 +36,17 @@ function App() {
               />
             }
           />
+
           <Route
-           path="/categoria/:categoria"
-           element={<CategoryPage />}
+            path="/categoria/:categoria"
+            element={<CategoryPage />}
           />
+
+          <Route
+            path="/producto/:id"
+            element={<ProductDetail />}
+          />
+
           <Route
             path="/admin"
             element={
@@ -43,22 +55,28 @@ function App() {
               </ProtectedRoute>
             }
           />
+
           <Route
             path="/seller/:id"
             element={<SellerProfile />}
           />
+
           <Route
-           path="/login"
-           element={<Login />}
+            path="/login"
+            element={<Login />}
           />
+
           <Route
-           path="/register"
-           element={<Register />}
+            path="/register"
+            element={<Register />}
           />
+
         </Routes>
+
       </BrowserRouter>
     </ProductsProvider>
-  );
+  </HelmetProvider>
+);
 }
 
 export default App;
