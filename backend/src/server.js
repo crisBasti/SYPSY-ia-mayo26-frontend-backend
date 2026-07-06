@@ -7,6 +7,7 @@ import cors from "cors";
 import connectDB from "../config/db.js";
 import productRoutes from "../routes/productRoutes.js";
 import userRoutes from "../routes/userRoutes.js";
+import Product from "../models/Product.js";
 
 connectDB();
 
@@ -34,6 +35,82 @@ app.get("/", (req, res) => {
   res.json({
     mensaje: "Servidor SYPSY funcionando 🚀",
   });
+});
+
+app.get("/sitemap.xml", async (req, res) => {
+  try {
+
+    const products = await Product.find()
+      .select("_id categoria updatedAt");
+
+    const urls = [];
+
+    urls.push(`
+      <url>
+        <loc>https://www.sypsy.com.ar/</loc>
+      </url>
+    `);
+
+    const categorias = [
+      "Electro",
+      "Servicios",
+      "Hogar",
+      "Tecnologia",
+      "Vehiculos",
+      "Moda"
+    ];
+
+    categorias.forEach(cat => {
+      urls.push(`
+        <url>
+          <loc>
+            https://www.sypsy.com.ar/categoria/${encodeURIComponent(cat)}
+          </loc>
+        </url>
+      `);
+    });
+
+    products.forEach(product => {
+
+      urls.push(`
+        <url>
+          <loc>
+            https://www.sypsy.com.ar/producto/${product._id}
+          </loc>
+          <lastmod>
+            ${new Date(
+              product.updatedAt || Date.now()
+            ).toISOString()}
+          </lastmod>
+        </url>
+      `);
+
+    });
+
+    const sitemap = `<?xml version="1.0" encoding="UTF-8"?>
+
+<urlset
+xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+
+${urls.join("")}
+
+</urlset>`;
+
+    res.header(
+      "Content-Type",
+      "application/xml"
+    );
+
+    res.send(sitemap);
+
+  } catch (error) {
+
+    console.error(error);
+
+    res.status(500).send(
+      "Error generando sitemap"
+    );
+  }
 });
 
 const PORT = process.env.PORT || 3000;
