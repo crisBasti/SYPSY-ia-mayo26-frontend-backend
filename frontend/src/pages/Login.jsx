@@ -20,8 +20,9 @@ const handleLogin = async (e) => {
         password
       );
 
-    const user =
-      userCredential.user;
+    const user = userCredential.user;
+
+    await user.reload();
 
     if (!user.emailVerified) {
 
