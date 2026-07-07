@@ -203,7 +203,6 @@ const prevImage = (productId, total) => {
               {/* WHATSAPP */}
               <a
                 className="contact-btn"
-                onClick={handleWhatsappClick}
                 href={`https://wa.me/54${product.vendedor?.telefono}?text=${encodeURIComponent(
                 `Hola ${product.vendedor?.name} 👋
 
