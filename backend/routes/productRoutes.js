@@ -7,11 +7,15 @@ import {
   getMyProducts,
   createProduct,
   deleteProduct,
-  updateProduct
+  updateProduct,
+  incrementView,
+  incrementWhatsappClick
 } from "../controllers/productController.js";
 
 const router = express.Router();
 router.get("/", getProducts);
+router.post("/:id/view", incrementView);
+router.post("/:id/whatsapp", incrementWhatsappClick);
 router.get( "/mine", authFirebase, getMyProducts );
 router.post("/", authFirebase, upload.array("images", 5), createProduct);
 router.put("/:id", authFirebase, updateProduct);

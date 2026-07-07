@@ -180,3 +180,58 @@ export const getMyProducts = async (
 
   }
 };
+
+export const incrementView = async (
+  req,
+  res
+) => {
+  try {
+
+    await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        $inc: {
+          views: 1
+        }
+      }
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+};
+
+export const incrementWhatsappClick =
+  async (req, res) => {
+
+  try {
+
+    await Product.findByIdAndUpdate(
+      req.params.id,
+      {
+        $inc: {
+          whatsappClicks: 1
+        }
+      }
+    );
+
+    res.json({
+      success: true
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+};
