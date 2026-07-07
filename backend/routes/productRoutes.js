@@ -5,6 +5,7 @@ import authFirebase from "../middleware/authFirebase.js";
 import {
   getProducts,
   getMyProducts,
+  getMyStats,
   createProduct,
   deleteProduct,
   updateProduct,
@@ -16,6 +17,7 @@ const router = express.Router();
 router.get("/", getProducts);
 router.post("/:id/view", incrementView);
 router.post("/:id/whatsapp", incrementWhatsappClick);
+router.get("/stats", authFirebase, getMyStats);
 router.get( "/mine", authFirebase, getMyProducts );
 router.post("/", authFirebase, upload.array("images", 5), createProduct);
 router.put("/:id", authFirebase, updateProduct);

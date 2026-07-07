@@ -235,3 +235,49 @@ export const incrementWhatsappClick =
 
   }
 };
+
+export const getMyStats = async (req, res) => {
+  try {
+
+    const products = await Product.find({
+      "vendedor.uid": req.user.uid
+    });
+
+    const totalProducts = products.length;
+
+    const totalViews = products.reduce(
+      (acc, product) => acc + (product.views || 0),
+      0
+    );
+
+    const totalWhatsappClicks = products.reduce(
+      (acc, product) => acc + (product.whatsappClicks || 0),
+      0
+    );
+
+    const conversionRate =
+      totalViews === 0
+        ? 0
+        : Number(
+            (
+              (totalWhatsappClicks / totalViews) *
+              100
+            ).toFixed(2)
+          );
+
+    res.json({
+      totalProducts,
+      totalViews,
+      totalWhatsappClicks,
+      conversionRate,
+      products
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+      message: error.message
+    });
+
+  }
+};
