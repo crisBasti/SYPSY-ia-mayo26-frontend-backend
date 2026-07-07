@@ -1,17 +1,21 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useRef } from "react";
 import { useParams } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
 import { Helmet } from "react-helmet-async";
 import { FaWhatsapp } from "react-icons/fa";
 import { slugify } from "../utils/slugify";
+import { incrementViewService, incrementWhatsappService } from "../services/productService";
 
 function ProductDetail() {
 
+  
   const { id } = useParams();
-
+  
   const realId = id.includes("-")
   ? id.split("-").pop()
   : id;
+  
+  const viewRegistered = useRef(false);
 
   const {
     productos,
@@ -27,6 +31,21 @@ function ProductDetail() {
  const producto = productos.find(
   (p) => p._id === realId
 );
+
+useEffect(() => {
+
+  if (!producto) return;
+
+  if (viewRegistered.current) return;
+
+  viewRegistered.current = true;
+
+  incrementViewService(
+    producto._id
+  ).catch(console.error);
+
+}, [producto]);
+
 
   const productUrl = producto
   ? `https://www.sypsy.com.ar/producto/${slugify(
@@ -69,6 +88,23 @@ if (!producto) {
     </h2>
   );
 }
+
+const handleWhatsappClick =
+  async () => {
+
+    try {
+
+      await incrementWhatsappService(
+        producto._id
+      );
+
+    } catch (error) {
+
+      console.error(error);
+
+    }
+
+};
 
   return (
     <>
@@ -170,6 +206,7 @@ if (!producto) {
 
         <a
           className="contact-btn"
+          onClick={handleWhatsappClick}
           href={`https://wa.me/54${producto.vendedor?.telefono}?text=${encodeURIComponent(
             `Hola ${producto.vendedor?.name} 👋
 

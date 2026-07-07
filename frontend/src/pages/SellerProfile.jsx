@@ -76,6 +76,7 @@ const seller = sellerProducts[0]?.vendedor;
               {/* WHATSAPP */}
               <a
   className="contact-btn"
+  onClick={handleWhatsappClick}
   href={`https://wa.me/54${seller?.telefono}?text=${encodeURIComponent(
     `Hola ${seller?.name} 👋
 

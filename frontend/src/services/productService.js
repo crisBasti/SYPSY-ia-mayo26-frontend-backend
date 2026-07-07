@@ -126,3 +126,21 @@ export const getMyProducts =
 
     return response.data;
 };
+
+export const incrementViewService =
+  async (id) => {
+
+    await axios.post(
+      `${API_URL}/${id}/view`
+    );
+
+};
+
+export const incrementWhatsappService =
+  async (id) => {
+
+    await axios.post(
+      `${API_URL}/${id}/whatsapp`
+    );
+
+};
