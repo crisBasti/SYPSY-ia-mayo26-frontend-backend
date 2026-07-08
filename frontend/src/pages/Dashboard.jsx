@@ -5,6 +5,7 @@ import { getMyStats } from "../services/productService";
 
 import StatCard from "../components/dashboard/StatCard";
 import ProductsTable from "../components/dashboard/ProductsTable";
+import ProductsChart from "../components/dashboard/ProductsChart";
 
 function Dashboard() {
 
@@ -131,6 +132,20 @@ function Dashboard() {
                 Mis productos
 
             </h2>
+
+            <ProductsChart
+              products={stats.products}
+              dataKey="views"
+              title="👁 Visualizaciones por producto"
+              color="#2563eb"
+            />
+
+            <ProductsChart
+              products={stats.products}
+              dataKey="whatsappClicks"
+              title="📲 Consultas por WhatsApp"
+              color="#22c55e"
+            />
 
             <ProductsTable
                 products={stats.products}
