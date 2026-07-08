@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { FaWhatsapp } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import { slugify } from "../utils/slugify";
+import { incrementWhatsappService } from "../services/productService";
 
 
 function Home({ search }) {
@@ -14,6 +15,20 @@ function Home({ search }) {
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [imgIndex, setImgIndex] = useState({});
+  const handleWhatsappClick = async (productId) => {
+
+  try {
+
+    await incrementWhatsappService(productId);
+
+  } catch (error) {
+
+    console.error(error);
+
+  }
+
+};
+
   const nextImage = (productId, total) => {
   setImgIndex((prev) => ({
     ...prev,
@@ -203,6 +218,7 @@ const prevImage = (productId, total) => {
               {/* WHATSAPP */}
               <a
                 className="contact-btn"
+                onClick={() => handleWhatsappClick(product._id)}
                 href={`https://wa.me/54${product.vendedor?.telefono}?text=${encodeURIComponent(
                 `Hola ${product.vendedor?.name} 👋
 

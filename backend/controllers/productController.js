@@ -1,5 +1,6 @@
 import Product from "../models/Product.js";
 import User from "../models/User.js";
+import Analytics from "../models/Analytics.js";
 
 export const getProducts = async (req, res) => {
   try {
@@ -185,7 +186,19 @@ export const incrementView = async (
   req,
   res
 ) => {
+
   try {
+
+    const product =
+      await Product.findById(req.params.id);
+
+    if (!product) {
+
+      return res.status(404).json({
+        message: "Producto no encontrado"
+      });
+
+    }
 
     await Product.findByIdAndUpdate(
       req.params.id,
@@ -196,6 +209,16 @@ export const incrementView = async (
       }
     );
 
+    await Analytics.create({
+
+      productId: product._id,
+
+      sellerUid: product.vendedor.uid,
+
+      type: "view"
+
+    });
+
     res.json({
       success: true
     });
@@ -207,6 +230,7 @@ export const incrementView = async (
     });
 
   }
+
 };
 
 export const incrementWhatsappClick =
@@ -214,26 +238,57 @@ export const incrementWhatsappClick =
 
   try {
 
+    const product =
+      await Product.findById(req.params.id);
+
+    if (!product) {
+
+      return res.status(404).json({
+        message: "Producto no encontrado"
+      });
+
+    }
+
     await Product.findByIdAndUpdate(
+
       req.params.id,
+
       {
+
         $inc: {
           whatsappClicks: 1
         }
+
       }
+
     );
 
+    await Analytics.create({
+
+      productId: product._id,
+
+      sellerUid: product.vendedor.uid,
+
+      type: "whatsapp"
+
+    });
+
     res.json({
+
       success: true
+
     });
 
   } catch (error) {
 
     res.status(500).json({
+
       message: error.message
+
     });
 
   }
+
 };
 
 export const getMyStats = async (req, res) => {
