@@ -127,21 +127,69 @@ export const getMyProducts =
     return response.data;
 };
 
-export const incrementViewService =
-  async (id) => {
+export const incrementViewService = async (
 
-    await axios.post(
-      `${API_URL}/${id}/view`
-    );
+  id,
+
+  source = "unknown",
+
+  search = ""
+
+) => {
+
+  const device =
+    window.innerWidth < 768
+      ? "mobile"
+      : "desktop";
+
+  await axios.post(
+
+    `${API_URL}/${id}/view`,
+
+    {
+
+      source,
+
+      search,
+
+      device
+
+    }
+
+  );
 
 };
 
-export const incrementWhatsappService =
-  async (id) => {
+export const incrementWhatsappService = async (
 
-    await axios.post(
-      `${API_URL}/${id}/whatsapp`
-    );
+  id,
+
+  source = "unknown",
+
+  search = ""
+
+) => {
+
+  const device =
+    window.innerWidth < 768
+      ? "mobile"
+      : "desktop";
+
+  await axios.post(
+
+    `${API_URL}/${id}/whatsapp`,
+
+    {
+
+      source,
+
+      search,
+
+      device
+
+    }
+
+  );
 
 };
 

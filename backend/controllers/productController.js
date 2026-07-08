@@ -211,13 +211,19 @@ export const incrementView = async (
 
     await Analytics.create({
 
-      productId: product._id,
+  productId: product._id,
 
-      sellerUid: product.vendedor.uid,
+  sellerUid: product.vendedor.uid,
 
-      type: "view"
+  type: "view",
 
-    });
+  source: req.body.source || "unknown",
+
+  search: req.body.search || "",
+
+  device: req.body.device || "desktop"
+
+});
 
     res.json({
       success: true
@@ -265,13 +271,19 @@ export const incrementWhatsappClick =
 
     await Analytics.create({
 
-      productId: product._id,
+  productId: product._id,
 
-      sellerUid: product.vendedor.uid,
+  sellerUid: product.vendedor.uid,
 
-      type: "whatsapp"
+  type: "whatsapp",
 
-    });
+  source: req.body.source || "unknown",
+
+  search: req.body.search || "",
+
+  device: req.body.device || "desktop"
+
+});
 
     res.json({
 

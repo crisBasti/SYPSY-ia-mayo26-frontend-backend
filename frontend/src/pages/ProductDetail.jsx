@@ -41,7 +41,8 @@ useEffect(() => {
   viewRegistered.current = true;
 
   incrementViewService(
-    producto._id
+    producto._id,
+    "product"
   ).catch(console.error);
 
 }, [producto]);
@@ -95,7 +96,8 @@ const handleWhatsappClick =
     try {
 
       await incrementWhatsappService(
-        producto._id
+        producto._id,
+        "product"
       );
 
     } catch (error) {

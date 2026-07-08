@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const analyticsSchema = new mongoose.Schema(
 
 {
+
     productId: {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Product",
@@ -18,6 +19,21 @@ const analyticsSchema = new mongoose.Schema(
         type: String,
         enum: ["view", "whatsapp"],
         required: true
+    },
+
+    source: {
+        type: String,
+        default: "unknown"
+    },
+
+    search: {
+        type: String,
+        default: ""
+    },
+
+    device: {
+        type: String,
+        default: "desktop"
     }
 
 },
