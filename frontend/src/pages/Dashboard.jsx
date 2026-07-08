@@ -92,6 +92,40 @@ function Dashboard() {
 
             </div>
 
+            <div className="dashboard-highlights">
+
+    <h2>📌 Resumen</h2>
+
+    <p>
+        🔥 Producto más visto:
+        <strong>
+            {" "}
+            {stats.mostViewedProduct
+                ? stats.mostViewedProduct.nombre
+                : "Sin datos"}
+        </strong>
+    </p>
+
+    <p>
+        📲 Producto más consultado:
+        <strong>
+            {" "}
+            {stats.mostWhatsappProduct
+                ? stats.mostWhatsappProduct.nombre
+                : "Sin datos"}
+        </strong>
+    </p>
+
+    <p>
+        👁 Promedio de vistas por producto:
+        <strong>
+            {" "}
+            {stats.averageViews}
+        </strong>
+    </p>
+
+</div>
+
             <h2>
 
                 Mis productos
