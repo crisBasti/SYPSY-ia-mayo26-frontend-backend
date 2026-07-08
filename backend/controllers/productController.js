@@ -237,6 +237,7 @@ export const incrementWhatsappClick =
 };
 
 export const getMyStats = async (req, res) => {
+
   try {
 
     const products = await Product.find({
@@ -260,9 +261,58 @@ export const getMyStats = async (req, res) => {
         ? 0
         : Number(
             (
-              (totalWhatsappClicks / totalViews) *
+              totalWhatsappClicks /
+              totalViews *
               100
             ).toFixed(2)
+          );
+
+    // =====================
+    // Producto más visto
+    // =====================
+
+    const mostViewed =
+      [...products].sort(
+        (a, b) => b.views - a.views
+      )[0] || null;
+
+    // =====================
+    // Producto con más contactos
+    // =====================
+
+    const mostContacted =
+      [...products].sort(
+        (a, b) =>
+          b.whatsappClicks -
+          a.whatsappClicks
+      )[0] || null;
+
+    // =====================
+    // Promedio de vistas
+    // =====================
+
+    const averageViews =
+      totalProducts === 0
+        ? 0
+        : Number(
+            (
+              totalViews /
+              totalProducts
+            ).toFixed(1)
+          );
+
+    // =====================
+    // Promedio de contactos
+    // =====================
+
+    const averageWhatsappClicks =
+      totalProducts === 0
+        ? 0
+        : Number(
+            (
+              totalWhatsappClicks /
+              totalProducts
+            ).toFixed(1)
           );
 
     res.json({
@@ -270,6 +320,10 @@ export const getMyStats = async (req, res) => {
       totalViews,
       totalWhatsappClicks,
       conversionRate,
+      averageViews,
+      averageWhatsappClicks,
+      mostViewed,
+      mostContacted,
       products
     });
 
@@ -280,4 +334,5 @@ export const getMyStats = async (req, res) => {
     });
 
   }
+
 };
