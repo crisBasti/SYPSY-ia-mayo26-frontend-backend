@@ -41,14 +41,22 @@ function Navbar({ search, setSearch }) {
         <div className="auth-section">
           {user ? (
             <>
-              <span className="user-name">
-                👋 {user.displayName || "Usuario"}
-              </span>
+  <span className="user-name">
+    👋 {user.displayName || "Usuario"}
+  </span>
 
-              <button onClick={logout}>
-                Salir
-              </button>
-            </>
+  <Link to="/dashboard">
+    📊 Mi Panel
+  </Link>
+
+  <Link to="/admin">
+    ⚙️ Admin
+  </Link>
+
+  <button onClick={logout}>
+    Salir
+  </button>
+</>
           ) : (
             <>
               <Link to="/login">
@@ -97,11 +105,6 @@ function Navbar({ search, setSearch }) {
           📦 Varios
         </Link>
 
-        {user && (
-          <Link to="/admin">
-            ⚙️ Admin
-          </Link>
-        )}
       </div>
 
       {/* HERO */}

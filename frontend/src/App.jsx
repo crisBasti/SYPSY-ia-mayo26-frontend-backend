@@ -12,6 +12,7 @@ import { ProductsProvider } from "./context/ProductsContext";
 import { HelmetProvider } from "react-helmet-async";
 import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
+import Dashboard from "./pages/Dashboard";
 
 function App() {
 
@@ -53,6 +54,15 @@ function App() {
             element={
               <ProtectedRoute>
                 <Admin />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
               </ProtectedRoute>
             }
           />

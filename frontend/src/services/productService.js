@@ -144,3 +144,21 @@ export const incrementWhatsappService =
     );
 
 };
+
+export const getMyStats = async (token) => {
+
+  const response = await axios.get(
+
+    `${API_URL}/stats`,
+
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+  );
+
+  return response.data;
+
+};
