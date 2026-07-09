@@ -14,9 +14,17 @@ function StatCard({
 
             </div>
 
-            <h3>{title}</h3>
+            <div className="stat-info">
 
-            <h2>{value}</h2>
+                <span className="stat-title">
+                    {title}
+                </span>
+
+                <span className="value">
+                    {value}
+                </span>
+
+            </div>
 
         </div>
 

@@ -6,6 +6,7 @@ import { getMyStats } from "../services/productService";
 import StatCard from "../components/dashboard/StatCard";
 import ProductsTable from "../components/dashboard/ProductsTable";
 import ProductsChart from "../components/dashboard/ProductsChart";
+import "../styles/dashboard.css";
 
 function Dashboard() {
 
@@ -93,7 +94,7 @@ function Dashboard() {
 
             </div>
 
-            <div className="dashboard-highlights">
+            <div className="summary-box">
 
     <h2>📌 Resumen</h2>
 
@@ -129,23 +130,35 @@ function Dashboard() {
 
             <h2>
 
-                Mis productos
+                📦 Rendimiento de mis publicaciones
 
             </h2>
 
-            <ProductsChart
-              products={stats.products}
-              dataKey="views"
-              title="👁 Visualizaciones por producto"
-              color="#2563eb"
-            />
+            <div className="charts">
 
-            <ProductsChart
-              products={stats.products}
-              dataKey="whatsappClicks"
-              title="📲 Consultas por WhatsApp"
-              color="#22c55e"
-            />
+    <div className="chart-box">
+
+        <ProductsChart
+            products={stats.products}
+            dataKey="views"
+            title="👁 Visualizaciones por producto"
+            color="#2563eb"
+        />
+
+    </div>
+
+    <div className="chart-box">
+
+        <ProductsChart
+            products={stats.products}
+            dataKey="whatsappClicks"
+            title="📲 Consultas por WhatsApp"
+            color="#22c55e"
+        />
+
+    </div>
+
+</div>
 
             <ProductsTable
                 products={stats.products}
