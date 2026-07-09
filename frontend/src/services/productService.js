@@ -210,3 +210,31 @@ export const getMyStats = async (token) => {
   return response.data;
 
 };
+
+export const reportProductService = async (
+
+  id,
+
+  reason,
+
+  description = ""
+
+) => {
+
+  const response = await axios.post(
+
+    `${API_URL}/${id}/report`,
+
+    {
+
+      reason,
+
+      description
+
+    }
+
+  );
+
+  return response.data;
+
+};

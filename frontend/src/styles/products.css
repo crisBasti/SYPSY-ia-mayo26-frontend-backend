@@ -730,3 +730,145 @@ VIEW BUTTON
 .modal-content h2 {
   color: #000;
 }
+
+
+/* ===========================
+REPORTAR PUBLICACIÓN
+=========================== */
+
+.report-btn{
+
+    margin-top:20px;
+
+    width:100%;
+
+    padding:14px;
+
+    border:none;
+
+    border-radius:12px;
+
+    background:#ef4444;
+
+    color:white;
+
+    font-weight:700;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+}
+
+.report-btn:hover{
+
+    background:#dc2626;
+
+}
+
+.report-modal{
+
+    position:fixed;
+
+    inset:0;
+
+    background:rgba(0,0,0,.55);
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    z-index:9999;
+
+}
+
+.report-box{
+
+    background:white;
+
+    width:95%;
+
+    max-width:500px;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+}
+
+.report-box h3{
+
+    color:#111;
+
+    margin:0;
+
+}
+
+.report-box select,
+.report-box textarea{
+
+    width:100%;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    border:1px solid #ddd;
+
+    font-size:15px;
+
+}
+
+.report-box textarea{
+
+    min-height:120px;
+
+    resize:vertical;
+
+}
+
+.report-actions{
+
+    display:flex;
+
+    justify-content:flex-end;
+
+    gap:12px;
+
+}
+
+.report-actions button{
+
+    padding:10px 20px;
+
+    border:none;
+
+    border-radius:10px;
+
+    cursor:pointer;
+
+    font-weight:600;
+
+}
+
+.report-actions button:first-child{
+
+    background:#2563eb;
+
+    color:white;
+
+}
+
+.report-actions button:last-child{
+
+    background:#ddd;
+
+}

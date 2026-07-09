@@ -1,6 +1,7 @@
 import Product from "../models/Product.js";
 import User from "../models/User.js";
 import Analytics from "../models/Analytics.js";
+import Report from "../models/Report.js";
 
 export const getProducts = async (req, res) => {
   try {
@@ -398,6 +399,62 @@ export const getMyStats = async (req, res) => {
 
     res.status(500).json({
       message: error.message
+    });
+
+  }
+
+};
+
+export const reportProduct = async (req, res) => {
+
+  try {
+
+    const product = await Product.findById(
+      req.params.id
+    );
+
+    if (!product) {
+
+      return res.status(404).json({
+        message: "Producto no encontrado"
+      });
+
+    }
+
+    const {
+
+      reason,
+
+      description
+
+    } = req.body;
+
+    await Report.create({
+
+      productId: product._id,
+
+      reason,
+
+      description,
+
+      reporterIp: req.ip
+
+    });
+
+    res.json({
+
+      success: true,
+
+      message: "Reporte enviado"
+
+    });
+
+  } catch (error) {
+
+    res.status(500).json({
+
+      message: error.message
+
     });
 
   }

@@ -1,10 +1,13 @@
-import { useContext, useEffect, useRef } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
 import { Helmet } from "react-helmet-async";
 import { FaWhatsapp } from "react-icons/fa";
 import { slugify } from "../utils/slugify";
-import { incrementViewService, incrementWhatsappService } from "../services/productService";
+import { incrementViewService,
+         incrementWhatsappService, 
+         reportProductService 
+        } from "../services/productService";
 
 function ProductDetail() {
 
@@ -21,6 +24,11 @@ function ProductDetail() {
     productos,
     fetchProducts
   } = useContext(ProductsContext);
+
+const [showReport, setShowReport] = useState(false);
+const [reportReason, setReportReason] = useState("");
+const [reportDescription, setReportDescription] = useState("");
+const [reportLoading, setReportLoading] = useState(false);
 
   useEffect(() => {
     if (productos.length === 0) {
@@ -105,6 +113,42 @@ const handleWhatsappClick =
       console.error(error);
 
     }
+
+};
+
+const handleReportSubmit = async () => {
+
+  if (!reportReason) {
+    alert("Seleccioná un motivo");
+    return;
+  }
+
+  try {
+
+    setReportLoading(true);
+
+    await reportProductService(
+      producto._id,
+      reportReason,
+      reportDescription
+    );
+
+    alert("Reporte enviado correctamente");
+
+    setShowReport(false);
+    setReportReason("");
+    setReportDescription("");
+
+  } catch (error) {
+
+    console.error(error);
+    alert("Error al enviar reporte");
+
+  } finally {
+
+    setReportLoading(false);
+
+  }
 
 };
 
@@ -227,7 +271,65 @@ Estoy interesado en este producto:
           Contactar vendedor
         </a>
 
+        <button
+          className="report-btn"
+          onClick={() => setShowReport(true)}
+        >
+          🚩 Reportar publicación
+        </button>
+
       </div>
+
+      {showReport && (
+  <div className="report-modal">
+
+    <div className="report-box">
+
+      <h3>Reportar publicación</h3>
+
+      <select
+        value={reportReason}
+        onChange={(e) => setReportReason(e.target.value)}
+      >
+        <option value="">Seleccionar motivo</option>
+        <option value="Estafa">Estafa</option>
+        <option value="Spam">Spam</option>
+        <option value="Contenido ofensivo">Contenido ofensivo</option>
+        <option value="Producto falso">Producto falso</option>
+        <option value="Otro">Otro</option>
+      </select>
+
+      <textarea
+        placeholder="Descripción (opcional)"
+        value={reportDescription}
+        onChange={(e) =>
+          setReportDescription(e.target.value)
+        }
+      />
+
+      <div className="report-actions">
+
+        <button
+          onClick={handleReportSubmit}
+          disabled={reportLoading}
+        >
+          {reportLoading
+            ? "Enviando..."
+            : "Enviar"}
+        </button>
+
+        <button
+          onClick={() => setShowReport(false)}
+        >
+          Cancelar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+)}
     </>
   );
 }
