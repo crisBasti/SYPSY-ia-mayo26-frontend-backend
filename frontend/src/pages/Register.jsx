@@ -5,6 +5,7 @@ import {
   updateProfile,
   sendEmailVerification
 } from "firebase/auth";
+import "../styles/auth.css";
 
 function Register() {
 

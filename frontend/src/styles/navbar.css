@@ -4,6 +4,7 @@ NAVBAR
 
 .navbar {
   width: 100%;
+  box-sizing:border-box;
   background: #0f172a;
   color: white;
 
@@ -18,6 +19,7 @@ NAVBAR
   justify-content: space-between;
 
   padding: 15px 25px;
+  
 }
 
 /* =========================
@@ -207,6 +209,36 @@ HERO
   background: #0099cc;
 }
 
+.categories-bar{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    gap:30px;
+
+    padding:12px;
+
+    background:#1e293b;
+
+    flex-wrap:wrap;
+
+}
+
+.categories-bar a{
+
+    color:white;
+
+    text-decoration:none;
+
+    font-weight:600;
+
+}
+
 /* =========================
 TABLET
 ========================= */
@@ -274,32 +306,79 @@ MOBILE
 SMALL MOBILE
 ========================= */
 
-@media (max-width: 768px) {
+@media (max-width:768px){
 
-  .menu-btn {
-    display: block;
+  .navbar{
+
+      flex-direction:column;
+      align-items:center;
+      gap:12px;
+      padding:15px;
+
   }
 
-  .navbar-search {
-    display: none;
+  .navbar-logo{
+
+      justify-content:center;
+
   }
 
-  .categories-bar {
-    display: none;
-    flex-direction: column;
-    gap: 15px;
-    padding: 20px;
+  .auth-section{
+
+      width:100%;
+      justify-content:center;
+      flex-wrap:wrap;
+      gap:12px;
+
   }
 
-  .categories-bar.active {
-    display: flex;
+  .navbar-search{
+
+      display:flex;
+      width:100%;
+      margin:0;
+
   }
 
-  .hero-content h2 {
-    font-size: 2rem;
+  .navbar-search input{
+
+      width:100%;
+      max-width:none;
+
   }
 
-  .hero-content p {
-    font-size: 1rem;
+  .menu-btn{
+
+      display:block;
+
+      align-self:center;
+
+      font-size:2rem;
+
   }
+
+  .categories-bar{
+
+      display:none;
+
+      width:100%;
+
+      flex-direction:column;
+
+      align-items:center;
+
+      gap:15px;
+
+      padding:20px;
+
+      background:#1e293b;
+
+  }
+
+  .categories-bar.active{
+
+      display:flex;
+
+  }
+
 }
