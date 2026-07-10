@@ -8,6 +8,7 @@ import connectDB from "../config/db.js";
 import productRoutes from "../routes/productRoutes.js";
 import userRoutes from "../routes/userRoutes.js";
 import Product from "../models/Product.js";
+import reportRoutes from "../routes/reportRoutes.js";
 
 connectDB();
 
@@ -30,6 +31,7 @@ app.use(express.json());
 
 app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
+app.use("/api/reports",reportRoutes);
 
 app.get("/", (req, res) => {
   res.json({

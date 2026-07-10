@@ -13,6 +13,7 @@ import { HelmetProvider } from "react-helmet-async";
 import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
+import AdminReports from "./pages/AdminReports";
 
 function App() {
 
@@ -65,6 +66,15 @@ function App() {
                 <Dashboard />
               </ProtectedRoute>
             }
+          />
+
+          <Route
+            path="/admin/reports"
+            element={
+              <ProtectedRoute>
+              <AdminReports />
+              </ProtectedRoute>
+          }
           />
 
           <Route

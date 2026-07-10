@@ -238,3 +238,68 @@ export const reportProductService = async (
   return response.data;
 
 };
+
+// =========================
+// REPORTES (ADMIN)
+// =========================
+
+export const getReportsService = async (token) => {
+
+  const response = await axios.get(
+
+    `${import.meta.env.VITE_API_URL}/api/reports`,
+
+    {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    }
+
+  );
+
+  return response.data;
+
+};
+
+
+export const updateReportStatusService = async (
+    reportId,
+    status,
+    token
+) => {
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/reports/${reportId}`,
+
+        {
+
+            method: "PUT",
+
+            headers: {
+
+                "Content-Type": "application/json",
+
+                Authorization: `Bearer ${token}`
+
+            },
+
+            body: JSON.stringify({
+                status
+            })
+
+        }
+
+    );
+
+    if (!response.ok) {
+
+        throw new Error(
+            "Error actualizando reporte"
+        );
+
+    }
+
+    return await response.json();
+
+};

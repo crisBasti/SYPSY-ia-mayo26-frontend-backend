@@ -431,15 +431,25 @@ export const reportProduct = async (req, res) => {
 
     await Report.create({
 
-      productId: product._id,
+    productId: product._id,
 
-      reason,
+    productName: product.nombre,
 
-      description,
+    productImage: product.images?.[0] || "",
 
-      reporterIp: req.ip
+    sellerUid: product.vendedor.uid,
 
-    });
+    sellerName: product.vendedor.name,
+
+    sellerEmail: product.vendedor.email,
+
+    reason,
+
+    description,
+
+    reporterIp: req.ip
+
+});
 
     res.json({
 

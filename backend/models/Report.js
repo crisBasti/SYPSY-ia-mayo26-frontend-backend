@@ -10,6 +10,31 @@ const reportSchema = new mongoose.Schema(
         required: true
     },
 
+    productName: {
+        type: String,
+        required: true
+    },
+
+    productImage: {
+        type: String,
+        default: ""
+    },
+
+    sellerUid: {
+        type: String,
+        required: true
+    },
+
+    sellerName: {
+        type: String,
+        default: ""
+    },
+
+    sellerEmail: {
+        type: String,
+        default: ""
+    },
+
     reason: {
         type: String,
         required: true
@@ -25,10 +50,23 @@ const reportSchema = new mongoose.Schema(
         default: ""
     },
 
-    status: {
-        type: String,
-        default: "pending"
-    }
+    status:{
+
+type:String,
+
+enum:[
+
+"pending",
+
+"resolved",
+
+"rejected"
+
+],
+
+default:"pending"
+
+}
 
 },
 
