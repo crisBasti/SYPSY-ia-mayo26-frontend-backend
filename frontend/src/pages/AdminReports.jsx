@@ -6,7 +6,9 @@ import {
 
     getReportsService,
 
-    updateReportStatusService
+    updateReportStatusService,
+
+    deleteProductService
 
 } from "../services/productService";
 
@@ -86,6 +88,45 @@ function AdminReports() {
 };
 
 
+const deleteReportedProduct = async (productId) => {
+
+    const ok = window.confirm(
+        "¿Eliminar definitivamente esta publicación?"
+    );
+
+    if (!ok) return;
+
+    try {
+
+        const token =
+            await auth.currentUser.getIdToken();
+
+        await deleteProductService(
+            productId,
+            token
+        );
+
+        setReports(
+
+            reports.filter(
+                r => r.productId?._id !== productId
+            )
+
+        );
+
+        alert("Producto eliminado.");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("No se pudo eliminar.");
+
+    }
+
+};
+
+
     return (
 
         <div className="dashboard">
@@ -128,13 +169,24 @@ function AdminReports() {
 
                                 <td>
 
-                                    {
+                                   {report.productId ? (
 
-                                        report.productId?.nombre ||
+                                   <a
+                                      href={`/producto/${report.productId._id}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="admin-link"
+                                >
 
-                                        "Producto eliminado"
+                                    {report.productId.nombre}
 
-                                    }
+                                    </a>
+
+                                ) : (
+
+                                    "Producto eliminado"
+
+                                )}
 
                                 </td>
 
@@ -213,6 +265,24 @@ report._id,
 >
 
 ❌ Rechazar
+
+</button>
+
+<button
+
+onClick={()=>
+
+deleteReportedProduct(
+
+report.productId?._id
+
+)
+
+}
+
+>
+
+🗑 Eliminar publicación
 
 </button>
 

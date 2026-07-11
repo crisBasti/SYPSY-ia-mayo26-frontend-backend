@@ -26,13 +26,7 @@ useEffect(() => {
             `https://sypsy-ia-mayo26-frontend-backend.onrender.com/api/users/${currentUser.uid}`
           );
 
-          console.log("STATUS:", response.status);
-
           const data = await response.json();
-
-          console.log("PROFILE:", data);
-
-          console.log("UID FIREBASE:", currentUser.uid);
 
           setProfile(data);
 

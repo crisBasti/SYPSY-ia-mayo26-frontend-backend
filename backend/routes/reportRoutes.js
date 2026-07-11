@@ -1,6 +1,7 @@
 import express from "express";
 
 import authFirebase from "../middleware/authFirebase.js";
+import isAdmin from "../middleware/isAdmin.js";
 
 import {
 
@@ -17,6 +18,7 @@ const router = express.Router();
 router.get(
     "/",
     authFirebase,
+    isAdmin,
     getReports
 );
 

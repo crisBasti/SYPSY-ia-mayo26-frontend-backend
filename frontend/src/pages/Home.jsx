@@ -6,7 +6,7 @@ import { FaWhatsapp } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import { slugify } from "../utils/slugify";
 import { incrementWhatsappService } from "../services/productService";
-
+import AdvertisementBanner from "../components/AdvertisementBanner";
 
 function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
@@ -111,6 +111,12 @@ const prevImage = (productId, total) => {
 
     <div className="products-container">
 
+      <AdvertisementBanner
+
+        position="home_top"
+
+      />
+
       <div className="section-title">
         <h2>Productos destacados</h2>
         <p>Encontrá todo lo que necesitás en SYPSY</p>
@@ -132,6 +138,12 @@ const prevImage = (productId, total) => {
           </button>
         ))}
       </div>
+
+      <AdvertisementBanner
+
+         position="home_middle"
+
+      />
 
       {/* GRID */}
       <div className="products-grid">
@@ -259,6 +271,12 @@ Estoy interesado en este producto de SYPSY:
           </div>
         ))}
       </div>
+
+      <AdvertisementBanner
+
+           position="home_bottom"
+
+      />
 
       {/* MODAL */}
       {selectedProduct && (

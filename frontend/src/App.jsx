@@ -14,6 +14,7 @@ import ProductDetail from "./pages/ProductDetail";
 import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import AdminReports from "./pages/AdminReports";
+import AdminPanel from "./pages/AdminPanel";
 
 function App() {
 
@@ -52,9 +53,9 @@ function App() {
 
           <Route
             path="/admin"
-            element={
+          element={
               <ProtectedRoute>
-                <Admin />
+                <AdminPanel />
               </ProtectedRoute>
             }
           />

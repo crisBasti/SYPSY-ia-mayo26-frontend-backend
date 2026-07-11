@@ -26,7 +26,17 @@ const productSchema = new mongoose.Schema(
   whatsappClicks: {
     type: Number,
     default: 0
-  }
+  },
+
+  hidden: {
+    type: Boolean,
+    default: false
+},
+
+reportsCount: {
+    type: Number,
+    default: 0
+}
 
 },
 { timestamps: true }

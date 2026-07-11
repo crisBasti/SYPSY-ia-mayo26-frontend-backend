@@ -120,7 +120,7 @@ export const getMyProducts =
           headers: {
             Authorization:
               `Bearer ${token}`
-          }
+          },
         }
       );
 
@@ -292,13 +292,236 @@ export const updateReportStatusService = async (
 
     );
 
+    
     if (!response.ok) {
 
-        throw new Error(
-            "Error actualizando reporte"
-        );
+    throw new Error(
+        "Error actualizando reporte"
+    );
 
-    }
+}
+
+return await response.json();
+
+};
+
+export const getUsersService = async () => {
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/users`
+
+    );
+
+    return await response.json();
+
+};
+
+export const updateUserService = async (
+
+    id,
+
+    data
+
+) => {
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/users/${id}`,
+
+        {
+
+            method: "PUT",
+
+            headers: {
+
+                "Content-Type":"application/json"
+
+            },
+
+            body: JSON.stringify(data)
+
+        }
+
+    );
+
+    return await response.json();
+
+};
+
+export const getCurrentUserService = async (token)=>{
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/users/me`,
+
+        {
+
+            headers:{
+
+                Authorization:`Bearer ${token}`
+
+            }
+
+        }
+
+    );
+
+    return await response.json();
+
+};
+
+// =========================
+// PUBLICIDAD
+// =========================
+
+export const getAdvertisementsService = async () => {
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/advertisements`
+
+    );
+
+    return await response.json();
+
+};
+
+export const createAdvertisementService = async (
+
+    data,
+
+    token
+
+) => {
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/advertisements`,
+
+        {
+
+            method:"POST",
+
+            headers:{
+
+                "Content-Type":"application/json",
+
+                Authorization:`Bearer ${token}`
+
+            },
+
+            body:JSON.stringify(data)
+
+        }
+
+    );
+
+    return await response.json();
+
+};
+
+export const updateAdvertisementService = async (
+
+    id,
+
+    data,
+
+    token
+
+)=>{
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/advertisements/${id}`,
+
+        {
+
+            method:"PUT",
+
+            headers:{
+
+                "Content-Type":"application/json",
+
+                Authorization:`Bearer ${token}`
+
+            },
+
+            body:JSON.stringify(data)
+
+        }
+
+    );
+
+    return await response.json();
+
+};
+
+export const deleteAdvertisementService = async (
+
+    id,
+
+    token
+
+)=>{
+
+    await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/advertisements/${id}`,
+
+        {
+
+            method:"DELETE",
+
+            headers:{
+
+                Authorization:`Bearer ${token}`
+
+            }
+
+        }
+
+    );
+
+};
+
+
+// =========================
+// PUBLICIDAD ANALYTICS
+// =========================
+
+
+export const registerAdImpressionService = async (id) => {
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/advertisements/${id}/impression`,
+
+        {
+            method:"POST"
+        }
+
+    );
+
+
+    return await response.json();
+
+};
+
+
+
+export const registerAdClickService = async (id) => {
+
+    const response = await fetch(
+
+        `${import.meta.env.VITE_API_URL}/api/advertisements/${id}/click`,
+
+        {
+            method:"POST"
+        }
+
+    );
+
 
     return await response.json();
 

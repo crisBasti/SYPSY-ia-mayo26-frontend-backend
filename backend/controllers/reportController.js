@@ -27,19 +27,41 @@ export const updateReportStatus = async (req, res) => {
 
     try {
 
-        const report = await Report.findByIdAndUpdate(
+        const report = await Report.findById(req.params.id);
 
-            req.params.id,
+        if (!report) {
 
-            {
-                status: req.body.status
-            },
+            return res.status(404).json({
+                message: "Reporte no encontrado"
+            });
 
-            {
-                new: true
+        }
+
+        report.status = req.body.status;
+
+        await report.save();
+
+        const product = await Product.findById(report.productId);
+
+        if (product) {
+
+            if (req.body.status === "resolved") {
+
+                product.hidden = true;
+
             }
 
-        );
+            if (req.body.status === "rejected") {
+
+                product.hidden = false;
+
+                product.reportsCount = 0;
+
+            }
+
+            await product.save();
+
+        }
 
         res.json(report);
 

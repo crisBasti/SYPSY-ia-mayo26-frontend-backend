@@ -206,3 +206,20 @@
     font-size: 2rem;
   }
 }
+
+
+.admin-link{
+
+color:#38bdf8;
+
+font-weight:700;
+
+text-decoration:none;
+
+}
+
+.admin-link:hover{
+
+text-decoration:underline;
+
+}

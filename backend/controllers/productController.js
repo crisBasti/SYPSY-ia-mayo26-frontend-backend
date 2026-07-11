@@ -5,7 +5,12 @@ import Report from "../models/Report.js";
 
 export const getProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    const products = await Product.find({
+  $or: [
+    { hidden: false },
+    { hidden: { $exists: false } }
+  ]
+});
 
     res.json(products);
   } catch (error) {
@@ -33,6 +38,13 @@ const usuario = await User.findOne({
 if (!usuario) {
   return res.status(404).json({
     message: "Usuario no encontrado",
+  });
+}
+
+if (usuario.blocked) {
+  return res.status(403).json({
+    message:
+      "Tu cuenta fue suspendida. No podés publicar productos.",
   });
 }
 
@@ -450,6 +462,20 @@ export const reportProduct = async (req, res) => {
     reporterIp: req.ip
 
 });
+
+// Incrementar cantidad de reportes
+
+product.reportsCount += 1;
+
+// Si llega a 3 reportes se oculta automáticamente
+
+if (product.reportsCount >= 3) {
+
+    product.hidden = true;
+
+}
+
+await product.save();
 
     res.json({
 

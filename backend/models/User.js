@@ -32,6 +32,46 @@ const userSchema = new mongoose.Schema(
       required: true,
       trim: true,
     },
+
+    blocked: {
+      type: Boolean,
+      default: false,
+    },
+
+    blockedReason: {
+      type: String,
+      default: ""
+    },
+
+    status: {
+      type: String,
+      enum: ["active", "suspended"],
+      default: "active",
+    },
+
+    role: {
+      type: String,
+
+    enum: [
+
+      "user",
+
+      "seller",
+
+      "moderator",
+
+      "admin"
+
+        ],
+
+      default: "user"
+
+    },
+
+    verifiedSeller: {
+      type: Boolean,
+      default: false
+    },
   },
   {
     timestamps: true,

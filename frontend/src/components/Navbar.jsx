@@ -8,7 +8,6 @@ function Navbar({ search, setSearch }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const { user, logout } = useContext(AuthContext);
-  console.log(user);
 
   return (
     <>
