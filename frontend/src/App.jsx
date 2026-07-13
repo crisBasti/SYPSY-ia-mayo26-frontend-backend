@@ -15,6 +15,7 @@ import NotFound from "./pages/NotFound";
 import Dashboard from "./pages/Dashboard";
 import AdminReports from "./pages/AdminReports";
 import AdminPanel from "./pages/AdminPanel";
+import MyAccountPanel from "./pages/MyAccountPanel";
 
 function App() {
 
@@ -56,6 +57,15 @@ function App() {
           element={
               <ProtectedRoute>
                 <AdminPanel />
+              </ProtectedRoute>
+            }
+          />
+
+          <Route
+            path="/micuenta"
+            element={
+              <ProtectedRoute>
+              <MyAccountPanel />
               </ProtectedRoute>
             }
           />

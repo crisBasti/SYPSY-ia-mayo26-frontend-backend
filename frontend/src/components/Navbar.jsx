@@ -105,26 +105,6 @@ function Navbar({ search, setSearch }) {
         </Link>
 
       </div>
-
-      {/* HERO */}
-      <section className="hero">
-        <div className="hero-content">
-
-          <h2>
-            Comprá rápido, simple y seguro
-          </h2>
-
-          <p>
-            Productos, servicios y soluciones
-            en un solo lugar.
-          </p>
-
-          <button>
-            Explorar ahora
-          </button>
-
-        </div>
-      </section>
     </>
   );
 }

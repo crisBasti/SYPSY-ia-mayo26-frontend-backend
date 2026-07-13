@@ -6,9 +6,10 @@ import ProductForm from "../components/ProductForm";
 import { ProductsContext } from "../context/ProductsContext";
 import { getMyProducts, deleteProductService, updateProductService, createProductService } from "../services/productService";
 import { auth } from "../firebase";
-
 import { useAuth } from "../context/AuthContext";
+import MyProducts from "../components/MyProducts";
 
+import ProductWorkspace from "../components/products/ProductWorkspace";
 
 function Admin() {
   const {
@@ -188,22 +189,7 @@ return (
     <p>{profile?.email}</p>
   </div>
 </div>
-    {/* HERO ADMIN */}
-    <div className="admin-hero">
-      <img
-        src="/logo-sypsy.png"
-        alt="SYPSY Logo"
-        className="admin-logo"
-      />
-      <div>
-        <h1 className="admin-title">
-          CEO Dashboard
-        </h1>
-        <p className="admin-subtitle">
-          Gestión premium de productos SYPSY
-        </p>
-      </div>
-    </div>
+    
     {/* STATS */}
     <div className="admin-stats">
       <div className="stat-card">
@@ -238,36 +224,7 @@ return (
       </div>
     </div>
     {/* FORM */}
-    <div className="admin-form-section">
-      <h2>
-        Crear nuevo producto
-      </h2>
-      <ProductForm
-        addProduct={addProduct}
-      />
-    </div>
-    {/* PRODUCTS */}
-    <div className="products-section">
-      <h2>
-        Productos publicados
-      </h2>
-      <div className="products-grid">
-
-        {productos.map((product) => (
-          <ProductCard
-          key={product._id}
-          product={product}
-          deleteProduct={deleteProduct}
-          startEdit={startEdit}
-          editingId={editingId}
-          editForm={editForm}
-          setEditForm={setEditForm}
-          updateProduct={updateProduct}
-            />
-          ))
-        }
-      </div>
-    </div>
+    <ProductWorkspace />
   </div>
 );
 }
