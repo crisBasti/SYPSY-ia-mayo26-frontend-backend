@@ -117,28 +117,6 @@ const prevImage = (productId, total) => {
 
       />
 
-      <div className="section-title">
-        <h2>Productos destacados</h2>
-        <p>Encontrá todo lo que necesitás en SYPSY</p>
-      </div>
-
-      {/* FILTROS */}
-      <div className="filters">
-        {categorias.map((categoria) => (
-          <button
-            key={categoria}
-            className={
-              categoriaActiva === categoria
-                ? "filter-btn active"
-                : "filter-btn"
-            }
-            onClick={() => setCategoriaActiva(categoria)}
-          >
-            {categoria}
-          </button>
-        ))}
-      </div>
-
       <AdvertisementCarousel
 
          position="home_middle"
