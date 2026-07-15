@@ -1,4 +1,4 @@
-import Order from "../models/Order.js";
+import Order from "../models/order.js";
 import User from "../models/User.js";
 import { COMISION_SYPSY } from "../config/comercial.js";
 
