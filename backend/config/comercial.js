@@ -1,0 +1,1 @@
+export const COMISION_SYPSY = 0.05;

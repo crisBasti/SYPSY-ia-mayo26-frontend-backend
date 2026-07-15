@@ -10,6 +10,9 @@ import userRoutes from "../routes/userRoutes.js";
 import Product from "../models/Product.js";
 import reportRoutes from "../routes/reportRoutes.js";
 import advertisementRoutes from "../routes/advertisementRoutes.js";
+import adminRoutes from "../routes/adminRoutes.js";
+import orderRoutes from "../routes/orderRoutes.js";
+
 
 connectDB();
 
@@ -34,6 +37,8 @@ app.use("/api/products", productRoutes);
 app.use("/api/users", userRoutes);
 app.use("/api/reports",reportRoutes);
 app.use("/api/advertisements",advertisementRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/orders", orderRoutes);
 
 app.get("/", (req, res) => {
   res.json({

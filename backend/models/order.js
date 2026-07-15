@@ -1,0 +1,96 @@
+import mongoose from "mongoose";
+
+const orderSchema = new mongoose.Schema(
+  {
+
+    numeroPedido: {
+
+    type: String,
+
+    unique: true
+
+  },
+
+    comprador: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
+
+    vendedor: {
+  uid: {
+    type: String,
+    required: true,
+  },
+
+  email: {
+    type: String,
+  },
+
+  name: {
+    type: String,
+  },
+
+  telefono: {
+    type: String,
+  }
+},
+
+    producto: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Product",
+      required: true,
+    },
+
+    precio: {
+      type: Number,
+      required: true,
+    },
+
+    cantidad: {
+      type: Number,
+      default: 1,
+    },
+
+    estado: {
+      type: String,
+      enum: [
+        "pendiente",
+        "aceptado",
+        "pagado",
+        "preparando",
+        "en_camino",
+        "entregado",
+        "finalizado",
+        "cancelado",
+      ],
+      default: "pendiente",
+    },
+
+    estadoPago: {
+      type: String,
+      enum: ["pendiente", "pagado", "reembolsado"],
+      default: "pendiente",
+    },
+
+    comision: {
+      type: Number,
+      default: 0,
+    },
+
+    costoEnvio: {
+      type: Number,
+      default: 0,
+    },
+
+    total: {
+      type: Number,
+      required: true,
+    },
+  },
+  {
+    timestamps: true,
+  }
+);
+
+export default mongoose.model("Order", orderSchema);

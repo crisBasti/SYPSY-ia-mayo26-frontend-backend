@@ -10,7 +10,7 @@ updateAdvertisementService
 
 }
 
-from "../services/productService";
+from "../services/advertisementService";
 
 function AdminAdvertisements(){
 

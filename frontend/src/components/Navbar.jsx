@@ -41,15 +41,11 @@ function Navbar({ search, setSearch }) {
           {user ? (
             <>
   <span className="user-name">
-    👋 {user.displayName || "Usuario"}
+    👋 {(user?.displayName || "Usuario").split(" ")[0]}
   </span>
 
-  <Link to="/dashboard">
-    📊 Mi Panel
-  </Link>
-
   <Link to="/admin">
-    ⚙️ Admin
+    🛠 Administración
   </Link>
 
   <button onClick={logout}>

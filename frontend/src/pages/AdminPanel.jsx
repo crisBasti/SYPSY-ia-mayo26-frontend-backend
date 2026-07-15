@@ -1,12 +1,14 @@
 import { useState } from "react";
 
 import AdminSidebar from "../components/AdminSidebar";
-
-import Dashboard from "./Dashboard";
+import AdminDashboard from "../components/admin/AdminDashboard";
 import AdminReports from "./AdminReports";
-import Admin from "./Admin";
-import AdminUsers from "./AdminUsers";
 import AdminAdvertisements from "./AdminAdvertisements";
+import Admin from "./Admin";
+import AdminUsers from "../components/admin/AdminUsers";
+import AdminOrders from "./AdminOrders";
+
+
 
 function AdminPanel() {
 
@@ -26,59 +28,34 @@ function AdminPanel() {
 
             <main className="admin-content">
 
-                {
+                
+                {section === "dashboard" && (
+                  <AdminDashboard />
+                )}
 
-                    section === "dashboard" &&
+                {section === "users" && (
+                  <AdminUsers />
+                )}
 
-                    <Dashboard />
+                {section === "products" && (
+                  <Admin />
+                )}
 
-                }
+                {section === "ads" && (
+                    <AdminAdvertisements />
+                )}
 
-                {
+                {section === "orders" && (
+                    <AdminOrders />
+                )}
 
-                    section === "reports" &&
-
+                {section === "reports" && (
                     <AdminReports />
+                )}
 
-                }
-
-                {
-                    section === "products" &&
-
-                    <Admin />
-                }
-
-                {
-
-                   section === "users" &&
-
-                   <AdminUsers />
-
-                }
-
-                {
-
-                    section === "analytics" &&
-
-                    <h2>📈 Analytics (próximamente)</h2>
-
-                }
-
-                {
-
-                   section==="advertisements" &&
-
-                   <AdminAdvertisements />
-
-                }
-
-                {
-
-                    section === "settings" &&
-
-                    <h2>⚙ Configuración (próximamente)</h2>
-
-                }
+                {section === "settings" && (
+                    <h2>⚙ Configuración General</h2>
+                )}
 
             </main>
 

@@ -1,85 +1,37 @@
-function AdminSidebar({
+function AdminSidebar({ section, setSection }) {
+  return (
+    <aside className="admin-sidebar">
 
-    section,
+      <button onClick={() => setSection("dashboard")}>
+        📊 Dashboard
+      </button>
 
-    setSection
+      <button onClick={() => setSection("users")}>
+        👥 Usuarios
+      </button>
 
-}) {
+      <button onClick={() => setSection("products")}>
+        📦 Productos
+      </button>
 
-    return (
+      <button onClick={() => setSection("orders")}>
+        📦 Pedidos
+      </button>
 
-        <aside className="admin-sidebar">
+      <button onClick={() => setSection("ads")}>
+        📢 Publicidad
+      </button>
 
-            <h2>SYPSY Admin</h2>
+      <button onClick={() => setSection("reports")}>
+        📈 Reportes
+      </button>
 
-            <button onClick={() => setSection("dashboard")}>
+      <button onClick={() => setSection("settings")}>
+        ⚙ Configuración
+      </button>
 
-                📊 Dashboard
-
-            </button>
-
-            <button onClick={() => setSection("reports")}>
-
-                🚩 Reportes
-
-            </button>
-
-            <button onClick={() => setSection("products")}>
-
-                📦 Publicaciones
-
-            </button>
-
-            <button onClick={() => setSection("users")}>
-
-                👤 Usuarios
-
-            </button>
-
-            <button onClick={() => setSection("analytics")}>
-
-                📈 Analytics
-
-            </button>
-
-            <button
-
-className={
-
-section==="advertisements"
-
-? "active"
-
-: ""
-
-}
-
-onClick={()=>
-
-setSection(
-
-"advertisements"
-
-)
-
-}
-
->
-
-📢 Publicidad
-
-</button>
-
-            <button onClick={() => setSection("settings")}>
-
-                ⚙ Configuración
-
-            </button>
-
-        </aside>
-
-    );
-
+    </aside>
+  );
 }
 
 export default AdminSidebar;

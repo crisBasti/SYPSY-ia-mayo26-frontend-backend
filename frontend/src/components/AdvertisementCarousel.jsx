@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 
 import { getAdvertisementsService }
 
-from "../services/productService";
+from "../services/advertisementService";
 
 function AdvertisementCarousel({
 

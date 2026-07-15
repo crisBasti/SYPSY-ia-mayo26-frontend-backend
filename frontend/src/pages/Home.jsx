@@ -8,6 +8,10 @@ import { slugify } from "../utils/slugify";
 import { incrementWhatsappService } from "../services/productService";
 import AdvertisementCarousel from "../components/AdvertisementCarousel";
 
+
+import { crearPedidoService } from "../services/orderService";
+import { auth } from "../firebase";
+
 function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
   useEffect(() => { fetchProducts(); }, []);
@@ -15,15 +19,68 @@ function Home({ search }) {
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [imgIndex, setImgIndex] = useState({});
+
+
   const handleWhatsappClick = async (productId) => {
+  try {
+    await incrementWhatsappService(productId);
+  } catch (error) {
+    console.error(error);
+  }
+};
+
+const handleComprar = async (product) => {
 
   try {
 
-    await incrementWhatsappService(productId);
+    const token =
+      await auth.currentUser.getIdToken();
+
+
+    const pedido = {
+
+      vendedor: product.vendedor,
+
+      producto: product._id,
+
+      precio: product.precio,
+
+      cantidad: 1,
+
+      costoEnvio: 0
+
+    };
+
+
+    const resultado =
+      await crearPedidoService(
+        pedido,
+        token
+      );
+
+
+    console.log(
+      "PEDIDO CREADO:",
+      resultado
+    );
+
+
+    alert(
+      "Pedido creado correctamente"
+    );
+
 
   } catch (error) {
 
-    console.error(error);
+    console.error(
+      "Error creando pedido:",
+      error
+    );
+
+
+    alert(
+      "Error creando pedido"
+    );
 
   }
 
@@ -244,6 +301,15 @@ Estoy interesado en este producto de SYPSY:
               >
               Ver producto
               </Link>
+
+              <button
+  className="buy-btn"
+  onClick={() =>
+    handleComprar(product)
+  }
+>
+🛒 Comprar ahora
+</button>
 
             </div>
           </div>
