@@ -1,14 +1,64 @@
-function OrderCard({ pedido }) {
+
+
+function OrderCard({
+
+    pedido,
+
+    onSelect
+
+}) {
+
+    const coloresEstado = {
+
+    pendiente:"#FFC107",
+
+    aceptado:"#28A745",
+
+    pagado:"#0D6EFD",
+
+    en_reparto:"#6F42C1",
+
+    finalizado:"#198754",
+
+    cancelado:"#DC3545"
+
+};
+
+const colorBarra =
+
+    coloresEstado[pedido.estado]
+
+    || "#999";
+
+
+    const estadoTexto = {
+
+    pendiente: "🟡 Pendiente",
+
+    aceptado: "🟢 Aceptado",
+
+    pagado: "💳 Pagado",
+
+    en_reparto: "🚚 En reparto",
+
+    finalizado: "✅ Finalizado",
+
+    cancelado: "❌ Cancelado"
+
+};
+
 
     return (
 
        <div
 
-    className="order-card"
+           className="order-card"
 
->
+           onClick={() => onSelect(pedido)}
 
-    <div
+           >
+
+       <div
 
         className="order-status-bar"
 
@@ -31,7 +81,7 @@ function OrderCard({ pedido }) {
 
                 <span>
 
-                    {pedido.estado}
+                    {estadoTexto[pedido.estado]}
 
                 </span>
 
@@ -41,7 +91,7 @@ function OrderCard({ pedido }) {
 
                 <p>
 
-                    <strong>Producto</strong>
+                    <strong>📦 Producto</strong>
 
                     <br />
 
@@ -51,7 +101,7 @@ function OrderCard({ pedido }) {
 
                 <p>
 
-                    <strong>Vendedor</strong>
+                    <strong>🏪 Vendedor</strong>
 
                     <br />
 
@@ -61,7 +111,7 @@ function OrderCard({ pedido }) {
 
                 <p>
 
-                    <strong>Total</strong>
+                    <strong>💰 Total</strong>
 
                     <br />
 
@@ -71,9 +121,32 @@ function OrderCard({ pedido }) {
 
                 </p>
 
+
                 <p>
 
-                    <strong>Comisión</strong>
+    <strong>
+
+        🕒 Creado
+
+    </strong>
+
+    <br />
+
+    {
+
+        new Date(
+
+            pedido.createdAt
+
+        ).toLocaleString()
+
+    }
+
+</p>
+
+                <p>
+
+                    <strong>💸 Comisión SYPSY</strong>
 
                     <br />
 
@@ -85,42 +158,12 @@ function OrderCard({ pedido }) {
 
             </div>
 
-            <div className="order-actions">
-
-                <button>
-
-                    👁 Ver
-
-                </button>
-
-            </div>
-
         </div>
 
     );
 
 }
 
-const coloresEstado = {
 
-    pendiente:"#FFC107",
-
-    aceptado:"#28A745",
-
-    pagado:"#0D6EFD",
-
-    en_reparto:"#6F42C1",
-
-    finalizado:"#198754",
-
-    cancelado:"#DC3545"
-
-};
-
-const colorBarra =
-
-    coloresEstado[pedido.estado]
-
-    || "#999";
 
 export default OrderCard;

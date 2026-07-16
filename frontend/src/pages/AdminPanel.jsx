@@ -7,6 +7,8 @@ import AdminAdvertisements from "./AdminAdvertisements";
 import Admin from "./Admin";
 import AdminUsers from "../components/admin/AdminUsers";
 import AdminOrders from "./AdminOrders";
+import AdminSettings from "../components/admin/AdminSettings";
+import AdminFinance from "../components/admin/AdminFinance";
 
 
 
@@ -26,7 +28,13 @@ function AdminPanel() {
 
             />
 
-            <main className="admin-content">
+            <main
+
+                  className="admin-content"
+
+                  id="workspace"
+
+                >
 
                 
                 {section === "dashboard" && (
@@ -49,12 +57,16 @@ function AdminPanel() {
                     <AdminOrders />
                 )}
 
+                {section === "finance" && (
+                    <AdminFinance />
+                )}
+
                 {section === "reports" && (
                     <AdminReports />
                 )}
 
                 {section === "settings" && (
-                    <h2>⚙ Configuración General</h2>
+                    <AdminSettings />
                 )}
 
             </main>

@@ -12,6 +12,8 @@ import reportRoutes from "../routes/reportRoutes.js";
 import advertisementRoutes from "../routes/advertisementRoutes.js";
 import adminRoutes from "../routes/adminRoutes.js";
 import orderRoutes from "../routes/orderRoutes.js";
+import configurationRoutes from "../routes/configurationRoutes.js";
+import financeRoutes from "../routes/financeRoutes.js";
 
 
 connectDB();
@@ -39,6 +41,8 @@ app.use("/api/reports",reportRoutes);
 app.use("/api/advertisements",advertisementRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/orders", orderRoutes);
+app.use("/api/configuration", configurationRoutes);
+app.use("/api/finance", financeRoutes);
 
 app.get("/", (req, res) => {
   res.json({

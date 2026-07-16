@@ -1,6 +1,6 @@
 import Order from "../models/order.js";
 import User from "../models/User.js";
-import { COMISION_SYPSY } from "../config/comercial.js";
+import Configuration from "../models/Configuration.js";
 
 // Crear pedido
 export const crearPedido = async (req, res) => {
@@ -37,8 +37,17 @@ export const crearPedido = async (req, res) => {
   (precio * cantidad) + costoEnvio;
 
 
+const configuracion =
+
+    await Configuration.findOne();
+
+const porcentaje =
+
+    configuracion?.comisionGeneral || 5;
+
 const comision =
-  total * COMISION_SYPSY;
+
+    total * (porcentaje / 100);
 
   const ultimoPedido = await Order
 

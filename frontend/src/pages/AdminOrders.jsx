@@ -1,12 +1,16 @@
 import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import axios from "axios";
+import OrderCard from "../components/admin/OrderCard";
+import OrderDrawer from "../components/admin/OrderDrawer";
 
 function AdminOrders() {
 
     const [pedidos, setPedidos] = useState([]);
 
     const [busqueda, setBusqueda] = useState("");
+
+    const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null);
 
     const resumen = {
 
@@ -146,109 +150,234 @@ const pedidosFinalizados =
     return (
 
         <div>
+            <>
 
             <h2>📦 Pedidos</h2>
 
             <div className="orders-toolbar">
 
-    <input
+                <input
 
-        type="text"
+                  type="text"
 
-        placeholder="🔍 Buscar producto o vendedor..."
+                  placeholder="🔍 Buscar producto o vendedor..."
 
-        value={busqueda}
+                  value={busqueda}
 
-        onChange={(e)=>
+                  onChange={(e)=>
 
-            setBusqueda(e.target.value)
+                  setBusqueda(e.target.value)
 
-        }
+                  }
 
-    />
+                />
 
-</div>
+            </div>
 
             <div className="orders-summary">
 
-    <div className="summary-card">
+              <div className="summary-card">
 
-        <h3>🟡 Pendientes</h3>
+                  <h3>🟡 Pendientes</h3>
 
-        <span>{resumen.pendientes}</span>
+                  <span>{resumen.pendientes}</span>
 
-    </div>
+              </div>
 
-    <div className="summary-card">
+              <div className="summary-card">
 
-        <h3>🟢 Aceptados</h3>
+                  <h3>🟢 Aceptados</h3>
 
-        <span>{resumen.aceptados}</span>
+                  <span>{resumen.aceptados}</span>
 
-    </div>
+              </div>
 
-    <div className="summary-card">
+              <div className="summary-card">
 
-        <h3>💳 Pagados</h3>
+                  <h3>💳 Pagados</h3>
 
-        <span>{resumen.pagados}</span>
+                  <span>{resumen.pagados}</span>
 
-    </div>
+              </div>
 
-    <div className="summary-card">
+              <div className="summary-card">
 
-        <h3>📦 Entregados</h3>
+                  <h3>📦 Entregados</h3>
 
-        <span>{resumen.entregados}</span>
+                  <span>{resumen.entregados}</span>
 
-    </div>
+              </div>
 
-    <div className="summary-card">
+              <div className="summary-card">
 
-        <h3>❌ Cancelados</h3>
+                  <h3>❌ Cancelados</h3>
 
-        <span>{resumen.cancelados}</span>
+                  <span>{resumen.cancelados}</span>
 
-    </div>
+            </div>
 
-</div>
+       </div>
 
-            <div className="kanban-board">
-
-    <div className="kanban-column">
-
-        <h3>🟡 Pendientes</h3>
-
-    </div>
+    <div className="kanban-board">
 
     <div className="kanban-column">
 
-        <h3>🟢 Aceptados</h3>
+    <h3>
+
+        🟡 Pendientes
+
+        ({pedidosPendientes.length})
+
+    </h3>
+
+    {
+
+        pedidosPendientes.map((pedido)=>(
+
+            <OrderCard
+
+                key={pedido._id}
+
+                pedido={pedido}
+
+                onSelect={setPedidoSeleccionado}
+
+            />
+
+        ))
+
+    }
 
     </div>
 
-    <div className="kanban-column">
+                    <div className="kanban-column">
 
-        <h3>💳 Pagados</h3>
+                    <h3>
 
-    </div>
+                    🟢 Aceptados
 
-    <div className="kanban-column">
+                    ({pedidosAceptados.length})
 
-        <h3>🚚 En reparto</h3>
+                    </h3>
 
-    </div>
+                    {
 
-    <div className="kanban-column">
+                    pedidosAceptados.map((pedido)=>(
 
-        <h3>✅ Finalizados</h3>
+                    <OrderCard
 
-    </div>
+                        key={pedido._id}
 
-</div>
+                        pedido={pedido}
+
+                        onSelect={setPedidoSeleccionado}
+
+                        />
+
+                      ))
+
+                    }
+
+                    </div>
+
+                    <div className="kanban-column">
+
+                    <h3>
+
+                    💳 Pagados
+
+                    ({pedidosPagados.length})
+
+                    </h3>
+
+                    {
+
+                       pedidosPagados.map((pedido)=>(
+
+                       <OrderCard
+
+                          key={pedido._id}
+
+                          pedido={pedido}
+
+                          onSelect={setPedidoSeleccionado}
+
+                        />
+                      ))
+                    }
+                </div>
+
+                <div className="kanban-column">
+
+                    <h3>
+
+                      🚚 En reparto
+
+                      ({pedidosEnReparto.length})
+
+                    </h3>
+
+                    {
+
+                      pedidosEnReparto.map((pedido)=>(
+
+                      <OrderCard
+
+                      key={pedido._id}
+
+                      pedido={pedido}
+
+                      onSelect={setPedidoSeleccionado}
+
+                    />
+
+                      ))
+                    }
+                </div>
+
+                <div className="kanban-column">
+
+                    <h3>
+
+                      ✅ Finalizados
+
+                      ({pedidosFinalizados.length})
+
+                    </h3>
+
+                    {
+
+                      pedidosFinalizados.map((pedido)=>(
+
+                        <OrderCard
+
+                          key={pedido._id}
+
+                          pedido={pedido}
+
+                          onSelect={setPedidoSeleccionado}
+
+                        />
+                      ))
+
+                    }
+
+                    
+
+                </div>
+
+            </div>
+
+            <OrderDrawer
+
+                      pedido={pedidoSeleccionado}
+
+                      onClose={() => setPedidoSeleccionado(null)}
+
+                    />
+            </>        
 
         </div>
-
     );
 
 }
