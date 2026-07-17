@@ -30,6 +30,8 @@ useEffect(() => {
 
           setProfile(data);
 
+          console.log("PERFIL:", data);
+
         } catch (error) {
 
           console.error(

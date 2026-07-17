@@ -12,6 +12,8 @@ function MyAccountSidebar({
 
             <button
 
+                className={section==="dashboard" ? "active" : ""}
+
                 onClick={()=>setSection("dashboard")}
 
             >
@@ -22,25 +24,67 @@ function MyAccountSidebar({
 
             <button
 
-                onClick={()=>setSection("publish")}
+                className={section==="orders" ? "active" : ""}
+
+                onClick={()=>setSection("orders")}
 
             >
 
-                ➕ Publicar
+                🛒 Mis Compras
 
             </button>
 
             <button
+
+                className={section==="sales" ? "active" : ""}
+
+                onClick={()=>setSection("sales")}
+
+            >
+
+                🏪 Mis Ventas
+
+            </button>
+
+            <button
+
+                className={section==="products" ? "active" : ""}
 
                 onClick={()=>setSection("products")}
 
             >
 
-                📦 Mis publicaciones
+                📦 Mis Productos
 
             </button>
 
             <button
+
+                className={section==="publish" ? "active" : ""}
+
+                onClick={()=>setSection("publish")}
+
+            >
+
+                ➕ Publicar Producto
+
+            </button>
+
+            <button
+
+                className={section==="favorites" ? "active" : ""}
+
+                onClick={()=>setSection("favorites")}
+
+            >
+
+                ❤️ Favoritos
+
+            </button>
+
+            <button
+
+                className={section==="stats" ? "active" : ""}
 
                 onClick={()=>setSection("stats")}
 
@@ -52,15 +96,7 @@ function MyAccountSidebar({
 
             <button
 
-                onClick={()=>setSection("favorites")}
-
-            >
-
-                ❤️ Favoritos
-
-            </button>
-
-            <button
+                className={section==="settings" ? "active" : ""}
 
                 onClick={()=>setSection("settings")}
 

@@ -16,6 +16,8 @@ import Dashboard from "./pages/Dashboard";
 import AdminReports from "./pages/AdminReports";
 import AdminPanel from "./pages/AdminPanel";
 import MyAccountPanel from "./pages/MyAccountPanel";
+import AdminRoute from "./components/AdminRoute";
+import RoleRoute from "./components/RoleRoute";
 
 function App() {
 
@@ -54,10 +56,10 @@ function App() {
 
           <Route
             path="/admin"
-          element={
-              <ProtectedRoute>
+            element={
+              <RoleRoute role="admin">
                 <AdminPanel />
-              </ProtectedRoute>
+              </RoleRoute>
             }
           />
 

@@ -9,6 +9,7 @@ import {
   obtenerMisVentas,
   actualizarEstadoPedido,
   cancelarPedido,
+  confirmarRecepcion,
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -27,6 +28,9 @@ router.get("/mis-ventas", authFirebase, obtenerMisVentas);
 
 // Obtener un pedido
 router.get("/:id", authFirebase, obtenerPedidoPorId);
+
+// Confirmar recepción por comprador
+router.put("/:id/confirmar-recepcion", authFirebase, confirmarRecepcion);
 
 // Actualizar estado
 router.put("/:id", authFirebase, actualizarEstadoPedido);

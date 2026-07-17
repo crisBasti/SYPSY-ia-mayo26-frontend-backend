@@ -2,13 +2,9 @@ import mongoose from "mongoose";
 
 const orderSchema = new mongoose.Schema(
   {
-
     numeroPedido: {
-
     type: String,
-
     unique: true
-
   },
 
     comprador: {
@@ -55,15 +51,15 @@ const orderSchema = new mongoose.Schema(
     estado: {
       type: String,
       enum: [
-        "pendiente",
-        "aceptado",
-        "pagado",
-        "preparando",
-        "en_camino",
-        "entregado",
-        "finalizado",
-        "cancelado",
-      ],
+             "pendiente",
+             "aceptado",
+             "preparando",
+             "enviado",
+             "en_reparto",
+             "entregado",
+             "finalizado",
+             "cancelado",
+            ],
       default: "pendiente",
     },
 
@@ -87,6 +83,39 @@ const orderSchema = new mongoose.Schema(
       type: Number,
       required: true,
     },
+
+    trackingNumber: {
+    type: String,
+    default: ""
+},
+
+transportista: {
+    type: String,
+    default: ""
+},
+
+fechaAceptado: Date,
+
+fechaPreparacion: Date,
+
+fechaEnvio: Date,
+
+fechaEnReparto: Date,
+
+fechaEntregado: Date,
+
+fechaFinalizado: Date,
+
+historial: [
+    {
+        estado: String,
+        fecha: {
+            type: Date,
+            default: Date.now
+        },
+        descripcion: String
+    }
+],
   },
   {
     timestamps: true,

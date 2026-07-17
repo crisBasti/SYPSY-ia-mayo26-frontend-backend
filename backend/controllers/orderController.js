@@ -1,6 +1,8 @@
 import Order from "../models/order.js";
 import User from "../models/User.js";
 import Configuration from "../models/Configuration.js";
+import { executeAction } from "../services/orderStateMachine.js";
+
 
 // Crear pedido
 export const crearPedido = async (req, res) => {
@@ -105,7 +107,14 @@ const nuevoPedido = new Order({
 
   total,
 
-  comision
+  comision,
+
+  historial: [
+    {
+      estado: "pendiente",
+      descripcion: "Pedido creado"
+    }
+  ]
 
 });
 
@@ -234,41 +243,86 @@ export const obtenerMisVentas = async (req, res) => {
 // Actualizar estado del pedido
 export const actualizarEstadoPedido = async (req, res) => {
 
-  try {
+    try {
 
-    const { estado } = req.body;
+        const { accion } = req.body;
 
-    const pedido = await Order.findByIdAndUpdate(
+        const pedido = await Order.findById(req.params.id);
 
-      req.params.id,
+        if (!pedido) {
 
-      { estado },
+            return res.status(404).json({
 
-      { new: true }
+                message: "Pedido no encontrado"
 
-    );
+            });
 
-    if (!pedido) {
+        }
 
-      return res.status(404).json({
+        const estadoAnterior = pedido.estado;
 
-        message: "Pedido no encontrado"
+        const nuevoEstado = executeAction(
 
-      });
+            estadoAnterior,
+
+            accion
+
+        );
+
+        pedido.estado = nuevoEstado;
+
+        pedido.historial.push({
+
+            estado: nuevoEstado,
+
+            fecha: new Date(),
+
+            observacion: `Acción ejecutada: ${accion}`
+
+        });
+
+        await pedido.save();
+
+        res.json(pedido);
 
     }
 
-    res.json(pedido);
+    catch (error) {
 
-  } catch (error) {
+        res.status(400).json({
 
-    res.status(500).json({
+            message: error.message
 
-      message: error.message
+        });
 
-    });
+    }
 
-  }
+};
+
+
+const obtenerDescripcionEstado = (estado) => {
+
+  const mapa = {
+
+    pendiente: "Pedido creado",
+
+    aceptado: "El vendedor aceptó el pedido",
+
+    preparando: "Producto en preparación",
+
+    enviado: "Pedido despachado",
+
+    en_reparto: "Pedido en reparto",
+
+    entregado: "Pedido entregado",
+
+    finalizado: "Compra finalizada",
+
+    cancelado: "Pedido cancelado"
+
+  };
+
+  return mapa[estado] || estado;
 
 };
 
@@ -314,6 +368,112 @@ export const cancelarPedido = async (req, res) => {
       message: error.message
 
     });
+
+  }
+
+};
+
+
+
+export const confirmarRecepcion = async (req, res) => {
+
+  try {
+
+    const comprador = await User.findOne({
+
+      uid: req.user.uid
+
+    });
+
+
+    if (!comprador) {
+
+      return res.status(404).json({
+
+        message: "Comprador no encontrado"
+
+      });
+
+    }
+
+
+    const pedido = await Order.findById(
+
+      req.params.id
+
+    );
+
+
+    if (!pedido) {
+
+      return res.status(404).json({
+
+        message: "Pedido no encontrado"
+
+      });
+
+    }
+
+
+    if (
+
+      pedido.comprador.toString() !== comprador._id.toString()
+
+    ) {
+
+      return res.status(403).json({
+
+        message: "No tienes permiso para confirmar este pedido"
+
+      });
+
+    }
+
+
+    if (pedido.estado !== "entregado") {
+
+      return res.status(400).json({
+
+        message:
+
+        "El pedido todavía no fue entregado"
+
+      });
+
+    }
+
+
+    pedido.estado = "finalizado";
+
+    pedido.fechaFinalizado = new Date();
+
+
+    pedido.historial.push({
+
+      estado: "finalizado",
+
+      descripcion:
+
+      "Comprador confirmó recepción del producto"
+
+    });
+
+
+    await pedido.save();
+
+
+    res.json(pedido);
+
+
+  } catch(error) {
+
+
+    res.status(500).json({
+
+      message:error.message
+
+    });
+
 
   }
 

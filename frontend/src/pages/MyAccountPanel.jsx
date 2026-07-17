@@ -2,6 +2,8 @@ import { useState } from "react";
 
 import MyAccountSidebar from "../components/MyAccountSidebar";
 import Admin from "./Admin";
+import MyOrders from "./MyOrders";
+
 
 function MyAccountPanel(){
 
@@ -38,6 +40,13 @@ function MyAccountPanel(){
                     section==="publish" &&
 
                     <Admin />
+
+                }
+
+                {
+                   section==="orders" &&
+
+                   <MyOrders />
 
                 }
 

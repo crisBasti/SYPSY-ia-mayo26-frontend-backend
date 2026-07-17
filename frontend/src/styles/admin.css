@@ -937,3 +937,267 @@ text-decoration:underline;
     color:#2563eb;
 
 }
+
+
+/* =============================
+   PROGRESO DEL PEDIDO
+============================= */
+
+.order-progress {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 20px;
+}
+
+.step {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    border-radius: 10px;
+    background: #f5f5f5;
+    color: #6c757d;
+    font-size: 14px;
+}
+
+.step-icon {
+    font-size: 18px;
+}
+
+.step.completed {
+    background: #d1e7dd;
+    color: #0f5132;
+}
+
+.step.active {
+    background: #cfe2ff;
+    color: #084298;
+    font-weight: bold;
+}
+
+
+/*=========================
+   Timeline del pedido
+==========================*/
+
+.order-timeline{
+
+margin-top:30px;
+
+}
+
+.timeline-item{
+
+display:flex;
+
+gap:15px;
+
+margin-bottom:18px;
+
+align-items:flex-start;
+
+}
+
+.timeline-dot{
+
+width:12px;
+
+height:12px;
+
+border-radius:50%;
+
+background:#0d6efd;
+
+margin-top:6px;
+
+flex-shrink:0;
+
+}
+
+.timeline-content{
+
+background:#f8f9fa;
+
+padding:12px;
+
+border-radius:10px;
+
+width:100%;
+
+}
+
+.timeline-content strong{
+
+color:#212529;
+
+}
+
+.timeline-content small{
+
+color:#6c757d;
+
+}
+
+
+/*=========================
+   acciones de pedido
+==========================*/
+
+.order-actions-panel{
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+margin-top:30px;
+
+}
+
+.order-actions-panel button{
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+font-weight:700;
+
+cursor:pointer;
+
+background:#0d6efd;
+
+color:white;
+
+transition:.2s;
+
+}
+
+.order-actions-panel button:hover{
+
+transform:translateY(-2px);
+
+box-shadow:0 8px 20px rgba(13,110,253,.25);
+
+}
+
+
+.drawer-actions{
+
+display:flex;
+
+flex-direction:column;
+
+gap:12px;
+
+margin-top:30px;
+
+}
+
+.drawer-actions button{
+
+padding:14px;
+
+border:none;
+
+border-radius:10px;
+
+cursor:pointer;
+
+font-weight:700;
+
+font-size:15px;
+
+background:#0d6efd;
+
+color:white;
+
+transition:.2s;
+
+}
+
+.drawer-actions button:hover{
+
+transform:translateY(-2px);
+
+}
+
+.drawer-actions .danger{
+
+background:#dc3545;
+
+}
+
+
+/*=========================
+ESTILOS DE barra Progress
+==========================*/
+
+.order-progress{
+
+display:flex;
+
+justify-content:space-between;
+
+margin:25px 0;
+
+gap:10px;
+
+}
+
+.progress-step{
+
+display:flex;
+
+flex-direction:column;
+
+align-items:center;
+
+flex:1;
+
+}
+
+.circle{
+
+width:34px;
+
+height:34px;
+
+border-radius:50%;
+
+background:#d1d5db;
+
+display:flex;
+
+align-items:center;
+
+justify-content:center;
+
+font-weight:bold;
+
+color:white;
+
+}
+
+.circle.active{
+
+background:#198754;
+
+}
+
+.progress-step span{
+
+margin-top:8px;
+
+font-size:12px;
+
+font-weight:600;
+
+color:#212529;
+
+text-align:center;
+
+}

@@ -89,14 +89,24 @@ const pedidosAceptados =
         pedido => pedido.estado === "aceptado"
     );
 
-const pedidosPagados =
+const pedidosPreparando =
     pedidosFiltrados.filter(
-        pedido => pedido.estado === "pagado"
+        pedido => pedido.estado === "preparando"
+    );
+
+const pedidosEnviados =
+    pedidosFiltrados.filter(
+        pedido => pedido.estado === "enviado"
     );
 
 const pedidosEnReparto =
     pedidosFiltrados.filter(
         pedido => pedido.estado === "en_reparto"
+    );
+
+const pedidosEntregados =
+    pedidosFiltrados.filter(
+        pedido => pedido.estado === "entregado"
     );
 
 const pedidosFinalizados =
@@ -282,30 +292,63 @@ const pedidosFinalizados =
 
                     <div className="kanban-column">
 
-                    <h3>
+    <h3>
 
-                    💳 Pagados
+        📦 Preparando
 
-                    ({pedidosPagados.length})
+        ({pedidosPreparando.length})
 
-                    </h3>
+    </h3>
 
-                    {
+    {
 
-                       pedidosPagados.map((pedido)=>(
+        pedidosPreparando.map((pedido)=>(
 
-                       <OrderCard
+            <OrderCard
 
-                          key={pedido._id}
+                key={pedido._id}
 
-                          pedido={pedido}
+                pedido={pedido}
 
-                          onSelect={setPedidoSeleccionado}
+                onSelect={setPedidoSeleccionado}
 
-                        />
-                      ))
-                    }
-                </div>
+            />
+
+        ))
+
+    }
+
+</div>
+
+                    <div className="kanban-column">
+
+    <h3>
+
+        🚚 Enviados
+
+        ({pedidosEnviados.length})
+
+    </h3>
+
+    {
+
+        pedidosEnviados.map((pedido)=>(
+
+            <OrderCard
+
+                key={pedido._id}
+
+                pedido={pedido}
+
+                onSelect={setPedidoSeleccionado}
+
+            />
+
+        ))
+
+    }
+
+</div>
 
                 <div className="kanban-column">
 
@@ -334,6 +377,36 @@ const pedidosFinalizados =
                       ))
                     }
                 </div>
+
+                <div className="kanban-column">
+
+    <h3>
+
+        📬 Entregados
+
+        ({pedidosEntregados.length})
+
+    </h3>
+
+    {
+
+        pedidosEntregados.map((pedido)=>(
+
+            <OrderCard
+
+                key={pedido._id}
+
+                pedido={pedido}
+
+                onSelect={setPedidoSeleccionado}
+
+            />
+
+        ))
+
+    }
+
+</div>
 
                 <div className="kanban-column">
 
