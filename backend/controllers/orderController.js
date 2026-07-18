@@ -259,6 +259,34 @@ export const actualizarEstadoPedido = async (req, res) => {
 
         }
 
+        const accionesVendedor = [
+
+    "ACEPTAR",
+
+    "PREPARAR",
+
+    "DESPACHAR",
+
+    "EN_REPARTO",
+
+    "ENTREGAR"
+
+];
+
+if (accionesVendedor.includes(accion)) {
+
+    if (pedido.vendedor.uid !== req.user.uid) {
+
+        return res.status(403).json({
+
+            message: "Solo el vendedor propietario puede realizar esta acción."
+
+        });
+
+    }
+
+}
+
         const estadoAnterior = pedido.estado;
 
         const nuevoEstado = executeAction(

@@ -1,5 +1,5 @@
 
-import OrderProgress from "./OrderProgress";
+import OrderProgress from "../orders/OrderProgress";
 import OrderTimeline from "./OrderTimeline";
 import axios from "axios";
 import { auth } from "../../firebase";
