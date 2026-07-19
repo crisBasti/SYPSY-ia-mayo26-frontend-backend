@@ -4,20 +4,37 @@ import Analytics from "../models/Analytics.js";
 import Report from "../models/Report.js";
 
 export const getProducts = async (req, res) => {
+
   try {
+
     const products = await Product.find({
-  $or: [
-    { hidden: false },
-    { hidden: { $exists: false } }
-  ]
-});
+
+      estado: "activo",
+
+      $or: [
+
+        { hidden: false },
+
+        { hidden: { $exists: false } }
+
+      ]
+
+    });
 
     res.json(products);
-  } catch (error) {
-    res.status(500).json({
-      mensaje: "Error obteniendo productos",
-    });
+
   }
+
+  catch (error) {
+
+    res.status(500).json({
+
+      mensaje: "Error obteniendo productos"
+
+    });
+
+  }
+
 };
 
 export const createProduct = async (req, res) => {
@@ -47,8 +64,6 @@ if (usuario.blocked) {
       "Tu cuenta fue suspendida. No podés publicar productos.",
   });
 }
-
-
 
 const newProduct = new Product({
   nombre,
@@ -170,6 +185,105 @@ export const updateProduct = async (
 
   }
 };
+
+
+export const pausarProducto = async (req, res) => {
+
+    try {
+
+        const producto = await Product.findById(req.params.id);
+
+        if (!producto) {
+
+            return res.status(404).json({
+
+                message: "Producto no encontrado"
+
+            });
+
+        }
+
+        if (producto.vendedor.uid !== req.user.uid) {
+
+            return res.status(403).json({
+
+                message: "No autorizado"
+
+            });
+
+        }
+
+        producto.estado = "pausado";
+
+        producto.fechaPausado = new Date();
+
+        await producto.save();
+
+        res.json(producto);
+
+    }
+
+    catch(error){
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+    }
+
+};
+
+export const reactivarProducto = async (req,res)=>{
+
+    try{
+
+        const producto=await Product.findById(req.params.id);
+
+        if(!producto){
+
+            return res.status(404).json({
+
+                message:"Producto no encontrado"
+
+            });
+
+        }
+
+        if(producto.vendedor.uid!==req.user.uid){
+
+            return res.status(403).json({
+
+                message:"No autorizado"
+
+            });
+
+        }
+
+        producto.estado="activo";
+
+        producto.fechaPausado=null;
+
+        await producto.save();
+
+        res.json(producto);
+
+    }
+
+    catch(error){
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+    }
+
+};
+
+
 
 export const getMyProducts = async (
   req,

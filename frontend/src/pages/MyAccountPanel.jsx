@@ -3,6 +3,9 @@ import { useState } from "react";
 import MyAccountSidebar from "../components/MyAccountSidebar";
 import Admin from "./Admin";
 import MyOrders from "./MyOrders";
+import MySales from "./MySales";
+import MyProducts from "./MyProducts";
+import SellerPanel from "./SellerPanel";
 
 
 function MyAccountPanel(){
@@ -36,11 +39,9 @@ function MyAccountPanel(){
                 }
 
                 {
+                    (section==="publish" || section==="products") &&
 
-                    section==="publish" &&
-
-                    <Admin />
-
+                    <SellerPanel section={section} />
                 }
 
                 {
@@ -51,10 +52,9 @@ function MyAccountPanel(){
                 }
 
                 {
+                   section==="sales" &&
 
-                   section==="products" &&
-
-                   <Admin />
+                   <MySales />
 
                 }
 

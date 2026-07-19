@@ -16,6 +16,8 @@ function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
   useEffect(() => { fetchProducts(); }, []);
 
+  
+
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [imgIndex, setImgIndex] = useState({});
@@ -124,6 +126,9 @@ const prevImage = (productId, total) => {
       (categoriaActiva === "Todos" ||
         product.categoria === categoriaActiva);
   });
+
+
+  console.log("PRODUCTOS DESDE API:", productos);
 
 
     return (

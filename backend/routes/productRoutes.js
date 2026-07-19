@@ -9,6 +9,8 @@ import {
   createProduct,
   deleteProduct,
   updateProduct,
+  pausarProducto,
+  reactivarProducto,
   incrementView,
   incrementWhatsappClick,
   reportProduct
@@ -23,6 +25,8 @@ router.get("/stats", authFirebase, getMyStats);
 router.get( "/mine", authFirebase, getMyProducts );
 router.post("/", authFirebase, upload.array("images", 5), createProduct);
 router.put("/:id", authFirebase, updateProduct);
+router.put("/:id/pause", authFirebase, pausarProducto);
+router.put("/:id/reactivate", authFirebase, reactivarProducto);
 router.delete("/:id", authFirebase, deleteProduct);
 
 export default router;

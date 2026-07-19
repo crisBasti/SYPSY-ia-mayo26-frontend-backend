@@ -18,6 +18,7 @@ import AdminPanel from "./pages/AdminPanel";
 import MyAccountPanel from "./pages/MyAccountPanel";
 import AdminRoute from "./components/AdminRoute";
 import RoleRoute from "./components/RoleRoute";
+import ProductFormSeller from "./components/seller/ProductFormSeller";
 
 function App() {
 
@@ -41,6 +42,15 @@ function App() {
               <Home
                 search={search}
               />
+            }
+          />
+
+          <Route
+            path="/micuenta/producto/:id"
+            element={
+              <ProtectedRoute>
+                <ProductFormSeller />
+              </ProtectedRoute>
             }
           />
 

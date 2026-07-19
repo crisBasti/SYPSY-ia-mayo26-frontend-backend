@@ -36,6 +36,17 @@ const productSchema = new mongoose.Schema(
 reportsCount: {
     type: Number,
     default: 0
+},
+
+estado: {
+    type: String,
+    enum: ["activo", "pausado"],
+    default: "activo"
+},
+
+fechaPausado: {
+    type: Date,
+    default: null
 }
 
 },

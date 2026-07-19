@@ -1,8 +1,9 @@
 
-import OrderProgress from "../orders/OrderProgress";
+
 import OrderTimeline from "./OrderTimeline";
 import axios from "axios";
 import { auth } from "../../firebase";
+import { useAuth } from "../../context/AuthContext";
 
 
 function OrderDrawer({
@@ -13,6 +14,14 @@ function OrderDrawer({
 
 }){
 
+    const { user } = useAuth();
+
+const esVendedor =
+    user?.uid === pedido?.vendedor?.uid;
+
+const esComprador =
+    user?.uid === pedido?.comprador?.uid;
+
     if(!pedido) return null;
 
 
@@ -22,27 +31,43 @@ function OrderDrawer({
 
         const token = await auth.currentUser.getIdToken();
 
-        await axios.put(
+        // Confirmación del comprador
+        if (accion === "FINALIZAR") {
 
-            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}`,
+            await axios.post(
 
-            {
+                `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/confirmar`,
 
-                accion
+                {},
 
-            },
-
-            {
-
-                headers: {
-
-                    Authorization: `Bearer ${token}`
-
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
                 }
 
-            }
+            );
 
-        );
+        }
+
+        // Acciones normales del vendedor
+        else {
+
+            await axios.put(
+
+                `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}`,
+
+                { accion },
+
+                {
+                    headers: {
+                        Authorization: `Bearer ${token}`
+                    }
+                }
+
+            );
+
+        }
 
         window.location.reload();
 
@@ -52,7 +77,10 @@ function OrderDrawer({
 
         console.error(error);
 
-        alert(error.response?.data?.message);
+        alert(
+            error.response?.data?.message ||
+            "Ocurrió un error"
+        );
 
     }
 
@@ -86,9 +114,15 @@ function OrderDrawer({
 
                 </h2>
 
-                <OrderProgress pedido={pedido} />
+                <div className="drawer-status">
 
-                <hr />
+                  <span className={`status-badge ${pedido.estado}`}>
+
+                      {pedido.estado.replaceAll("_"," ").toUpperCase()}
+
+                  </span>
+
+                </div>
 
                 <p>
 
@@ -100,47 +134,32 @@ function OrderDrawer({
 
                 </p>
 
+
                 <p>
 
-    <strong>
+                    <strong>
 
-        🏪 Vendedor
+                      🏪 Vendedor
 
-    </strong>
+                    </strong>
 
-    <br/>
+                    <br/>
 
-    {pedido.vendedor?.name}
+                    {pedido.vendedor?.name}
 
-</p>
+                </p>
 
-<p>
+                <a
 
-    📞
+                  href={`/seller/${pedido.vendedor.uid}`}
 
-    {pedido.vendedor?.telefono}
+                  className="seller-link"
 
-</p>
+                >
 
-<p>
+                  👤 Ver Perfil del Vendedor
 
-    ✉
-
-    {pedido.vendedor?.email}
-
-</p>
-
-<a
-
-    href={`/seller/${pedido.vendedor.uid}`}
-
-    className="seller-link"
-
->
-
-    👤 Ver Perfil del Vendedor
-
-</a>
+                </a>
 
                 <p>
 
@@ -168,90 +187,82 @@ function OrderDrawer({
 
                 <hr />
 
-<div className="drawer-actions">
+                <div className="drawer-actions">
 
-    {pedido.estado==="pendiente" && (
+    {/* ===============================
+        ACCIONES DEL VENDEDOR
+    ================================ */}
+
+    {esVendedor && pedido.estado === "pendiente" && (
 
         <>
-
             <button
-
-                onClick={()=>ejecutarAccion("ACEPTAR")}
-
+                onClick={() => ejecutarAccion("ACEPTAR")}
             >
-
-                🟢 Aceptar Pedido
-
+                ✅ Aceptar pedido
             </button>
 
             <button
-
                 className="danger"
-
-                onClick={()=>ejecutarAccion("CANCELAR")}
-
+                onClick={() => ejecutarAccion("CANCELAR")}
             >
-
-                🔴 Cancelar
-
+                ❌ Cancelar pedido
             </button>
-
         </>
 
     )}
 
-    {pedido.estado==="aceptado" && (
+    {esVendedor && pedido.estado === "aceptado" && (
 
         <button
-
-            onClick={()=>ejecutarAccion("PREPARAR")}
-
+            onClick={() => ejecutarAccion("PREPARAR")}
         >
-
-            📦 Preparando
-
+            📦 Preparar pedido
         </button>
 
     )}
 
-    {pedido.estado==="preparando" && (
+    {esVendedor && pedido.estado === "preparando" && (
 
         <button
-
-            onClick={()=>ejecutarAccion("DESPACHAR")}
-
+            onClick={() => ejecutarAccion("DESPACHAR")}
         >
-
-            🚚 Despachar
-
+            🚚 Despachar pedido
         </button>
 
     )}
 
-    {pedido.estado==="enviado" && (
+    {esVendedor && pedido.estado === "enviado" && (
 
         <button
-
-            onClick={()=>ejecutarAccion("EN_REPARTO")}
-
+            onClick={() => ejecutarAccion("EN_REPARTO")}
         >
-
-            🚛 En reparto
-
+            🚛 Marcar en reparto
         </button>
 
     )}
 
-    {pedido.estado==="en_reparto" && (
+    {esVendedor && pedido.estado === "en_reparto" && (
 
         <button
-
-            onClick={()=>ejecutarAccion("ENTREGAR")}
-
+            onClick={() => ejecutarAccion("ENTREGAR")}
         >
+            📍 Confirmar entrega
+        </button>
 
-            ✅ Confirmar entrega
+    )}
 
+    {/* ===============================
+        ACCIONES DEL COMPRADOR
+    ================================ */}
+
+    {esComprador && pedido.estado === "entregado" && (
+
+        <button
+            className="success"
+            onClick={() => ejecutarAccion("FINALIZAR")}
+        >
+            🎉 Confirmar recepción
         </button>
 
     )}

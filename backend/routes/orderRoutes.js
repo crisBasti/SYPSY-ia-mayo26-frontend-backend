@@ -30,7 +30,7 @@ router.get("/mis-ventas", authFirebase, obtenerMisVentas);
 router.get("/:id", authFirebase, obtenerPedidoPorId);
 
 // Confirmar recepción por comprador
-router.put("/:id/confirmar-recepcion", authFirebase, confirmarRecepcion);
+router.post("/:id/confirmar", authFirebase, confirmarRecepcion);
 
 // Actualizar estado
 router.put("/:id", authFirebase, actualizarEstadoPedido);
