@@ -6,6 +6,8 @@ import { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
 
+import { createProductService } from "../../services/productService";
+
 function ProductFormSeller({ addProduct }) {
 
   const { user } = useAuth();
@@ -170,14 +172,10 @@ if(id){
 
 else{
 
-    await addProduct(
-
-        productData,
-
-        token
-
+    await createProductService(
+      productData,
+      token
     );
-
 }
 
 navigate("/micuenta");
