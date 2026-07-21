@@ -1,46 +1,51 @@
 const transitions = {
+
     pendiente: {
+
         ACEPTAR: "aceptado",
-        CANCELAR: "cancelado",
+
+        CANCELAR: "cancelado"
+
     },
 
     aceptado: {
+
         PREPARAR: "preparando",
-        CANCELAR: "cancelado",
+
+        CANCELAR: "cancelado"
+
     },
 
     preparando: {
-        DESPACHAR: "enviado",
-        CANCELAR: "cancelado",
-    },
 
-    enviado: {
-        EN_REPARTO: "en_reparto",
-    },
+        ENTREGAR_REPARTIDOR: "entregado"
 
-    en_reparto: {
-        ENTREGAR: "entregado",
     },
 
     entregado: {},
 
     finalizado: {},
 
-    cancelado: {},
+    cancelado: {}
+
 };
 
-export function executeAction(estadoActual, accion) {
+export function executeAction(estadoActual, accion){
 
-    const siguienteEstado =
+    const siguienteEstado=
+
         transitions[estadoActual]?.[accion];
 
-    if (!siguienteEstado) {
+    if(!siguienteEstado){
 
         throw new Error(
-            `No se puede ejecutar '${accion}' desde '${estadoActual}'`
+
+            `No se puede ejecutar ${accion}`
+
         );
 
     }
 
     return siguienteEstado;
+
 }

@@ -108,17 +108,23 @@ const esComprador =
 
                 </button>
 
-                <h2>
+                <div className="drawer-header">
 
-                    📦 {pedido.numeroPedido}
+                  <div>
 
-                </h2>
+                    <h2>Pedido {pedido.numeroPedido}</h2>
 
-                <div className="drawer-status">
+                    <small>
+
+                      Estado actual
+
+                    </small>
+
+                  </div>
 
                   <span className={`status-badge ${pedido.estado}`}>
 
-                      {pedido.estado.replaceAll("_"," ").toUpperCase()}
+                    {pedido.estado.replaceAll("_"," ").toUpperCase()}
 
                   </span>
 
@@ -126,11 +132,21 @@ const esComprador =
 
                 <p>
 
-                    <strong>Producto</strong>
+                  <strong>Producto</strong>
 
-                    <br/>
+                <br/>
+
+                  <a
+
+                  href={`/producto/${pedido.producto?._id}`}
+
+                  className="seller-link"
+
+                  >
 
                     {pedido.producto?.nombre}
+
+                  </a>
 
                 </p>
 
@@ -224,31 +240,12 @@ const esComprador =
 
     {esVendedor && pedido.estado === "preparando" && (
 
-        <button
-            onClick={() => ejecutarAccion("DESPACHAR")}
-        >
-            🚚 Despachar pedido
-        </button>
-
-    )}
-
-    {esVendedor && pedido.estado === "enviado" && (
-
-        <button
-            onClick={() => ejecutarAccion("EN_REPARTO")}
-        >
-            🚛 Marcar en reparto
-        </button>
-
-    )}
-
-    {esVendedor && pedido.estado === "en_reparto" && (
-
-        <button
-            onClick={() => ejecutarAccion("ENTREGAR")}
-        >
-            📍 Confirmar entrega
-        </button>
+    <button
+        className="success"
+        onClick={() => ejecutarAccion("ENTREGAR_REPARTIDOR")}
+    >
+        🚚 Entregado al repartidor
+    </button>
 
     )}
 

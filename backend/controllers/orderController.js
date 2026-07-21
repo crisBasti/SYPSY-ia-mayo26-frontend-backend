@@ -265,11 +265,7 @@ export const actualizarEstadoPedido = async (req, res) => {
 
     "PREPARAR",
 
-    "DESPACHAR",
-
-    "EN_REPARTO",
-
-    "ENTREGAR"
+    "DESPACHAR"
 
 ];
 
@@ -304,8 +300,8 @@ if (accionesVendedor.includes(accion)) {
             estado: nuevoEstado,
 
             fecha: new Date(),
-
-            observacion: `Acción ejecutada: ${accion}`
+            
+            descripcion: obtenerDescripcionEstado(nuevoEstado)
 
         });
 
@@ -338,17 +334,13 @@ const obtenerDescripcionEstado = (estado) => {
 
     preparando: "Producto en preparación",
 
-    enviado: "Pedido despachado",
-
-    en_reparto: "Pedido en reparto",
-
-    entregado: "Pedido entregado",
+    entregado: "Entregado al repartidor",
 
     finalizado: "Compra finalizada",
 
     cancelado: "Pedido cancelado"
 
-  };
+};
 
   return mapa[estado] || estado;
 

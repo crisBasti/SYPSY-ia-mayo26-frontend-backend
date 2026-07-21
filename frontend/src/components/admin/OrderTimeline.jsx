@@ -1,43 +1,84 @@
 function OrderTimeline({ historial = [] }) {
 
+    const iconos = {
+
+        pendiente: "📝",
+
+        aceptado: "✅",
+
+        preparando: "📦",
+
+        entregado: "🚚",
+
+        finalizado: "🎉",
+
+        cancelado: "❌"
+
+    };
+
     return (
 
         <div className="order-timeline">
 
-            <h3>📜 Historial</h3>
+            <h3>📜 Historial del pedido</h3>
 
             {
 
-                historial.map((evento, index) => (
+                historial.map((evento,index)=>(
 
                     <div
+
                         key={index}
-                        className="timeline-item"
+
+                        className="timeline-step completed"
+
                     >
 
-                        <div className="timeline-dot" />
+                        <div className="timeline-icon">
+
+                            {
+
+                                iconos[evento.estado] ||
+
+                                "📍"
+
+                            }
+
+                        </div>
 
                         <div className="timeline-content">
 
-                            <strong>
-
-                                {evento.descripcion}
-
-                            </strong>
-
-                            <br />
-
-                            <small>
+                            <div className="timeline-title">
 
                                 {
 
-                                    new Date(
-                                        evento.fecha
-                                    ).toLocaleString()
+                                    evento.descripcion ||
+
+                                    evento.estado
 
                                 }
 
-                            </small>
+                            </div>
+
+                            <div className="timeline-date">
+
+                                {
+
+                                    evento.fecha
+
+                                    ?
+
+                                    new Date(evento.fecha)
+
+                                    .toLocaleString()
+
+                                    :
+
+                                    ""
+
+                                }
+
+                            </div>
 
                         </div>
 
