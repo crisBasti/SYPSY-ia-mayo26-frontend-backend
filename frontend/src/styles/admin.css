@@ -568,6 +568,7 @@ text-decoration:underline;
     flex-direction:column;
 
     overflow:hidden;
+    position:relative;
 
     box-shadow:-12px 0 35px rgba(0,0,0,.20);
 
@@ -599,21 +600,49 @@ text-decoration:underline;
 
 .drawer-close{
 
-    width:38px;
+position:absolute;
 
-    height:38px;
+top:18px;
 
-    border:none;
+right:18px;
 
-    border-radius:50%;
+width:46px;
 
-    background:#f3f4f6;
+height:46px;
 
-    cursor:pointer;
+border:none;
 
-    font-size:18px;
+border-radius:50%;
 
-    transition:.2s;
+background:#ef4444;
+
+color:#fff;
+
+font-size:24px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+box-shadow:0 6px 18px rgba(0,0,0,.25);
+
+transition:.25s;
+
+z-index:999;
+
+}
+
+.drawer-close:hover{
+
+transform:scale(1.08);
+
+background:#dc2626;
 
 }
 

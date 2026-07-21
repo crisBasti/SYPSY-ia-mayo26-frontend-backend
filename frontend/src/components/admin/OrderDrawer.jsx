@@ -24,6 +24,14 @@ const esComprador =
 
     if(!pedido) return null;
 
+    console.log("Pedido completo:", pedido);
+console.log("Estado:", pedido.estado);
+console.log("Usuario:", user?.uid);
+console.log("Comprador:", pedido.comprador);
+console.log("Vendedor:", pedido.vendedor);
+console.log("esComprador:", esComprador);
+console.log("esVendedor:", esVendedor);
+
 
     const ejecutarAccion = async (accion) => {
 
@@ -165,17 +173,21 @@ const esComprador =
 
                 </p>
 
-                <a
+                {esComprador && (
+
+                  <a
 
                   href={`/seller/${pedido.vendedor.uid}`}
 
-                  className="seller-link"
+                    className="seller-link"
 
-                >
+                  >
 
-                  👤 Ver Perfil del Vendedor
+                    👤 Ver perfil del vendedor
 
-                </a>
+                  </a>
+
+                )}
 
                 <p>
 

@@ -8,10 +8,19 @@ const orderSchema = new mongoose.Schema(
   },
 
     comprador: {
-      type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
-      required: true,
+
+    uid:{
+        type:String,
+        required:true
     },
+
+    email:String,
+
+    name:String,
+
+    telefono:String
+
+  },
 
     vendedor: {
   uid: {

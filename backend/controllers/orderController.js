@@ -93,7 +93,17 @@ const nuevoPedido = new Order({
 
   numeroPedido,
 
-  comprador: comprador._id,
+  comprador:{
+
+    uid:comprador.uid,
+
+    email:comprador.email,
+
+    name:`${comprador.nombre} ${comprador.apellido}`,
+
+    telefono:comprador.telefono
+
+},
 
   vendedor,
 
@@ -188,11 +198,12 @@ export const obtenerMisCompras = async (req, res) => {
       });
 
 
-    const pedidos =
-      await Order.find({
-        comprador: comprador._id
-      })
-      .populate("producto");
+    const pedidos = await Order.find({
+
+    "comprador.uid": req.user.uid
+
+    })
+    .populate("producto");
 
 
     res.json(pedidos);
@@ -304,6 +315,10 @@ if (accionesVendedor.includes(accion)) {
             descripcion: obtenerDescripcionEstado(nuevoEstado)
 
         });
+
+
+        console.log("Acción:", accion);
+        console.log("Nuevo estado:", nuevoEstado);
 
         await pedido.save();
 
@@ -437,9 +452,9 @@ export const confirmarRecepcion = async (req, res) => {
 
     if (
 
-      pedido.comprador.toString() !== comprador._id.toString()
+        pedido.comprador.uid !== req.user.uid
 
-    ) {
+      ) {
 
       return res.status(403).json({
 
