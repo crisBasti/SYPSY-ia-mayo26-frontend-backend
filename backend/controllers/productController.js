@@ -71,6 +71,7 @@ const newProduct = new Product({
   descripcion,
   categoria,
   stock: stock || 0,
+  estado: "activo",   // 🔥 AGREGAR ESTO
 
 vendedor: {
   uid: usuario.uid,

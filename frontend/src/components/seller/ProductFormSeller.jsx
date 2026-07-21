@@ -252,38 +252,94 @@ navigate("/micuenta");
 </select>
 
       <input
-        type="file"
-        multiple
-        accept="image/*"
-          onChange={(e) => {
+  type="file"
+  multiple
+  accept="image/*"
+  onChange={(e) => {
 
-  const files =
-    Array.from(e.target.files);
-    setFormData((prev) => ({
-  ...prev,
-  images: [
-    ...(prev.images || []),
-    ...files
-  ]
-}));
-}}
+    const files = Array.from(e.target.files);
+
+    const nuevasImagenes = [
+      ...(formData.images || []),
+      ...files
+    ];
+
+    if (nuevasImagenes.length > 5) {
+
+      alert("Solo podés subir un máximo de 5 imágenes.");
+
+      return;
+
+    }
+
+    setFormData(prev => ({
+
+      ...prev,
+
+      images: nuevasImagenes
+
+    }));
+
+  }}
 />
 
+<p
+  style={{
+    fontSize:"13px",
+    color:"#64748b",
+    marginTop:"8px"
+  }}
+>
+Máximo permitido: 5 imágenes
+</p>
+
 <div className="preview-grid">
-  {formData.images?.map((file, index) => (
-    <div
-      key={index}
-      className="preview-card"
-    >
-      <img
-        src={URL.createObjectURL(file)}
-        alt={`preview-${index}`}
-        className="preview-image"
-      />
-    </div>
-  ))}
+
+{formData.images?.map((file,index)=>(
+
+<div
+key={index}
+className="preview-card"
+>
+
+<button
+type="button"
+className="remove-image"
+
+onClick={()=>{
+
+setFormData(prev=>({
+
+...prev,
+
+images:prev.images.filter((_,i)=>i!==index)
+
+}));
+
+}}
+
+>
+
+✕
+
+</button>
+
+<img
+
+src={URL.createObjectURL(file)}
+
+alt={`preview-${index}`}
+
+className="preview-image"
+
+/>
 
 </div>
+
+))}
+
+</div>
+
       <button
         type="submit"
         style={styles.button}

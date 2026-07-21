@@ -57,6 +57,34 @@ function ProductSellerCard({
 
 };
 
+
+const cambiarEstado = async () => {
+  try {
+    const token = await auth.currentUser.getIdToken();
+
+    const endpoint =
+      producto.estado === "activo"
+        ? "pause"
+        : "reactivate";
+
+    const res = await axios.put(
+      `${import.meta.env.VITE_API_URL}/api/products/${producto._id}/${endpoint}`,
+      {},
+      {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      }
+    );
+
+    window.location.reload(); // después lo optimizamos
+
+  } catch (error) {
+    console.error(error);
+    alert("Error cambiando estado");
+  }
+};
+
     
 
     return (
@@ -85,11 +113,14 @@ function ProductSellerCard({
 
                     <strong>Estado:</strong>
 
-                    <span className="status-active">
-
-                        🟢 Activo
-
-                    </span>
+                    <p>
+                        <strong>Estado:</strong>{" "}
+                          {producto.estado === "activo" ? (
+                        <span className="status-active">🟢 Activo</span>
+                      ) : (
+                        <span className="status-paused">🟡 Pausado</span>
+                      )}
+                    </p>
 
                 </p>
 
@@ -105,9 +136,19 @@ function ProductSellerCard({
                     ✏ Editar
                 </button>
 
-                <button>📊 Estadísticas</button>
+                <button
+                   onClick={() =>
+                      navigate(`/micuenta/producto/${producto._id}?tab=stats`)
+                  }
+                >
+                  📊 Estadísticas
+                </button>
 
-                <button>⏸ Pausar</button>
+                <button onClick={cambiarEstado}>
+                  {producto.estado === "activo"
+                  ? "⏸ Pausar"
+                  : "▶ Reactivar"}
+                </button>
 
                 <button
                    onClick={eliminarProducto}

@@ -872,3 +872,118 @@ REPORTAR PUBLICACIÓN
     background:#ddd;
 
 }
+
+
+/* =========================
+   SELLER PRODUCT CARD
+========================= */
+
+.seller-product-card {
+  background: #111827;
+  border-radius: 18px;
+  padding: 16px;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.seller-product-image {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.seller-product-info h3 {
+  font-size: 1.1rem;
+  margin-bottom: 6px;
+}
+
+.seller-product-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.seller-product-actions button {
+  flex: 1;
+  min-width: 45%;
+  padding: 10px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 600;
+  cursor: pointer;
+  background: #1f2937;
+  color: white;
+  transition: 0.2s;
+}
+
+.seller-product-actions button:hover {
+  background: #2563eb;
+}
+
+
+.status-active {
+  color: #22c55e;
+  font-weight: bold;
+}
+
+.status-paused {
+  color: #facc15;
+  font-weight: bold;
+}
+
+
+
+.preview-card{
+
+position:relative;
+
+}
+
+.remove-image{
+
+position:absolute;
+
+top:6px;
+
+right:6px;
+
+width:24px;
+
+height:24px;
+
+border:none;
+
+border-radius:50%;
+
+background:#dc2626;
+
+color:white;
+
+font-size:14px;
+
+font-weight:bold;
+
+cursor:pointer;
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:5;
+
+transition:.2s;
+
+}
+
+.remove-image:hover{
+
+background:#991b1b;
+
+transform:scale(1.08);
+
+}
