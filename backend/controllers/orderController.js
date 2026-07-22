@@ -2,6 +2,8 @@ import Order from "../models/order.js";
 import User from "../models/User.js";
 import Configuration from "../models/Configuration.js";
 import { executeAction } from "../services/orderStateMachine.js";
+import Product from "../models/Product.js";
+
 
 
 // Crear pedido
@@ -22,6 +24,28 @@ export const crearPedido = async (req, res) => {
       await User.findOne({
         uid: req.user.uid
       });
+
+      const productoDB = await Product.findById(producto);
+
+if(!productoDB){
+
+    return res.status(404).json({
+
+        message:"Producto inexistente"
+
+    });
+
+}
+
+if(productoDB.vendedor.uid === req.user.uid){
+
+    return res.status(400).json({
+
+        message:"No puedes comprar tus propios productos."
+
+    });
+
+}
 
 
     if (!comprador) {
@@ -89,6 +113,13 @@ const numeroPedido =
         .padStart(6,"0")}`;
 
 
+const codigoEntrega = Math.floor(
+
+    100000 + Math.random() * 900000
+
+  ).toString();
+
+
 const nuevoPedido = new Order({
 
   numeroPedido,
@@ -118,6 +149,8 @@ const nuevoPedido = new Order({
   total,
 
   comision,
+
+  codigoEntrega,
 
   historial: [
     {
@@ -477,6 +510,16 @@ export const confirmarRecepcion = async (req, res) => {
 
     }
 
+    if(!pedido.codigoValidado){
+
+    return res.status(400).json({
+
+        message:"Primero debes validar el código de entrega."
+
+    });
+
+}
+
 
     pedido.estado = "finalizado";
 
@@ -511,5 +554,90 @@ export const confirmarRecepcion = async (req, res) => {
 
 
   }
+
+};
+
+
+export const validarCodigoEntrega = async (req, res) => {
+
+    try{
+
+        const { codigo } = req.body;
+
+        const comprador = await User.findOne({
+
+            uid:req.user.uid
+
+        });
+
+        const pedido = await Order.findById(req.params.id);
+
+        if(!pedido){
+
+            return res.status(404).json({
+
+                message:"Pedido no encontrado"
+
+            });
+
+        }
+
+        if(
+
+            pedido.comprador.uid.toString() !== req.user.uid
+
+        ){
+
+            return res.status(403).json({
+
+                message:"No autorizado"
+
+            });
+
+        }
+
+        if(
+
+            pedido.codigoEntrega !== codigo
+
+        ){
+
+            return res.status(400).json({
+
+                message:"Código incorrecto"
+
+            });
+
+        }
+
+        pedido.codigoValidado = true;
+
+        pedido.historial.push({
+
+            estado:"codigo_validado",
+
+            descripcion:"Comprador validó el código de entrega"
+
+        });
+
+        await pedido.save();
+
+        res.json({
+
+            ok:true
+
+        });
+
+    }
+
+    catch(error){
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+    }
 
 };

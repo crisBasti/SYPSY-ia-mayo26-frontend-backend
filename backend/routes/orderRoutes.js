@@ -10,6 +10,7 @@ import {
   actualizarEstadoPedido,
   cancelarPedido,
   confirmarRecepcion,
+  validarCodigoEntrega
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -37,5 +38,8 @@ router.put("/:id", authFirebase, actualizarEstadoPedido);
 
 // Cancelar pedido
 router.delete("/:id", authFirebase, cancelarPedido);
+
+// Validacion de pedido recibido con PIN
+router.post("/:id/validar-codigo", authFirebase, validarCodigoEntrega);
 
 export default router;

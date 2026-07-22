@@ -7,6 +7,7 @@ import { Helmet } from "react-helmet-async";
 import { slugify } from "../utils/slugify";
 import { incrementWhatsappService } from "../services/productService";
 import AdvertisementCarousel from "../components/AdvertisementCarousel";
+import { useAuth } from "../context/AuthContext";
 
 
 import { crearPedidoService } from "../services/orderService";
@@ -14,6 +15,9 @@ import { auth } from "../firebase";
 
 function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
+
+  const { user } = useAuth();
+  
   useEffect(() => { fetchProducts(); }, []);
 
   
@@ -32,6 +36,14 @@ function Home({ search }) {
 };
 
 const handleComprar = async (product) => {
+
+  if(user?.uid === product.vendedor?.uid){
+
+    alert("No puedes comprar tus propios productos.");
+
+    return;
+
+}
 
   try {
 
@@ -307,14 +319,29 @@ Estoy interesado en este producto de SYPSY:
               Ver producto
               </Link>
 
-              <button
-  className="buy-btn"
-  onClick={() =>
-    handleComprar(product)
-  }
->
-🛒 Comprar ahora
-</button>
+              {user?.uid !== product.vendedor?.uid ? (
+
+                <button
+                  className="buy-btn"
+                  onClick={() => handleComprar(product)}
+                >
+                  🛒 Comprar ahora
+                </button>
+
+              ) : (
+
+                <button
+                  className="buy-btn"
+                  disabled
+                   style={{
+                    background:"#9ca3af",
+                      cursor:"not-allowed"
+                  }}
+                >
+                  📦 Es tu publicación
+                </button>
+
+              )}
 
             </div>
           </div>

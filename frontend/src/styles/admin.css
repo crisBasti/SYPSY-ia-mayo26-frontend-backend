@@ -1605,3 +1605,55 @@ text-align:center;
     color:white;
 
 }
+
+
+.delivery-code-box{
+
+    margin-top:20px;
+
+    padding:18px;
+
+    border:2px dashed #0d6efd;
+
+    border-radius:12px;
+
+    text-align:center;
+
+    background:#eef6ff;
+
+}
+
+.delivery-code{
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    letter-spacing:10px;
+
+    color:#0d6efd;
+
+    margin:15px 0;
+
+}
+
+
+.order-drawer input{
+
+    width:100%;
+
+    padding:12px;
+
+    margin:12px 0;
+
+    border-radius:8px;
+
+    border:1px solid #ccc;
+
+    font-size:18px;
+
+    text-align:center;
+
+    letter-spacing:4px;
+
+}

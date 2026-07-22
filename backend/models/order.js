@@ -98,6 +98,22 @@ const orderSchema = new mongoose.Schema(
     default: ""
 },
 
+codigoEntrega:{
+
+    type:String,
+
+    default:""
+
+},
+
+codigoValidado:{
+
+    type:Boolean,
+
+    default:false
+
+},
+
 transportista: {
     type: String,
     default: ""

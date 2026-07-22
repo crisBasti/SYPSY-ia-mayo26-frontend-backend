@@ -4,6 +4,7 @@ import OrderTimeline from "./OrderTimeline";
 import axios from "axios";
 import { auth } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
+import { useState } from "react";
 
 
 function OrderDrawer({
@@ -21,6 +22,10 @@ const esVendedor =
 
 const esComprador =
     user?.uid === pedido?.comprador?.uid;
+
+const [codigoEntrega, setCodigoEntrega] = useState("");
+
+const [codigoValidado, setCodigoValidado] = useState(false);
 
     if(!pedido) return null;
 
@@ -95,6 +100,56 @@ console.log("esVendedor:", esVendedor);
 };
 
 
+const validarCodigo = async () => {
+
+    try{
+
+        const token =
+            await auth.currentUser.getIdToken();
+
+        await axios.post(
+
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/validar-codigo`,
+
+            {
+
+                codigo: codigoEntrega
+
+            },
+
+            {
+
+                headers:{
+
+                    Authorization:`Bearer ${token}`
+
+                }
+
+            }
+
+        );
+
+        setCodigoValidado(true);
+
+        alert("Código correcto.");
+
+    }
+
+    catch(error){
+
+        alert(
+
+            error.response?.data?.message ||
+
+            "Código incorrecto"
+
+        );
+
+    }
+
+};
+
+
 
 
 
@@ -139,48 +194,38 @@ console.log("esVendedor:", esVendedor);
                 </div>
 
                 <p>
-
                   <strong>Producto</strong>
-
-                <br/>
+                  <br />
 
                   <a
-
-                  href={`/producto/${pedido.producto?._id}`}
-
-                  className="seller-link"
-
+                    href={`/producto/${pedido.producto?._id}`}
+                    className="seller-link"
                   >
-
                     {pedido.producto?.nombre}
-
                   </a>
-
                 </p>
 
 
-                <p>
+                {!esVendedor && (
 
-                    <strong>
+                  <p>
 
-                      🏪 Vendedor
+                    <strong>🏪 Vendedor</strong>
 
-                    </strong>
-
-                    <br/>
+                      <br />
 
                     {pedido.vendedor?.name}
 
-                </p>
+                  </p>
 
-                {esComprador && (
+                )}
+                
+                  
+                {!esVendedor && (
 
                   <a
-
-                  href={`/seller/${pedido.vendedor.uid}`}
-
+                    href={`/seller/${pedido.vendedor.uid}`}
                     className="seller-link"
-
                   >
 
                     👤 Ver perfil del vendedor
@@ -200,6 +245,28 @@ console.log("esVendedor:", esVendedor);
                     {pedido.total.toLocaleString()}
 
                 </p>
+
+                {esVendedor && pedido.codigoEntrega && (
+
+                  <div className="delivery-code-box">
+
+                    <h3>🔐 Código de entrega</h3>
+
+                    <div className="delivery-code">
+
+                      {pedido.codigoEntrega}
+
+                    </div>
+
+                    <small>
+
+                      Entregá este código únicamente al comprador cuando reciba el producto.
+
+                    </small>
+
+                  </div>
+
+                )}
 
                 <p>
 
@@ -267,14 +334,73 @@ console.log("esVendedor:", esVendedor);
 
     {esComprador && pedido.estado === "entregado" && (
 
-        <button
-            className="success"
-            onClick={() => ejecutarAccion("FINALIZAR")}
-        >
-            🎉 Confirmar recepción
-        </button>
+    <>
 
-    )}
+        {!codigoValidado && (
+
+            <>
+
+                <input
+
+                    type="text"
+
+                    placeholder="Ingrese el código"
+
+                    value={codigoEntrega}
+
+                    onChange={(e)=>
+
+                        setCodigoEntrega(
+
+                            e.target.value
+
+                        )
+
+                    }
+
+                />
+
+                <button
+
+                    onClick={validarCodigo}
+
+                >
+
+                    🔐 Validar código
+
+                </button>
+
+            </>
+
+        )}
+
+        {codigoValidado && (
+
+            <button
+
+                className="success"
+
+                onClick={()=>
+
+                    ejecutarAccion(
+
+                        "FINALIZAR"
+
+                    )
+
+                }
+
+            >
+
+                ✅ Confirmar recepción
+
+            </button>
+
+        )}
+
+    </>
+
+)}
 
 </div>
 
