@@ -23,6 +23,8 @@ const esVendedor =
 const esComprador =
     user?.uid === pedido?.comprador?.uid;
 
+const [comprobante, setComprobante] = useState(null);    
+
 const [codigoEntrega, setCodigoEntrega] = useState("");
 
 const [codigoValidado, setCodigoValidado] = useState(false);
@@ -94,6 +96,61 @@ console.log("esVendedor:", esVendedor);
             error.response?.data?.message ||
             "Ocurrió un error"
         );
+
+    }
+
+};
+
+
+const subirComprobante = async () => {
+
+    if (!comprobante) {
+
+        return alert("Seleccione una imagen.");
+
+    }
+
+    try {
+
+        const token =
+            await auth.currentUser.getIdToken();
+
+        const formData = new FormData();
+
+        formData.append(
+            "comprobante",
+            comprobante
+        );
+
+        await axios.post(
+
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/comprobante`,
+
+            formData,
+
+            {
+
+                headers: {
+
+                    Authorization: `Bearer ${token}`
+
+                }
+
+            }
+
+        );
+
+        alert("Comprobante enviado correctamente.");
+
+        window.location.reload();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("No se pudo subir el comprobante.");
 
     }
 
@@ -246,6 +303,57 @@ const validarCodigo = async () => {
 
                 </p>
 
+                
+                <p>
+
+<strong>Pago</strong>
+
+<br/>
+
+{
+
+pedido.estadoPago === "pendiente"
+
+&&
+
+"⚪ Esperando comprobante"
+
+}
+
+{
+
+pedido.estadoPago === "pendiente_verificacion"
+
+&&
+
+"🟡 Comprobante enviado"
+
+}
+
+{
+
+pedido.estadoPago === "retenido"
+
+&&
+
+"🟢 Pago confirmado"
+
+}
+
+{
+
+pedido.estadoPago === "rechazado"
+
+&&
+
+"🔴 Comprobante rechazado"
+
+}
+
+</p>
+
+
+
                 {esVendedor && pedido.codigoEntrega && (
 
                   <div className="delivery-code-box">
@@ -279,6 +387,68 @@ const validarCodigo = async () => {
                     {pedido.comision.toLocaleString()}
 
                 </p>
+
+                {esComprador && pedido.estadoPago === "pendiente" && (
+
+<div className="payment-box">
+
+<h3>💳 Pago del pedido</h3>
+
+<p>
+
+Transferí el importe utilizando:
+
+</p>
+
+<p>
+
+<strong>Alias:</strong> sypsy.arg
+
+</p>
+
+<p>
+
+<strong>CVU:</strong>
+
+0000003100014719845478
+
+</p>
+
+<p>
+
+<strong>Titular:</strong>
+
+Cristian Alejandro Portillo
+
+</p>
+
+<input
+
+type="file"
+
+accept="image/*"
+
+onChange={(e)=>
+
+setComprobante(e.target.files[0])
+
+}
+
+/>
+
+<button
+
+onClick={subirComprobante}
+
+>
+
+📤 Enviar comprobante
+
+</button>
+
+</div>
+
+)}
 
                 <hr />
 

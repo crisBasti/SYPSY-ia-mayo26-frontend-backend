@@ -52,6 +52,20 @@ function AdminSidebar({ section, setSection }) {
 
 </button>
 
+
+<button
+
+    className={section === "payments" ? "activo" : ""}
+
+    onClick={() => setSection("payments")}
+
+>
+
+    💳 Pagos
+
+</button>
+
+
       <button
 
     className={section === "ads" ? "activo" : ""}

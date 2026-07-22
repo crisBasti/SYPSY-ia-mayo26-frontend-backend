@@ -73,10 +73,70 @@ const orderSchema = new mongoose.Schema(
     },
 
     estadoPago: {
-      type: String,
-      enum: ["pendiente", "pagado", "reembolsado"],
-      default: "pendiente",
-    },
+    type: String,
+    enum: [
+        "pendiente",
+        "pendiente_verificacion",
+        "retenido",
+        "liberar",
+        "pagado",
+        "rechazado",
+        "reembolsado"
+    ],
+    default: "pendiente"
+},
+
+comprobantePago: {
+    type: String,
+    default: ""
+},
+
+fechaPago: Date,
+
+fechaVerificacion: Date,
+
+verificadoPor: {
+    uid: String,
+    email: String,
+    name: String
+},
+
+observacionPago: {
+    type: String,
+    default: ""
+},
+
+fechaComprobante: Date,
+
+fechaRetencion: Date,
+
+fechaLiberacion: Date,
+
+fechaTransferencia: Date,
+
+metodoPago: {
+
+    type:String,
+
+    default:"Transferencia"
+
+},
+
+referenciaTransferencia: {
+
+    type:String,
+
+    default:""
+
+},
+
+observacionPago: {
+
+    type:String,
+
+    default:""
+
+},
 
     comision: {
       type: Number,
@@ -141,6 +201,29 @@ historial: [
         descripcion: String
     }
 ],
+
+historialPago:[
+
+    {
+
+        estado:String,
+
+        descripcion:String,
+
+        usuario:String,
+
+        fecha:{
+
+            type:Date,
+
+            default:Date.now
+
+        }
+
+    }
+
+],
+
   },
   {
     timestamps: true,

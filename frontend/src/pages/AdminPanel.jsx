@@ -9,7 +9,7 @@ import AdminUsers from "../components/admin/AdminUsers";
 import AdminOrders from "./AdminOrders";
 import AdminSettings from "../components/admin/AdminSettings";
 import AdminFinance from "../components/admin/AdminFinance";
-
+import AdminPayments from "../components/admin/AdminPayments";
 
 
 function AdminPanel() {
@@ -55,6 +55,12 @@ function AdminPanel() {
 
                 {section === "orders" && (
                     <AdminOrders />
+                )}
+
+                {section === "payments" && (
+
+                   <AdminPayments />
+
                 )}
 
                 {section === "finance" && (

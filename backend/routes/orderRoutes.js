@@ -1,5 +1,6 @@
 import express from "express";
 import authFirebase from "../middleware/authFirebase.js";
+import upload from "../middleware/upload.js";
 
 import {
   crearPedido,
@@ -10,7 +11,9 @@ import {
   actualizarEstadoPedido,
   cancelarPedido,
   confirmarRecepcion,
-  validarCodigoEntrega
+  validarCodigoEntrega,
+  subirComprobantePago,
+  verificarPago
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -41,5 +44,18 @@ router.delete("/:id", authFirebase, cancelarPedido);
 
 // Validacion de pedido recibido con PIN
 router.post("/:id/validar-codigo", authFirebase, validarCodigoEntrega);
+
+router.post(
+    "/:id/comprobante",
+    authFirebase,
+    upload.single("comprobante"),
+    subirComprobantePago
+);
+
+router.put(
+    "/:id/verificar-pago",
+    authFirebase,
+    verificarPago
+);
 
 export default router;

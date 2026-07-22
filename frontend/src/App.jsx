@@ -19,6 +19,8 @@ import MyAccountPanel from "./pages/MyAccountPanel";
 import AdminRoute from "./components/AdminRoute";
 import RoleRoute from "./components/RoleRoute";
 import ProductFormSeller from "./components/seller/ProductFormSeller";
+import Payments from "./pages/admin/Payments";
+
 
 function App() {
 
@@ -98,6 +100,11 @@ function App() {
               <AdminReports />
               </ProtectedRoute>
           }
+          />
+
+          <Route
+            path="/admin/payments"
+            element={<Payments/>}
           />
 
           <Route

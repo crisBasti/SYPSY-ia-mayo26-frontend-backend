@@ -327,6 +327,26 @@ if (accionesVendedor.includes(accion)) {
 
 }
 
+if (
+
+    pedido.estadoPago !== "retenido"
+
+    &&
+
+    accion !== "CANCELAR"
+
+){
+
+    return res.status(400).json({
+
+        message:
+
+        "El pago todavía no fue verificado por SYPSY."
+
+    });
+
+}
+
         const estadoAnterior = pedido.estado;
 
         const nuevoEstado = executeAction(
@@ -627,6 +647,106 @@ export const validarCodigoEntrega = async (req, res) => {
             ok:true
 
         });
+
+    }
+
+    catch(error){
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+    }
+
+};
+
+
+export const subirComprobantePago = async (req, res) => {
+
+    try {
+
+        if (pedido.comprador.uid !== req.user.uid) {
+
+    return res.status(403).json({
+
+        message: "Este pedido no pertenece a tu cuenta."
+
+    });
+
+} {
+
+            return res.status(403).json({
+                message: "Este pedido no te pertenece."
+            });
+
+        }
+
+        pedido.comprobantePago = req.file.path;
+
+        pedido.fechaPago = new Date();
+
+        pedido.estadoPago = "pendiente_verificacion";
+
+        await pedido.save();
+
+        res.json({
+
+            message: "Comprobante recibido",
+
+            pedido
+
+        });
+
+    }
+
+    catch(error){
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+    }
+
+};
+
+
+export const verificarPago = async (req, res) => {
+
+    try {
+
+        const { accion } = req.body;
+
+        const pedido = await Order.findById(req.params.id);
+
+        if (!pedido) {
+
+            return res.status(404).json({
+                message: "Pedido no encontrado."
+            });
+
+        }
+
+        if (accion === "APROBAR") {
+
+            pedido.estadoPago = "retenido";
+
+            pedido.fechaVerificacion = new Date();
+
+        }
+
+        if (accion === "RECHAZAR") {
+
+            pedido.estadoPago = "rechazado";
+
+        }
+
+        await pedido.save();
+
+        res.json(pedido);
 
     }
 
