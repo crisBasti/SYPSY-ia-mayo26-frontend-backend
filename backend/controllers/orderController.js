@@ -667,18 +667,34 @@ export const subirComprobantePago = async (req, res) => {
 
     try {
 
+      console.log("===== SUBIR COMPROBANTE =====");
+        console.log("BODY:", req.body);
+        console.log("FILE:", req.file);
+        console.log("PARAMS:", req.params);
+      
+
+        const pedido = await Order.findById(req.params.id);
+
+        if (!pedido) {
+
+            return res.status(404).json({
+                message: "Pedido no encontrado."
+            });
+
+        }
+
         if (pedido.comprador.uid !== req.user.uid) {
 
-    return res.status(403).json({
-
-        message: "Este pedido no pertenece a tu cuenta."
-
-    });
-
-} {
-
             return res.status(403).json({
-                message: "Este pedido no te pertenece."
+                message: "Este pedido no pertenece a tu cuenta."
+            });
+
+        }
+
+        if (!req.file) {
+
+            return res.status(400).json({
+                message: "No se recibió ningún comprobante."
             });
 
         }
@@ -692,21 +708,16 @@ export const subirComprobantePago = async (req, res) => {
         await pedido.save();
 
         res.json({
-
             message: "Comprobante recibido",
-
             pedido
-
         });
 
-    }
+    } catch (error) {
 
-    catch(error){
+        console.error(error);
 
         res.status(500).json({
-
-            message:error.message
-
+            message: error.message
         });
 
     }

@@ -17,11 +17,11 @@ function OrderDrawer({
 
     const { user } = useAuth();
 
-const esVendedor =
-    user?.uid === pedido?.vendedor?.uid;
+const esVendedor = user?.uid === pedido?.vendedor?.uid;
 
-const esComprador =
-    user?.uid === pedido?.comprador?.uid;
+const esComprador = user?.uid === pedido?.comprador?.uid;
+
+const [mostrarCodigo, setMostrarCodigo] = useState(false);
 
 const [comprobante, setComprobante] = useState(null);    
 
@@ -207,6 +207,95 @@ const validarCodigo = async () => {
 };
 
 
+const aprobarPago = async () => {
+
+    try {
+
+        const token = await auth.currentUser.getIdToken();
+
+        await axios.put(
+
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/verificar-pago`,
+
+            {
+
+                accion: "APROBAR"
+
+            },
+
+            {
+
+                headers: {
+
+                    Authorization: `Bearer ${token}`
+
+                }
+
+            }
+
+        );
+
+        alert("Pago aprobado.");
+
+        window.location.reload();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("No se pudo aprobar.");
+
+    }
+
+};
+
+const rechazarPago = async () => {
+
+    try {
+
+        const token = await auth.currentUser.getIdToken();
+
+        await axios.put(
+
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/verificar-pago`,
+
+            {
+
+                accion:"RECHAZAR"
+
+            },
+
+            {
+
+                headers:{
+
+                    Authorization:`Bearer ${token}`
+
+                }
+
+            }
+
+        );
+
+        alert("Pago rechazado.");
+
+        window.location.reload();
+
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("No se pudo rechazar.");
+
+    }
+
+};
+
+
 
 
 
@@ -242,11 +331,15 @@ const validarCodigo = async () => {
 
                   </div>
 
+                  
+
                   <span className={`status-badge ${pedido.estado}`}>
 
                     {pedido.estado.replaceAll("_"," ").toUpperCase()}
 
                   </span>
+
+                  
 
                 </div>
 
@@ -304,7 +397,13 @@ const validarCodigo = async () => {
                 </p>
 
                 
-                <p>
+
+
+               <hr />
+
+<h3>💳 Información del pago</h3>
+
+<p>
 
 <strong>Pago</strong>
 
@@ -353,40 +452,101 @@ pedido.estadoPago === "rechazado"
 </p>
 
 
+<p>
 
-                {esVendedor && pedido.codigoEntrega && (
+<strong>Estado:</strong>{" "}
 
-                  <div className="delivery-code-box">
+{pedido.estadoPago}
 
-                    <h3>🔐 Código de entrega</h3>
+</p>
 
-                    <div className="delivery-code">
+{/* ===============================
+   COMPROBANTE DE PAGO
+=============================== */}
 
-                      {pedido.codigoEntrega}
+{pedido.comprobantePago && (
 
-                    </div>
+  <div className="payment-proof">
 
-                    <small>
+    <a
+      href={pedido.comprobantePago}
+      target="_blank"
+      rel="noreferrer"
+    >
+      📄 Ver comprobante
+    </a>
 
-                      Entregá este código únicamente al comprador cuando reciba el producto.
+  </div>
 
-                    </small>
+)}
 
-                  </div>
+{/* ===============================
+   PIN (SOLO ADMIN)
+=============================== */}
 
-                )}
+<div className="admin-box">
 
-                <p>
+  <h3>🔐 Código de entrega</h3>
 
-                    <strong>Comisión</strong>
+  <div className="delivery-code">
 
-                    <br/>
+    {pedido.codigoEntrega}
 
-                    $
+  </div>
 
-                    {pedido.comision.toLocaleString()}
+</div>
 
-                </p>
+
+{pedido.estadoPago === "pendiente_verificacion" && (
+
+<div className="payment-admin-actions">
+
+<button
+
+className="success"
+
+onClick={aprobarPago}
+
+>
+
+✅ Aprobar pago
+
+</button>
+
+<button
+
+className="danger"
+
+onClick={rechazarPago}
+
+>
+
+❌ Rechazar
+
+</button>
+
+</div>
+
+)}
+
+
+
+
+                {esVendedor && (
+
+<p>
+
+<strong>Comisión SYPSY</strong>
+
+<br/>
+
+$
+
+{pedido.comision.toLocaleString()}
+
+</p>
+
+)}
 
                 {esComprador && pedido.estadoPago === "pendiente" && (
 
@@ -452,6 +612,8 @@ onClick={subirComprobante}
 
                 <hr />
 
+                
+
                 <div className="drawer-actions">
 
     {/* ===============================
@@ -502,73 +664,77 @@ onClick={subirComprobante}
         ACCIONES DEL COMPRADOR
     ================================ */}
 
-    {esComprador && pedido.estado === "entregado" && (
+    {esComprador &&
+ pedido.estado === "entregado" &&
+ pedido.estadoPago === "retenido" && (
 
-    <>
+  <>
 
-        {!codigoValidado && (
+    {!codigoValidado && (
 
-            <>
+      <>
 
-                <input
+        <div className="delivery-code-box">
 
-                    type="text"
+          <h3>📦 Producto recibido</h3>
 
-                    placeholder="Ingrese el código"
+          <p>
+            Si ya recibiste correctamente el producto,
+            presioná el botón para revelar el código.
+          </p>
 
-                    value={codigoEntrega}
+          {!mostrarCodigo && (
 
-                    onChange={(e)=>
-
-                        setCodigoEntrega(
-
-                            e.target.value
-
-                        )
-
-                    }
-
-                />
-
-                <button
-
-                    onClick={validarCodigo}
-
-                >
-
-                    🔐 Validar código
-
-                </button>
-
-            </>
-
-        )}
-
-        {codigoValidado && (
-
-            <button
-
-                className="success"
-
-                onClick={()=>
-
-                    ejecutarAccion(
-
-                        "FINALIZAR"
-
-                    )
-
-                }
-
-            >
-
-                ✅ Confirmar recepción
-
+            <button onClick={() => setMostrarCodigo(true)}>
+              Mostrar código de confirmación
             </button>
 
+          )}
+
+        </div>
+
+        {mostrarCodigo && (
+
+          <>
+
+            <div className="codigo-visible">
+
+              Código:
+              <strong> {pedido.codigoEntrega} </strong>
+
+            </div>
+
+            <input
+              type="text"
+              placeholder="Ingresá el código"
+              value={codigoEntrega}
+              onChange={(e)=>setCodigoEntrega(e.target.value)}
+            />
+
+            <button onClick={validarCodigo}>
+              🔐 Validar código
+            </button>
+
+          </>
+
         )}
 
-    </>
+      </>
+
+    )}
+
+    {codigoValidado && (
+
+      <button
+        className="success"
+        onClick={()=> ejecutarAccion("FINALIZAR")}
+      >
+        ✅ Confirmar recepción
+      </button>
+
+    )}
+
+  </>
 
 )}
 
