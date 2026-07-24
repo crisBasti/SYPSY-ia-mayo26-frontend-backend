@@ -60,8 +60,6 @@ const handleSubmit = async (e) => {
     formData.categoria
   );
 
-  //console.log(user);
-
   productData.append(
   "vendedor",
   JSON.stringify({

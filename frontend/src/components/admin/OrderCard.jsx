@@ -1,4 +1,4 @@
-
+import { ORDER_STATUS } from "../../utils/orderStatus";
 
 function OrderCard({
 
@@ -8,80 +8,104 @@ function OrderCard({
 
 }) {
 
-    const coloresEstado = {
+    const colorBarra =
+        ORDER_STATUS[pedido.estado]?.color || "#999";
 
-    pendiente:"#FFC107",
+    const estadoPago = {
 
-    aceptado:"#28A745",
+        pendiente: {
+            texto: "Esperando pago",
+            color: "#777"
+        },
 
-    pagado:"#0D6EFD",
+        pendiente_verificacion: {
+            texto: "Verificando pago",
+            color: "#f59e0b"
+        },
 
-    en_reparto:"#6F42C1",
+        retenido: {
+            texto: "Pago confirmado",
+            color: "#10b981"
+        },
 
-    finalizado:"#198754",
+        pagado: {
+            texto: "Pago liberado",
+            color: "#2563eb"
+        },
 
-    cancelado:"#DC3545"
+        rechazado: {
+            texto: "Pago rechazado",
+            color: "#ef4444"
+        }
 
-};
+    };
 
-const colorBarra =
+    const pago =
 
-    coloresEstado[pedido.estado]
+        estadoPago[pedido.estadoPago] ||
 
-    || "#999";
-
-
-    const estadoTexto = {
-
-    pendiente: "🟡 Pendiente",
-
-    aceptado: "🟢 Aceptado",
-
-    pagado: "💳 Pagado",
-
-    en_reparto: "🚚 En reparto",
-
-    finalizado: "✅ Finalizado",
-
-    cancelado: "❌ Cancelado"
-
-};
-
+        {
+            texto: pedido.estadoPago,
+            color: "#777"
+        };
 
     return (
 
-       <div
+        <div
 
-           className="order-card"
+            className="order-card"
 
-           onClick={() => onSelect(pedido)}
+            onClick={() => onSelect(pedido)}
 
-           >
+        >
 
-       <div
+            <div
 
-        className="order-status-bar"
+                className="order-status-bar"
 
-        style={{
+                style={{
 
-            background:colorBarra
+                    background: colorBarra
 
-        }}
+                }}
 
-    />
-
+            />
 
             <div className="order-header">
 
-                <strong>
+                <div>
 
-                    📦 {pedido.numeroPedido}
+                    <strong>
 
-                </strong>
+                        📦 {pedido.numeroPedido}
+
+                    </strong>
+
+                    <br />
+
+                    <small>
+
+                        {
+
+                            new Date(
+
+                                pedido.createdAt
+
+                            ).toLocaleString()
+
+                        }
+
+                    </small>
+
+                </div>
 
                 <span>
 
-                    {estadoTexto[pedido.estado]}
+                    {
+
+                        ORDER_STATUS[pedido.estado]?.text
+
+                    }
 
                 </span>
 
@@ -89,72 +113,69 @@ const colorBarra =
 
             <div className="order-body">
 
-                <p>
-
-                    <strong>📦 Producto</strong>
-
-                    <br />
+                <h3>
 
                     {pedido.producto?.nombre}
 
+                </h3>
+
+                <p>
+
+                    💰
+
+                    <strong>
+
+                        {" "}
+
+                        $
+
+                        {pedido.total.toLocaleString()}
+
+                    </strong>
+
                 </p>
 
                 <p>
 
-                    <strong>🏪 Vendedor</strong>
-
-                    <br />
-
-                    {pedido.vendedor?.name}
+                    👤 {pedido.comprador?.name}
 
                 </p>
 
                 <p>
 
-                    <strong>💰 Total</strong>
-
-                    <br />
-
-                    $
-
-                    {pedido.total.toLocaleString()}
+                    🏪 {pedido.vendedor?.name}
 
                 </p>
 
-
                 <p>
 
-    <strong>
+                    💸 Comisión:
 
-        🕒 Creado
-
-    </strong>
-
-    <br />
-
-    {
-
-        new Date(
-
-            pedido.createdAt
-
-        ).toLocaleString()
-
-    }
-
-</p>
-
-                <p>
-
-                    <strong>💸 Comisión SYPSY</strong>
-
-                    <br />
+                    {" "}
 
                     $
 
                     {pedido.comision.toLocaleString()}
 
                 </p>
+
+                <div
+
+                    className="payment-status"
+
+                    style={{
+
+                        color: pago.color,
+
+                        fontWeight: "bold"
+
+                    }}
+
+                >
+
+                    ● {pago.texto}
+
+                </div>
 
             </div>
 
@@ -163,7 +184,5 @@ const colorBarra =
     );
 
 }
-
-
 
 export default OrderCard;

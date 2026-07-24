@@ -74,8 +74,6 @@ export const deleteProductService = async ( id, token ) => {
     return response.data;
 };
 
-//console.log( "API URL:", import.meta.env.VITE_API_URL );
-
 
 // =========================
 // ACTUALIZAR PRODUCTO

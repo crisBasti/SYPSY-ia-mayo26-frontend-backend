@@ -369,10 +369,6 @@ if (
 
         });
 
-
-        console.log("Acción:", accion);
-        console.log("Nuevo estado:", nuevoEstado);
-
         await pedido.save();
 
         res.json(pedido);
@@ -405,6 +401,8 @@ const obtenerDescripcionEstado = (estado) => {
     entregado: "Entregado al repartidor",
 
     finalizado: "Compra finalizada",
+
+    pago_liberado: "Fondos liberados al vendedor",
 
     cancelado: "Pedido cancelado"
 
@@ -543,21 +541,29 @@ export const confirmarRecepcion = async (req, res) => {
 
     pedido.estado = "finalizado";
 
-    pedido.fechaFinalizado = new Date();
+pedido.estadoPago = "liberado";
 
+pedido.fechaFinalizado = new Date();
 
-    pedido.historial.push({
+pedido.fechaLiberacion = new Date();
 
-      estado: "finalizado",
+pedido.historial.push({
 
-      descripcion:
+    estado: "finalizado",
 
-      "Comprador confirmó recepción del producto"
+    descripcion: "Comprador confirmó la recepción del producto"
 
-    });
+});
 
+pedido.historial.push({
 
-    await pedido.save();
+    estado: "pago_liberado",
+
+    descripcion: "Fondos liberados al vendedor"
+
+});
+
+await pedido.save();
 
 
     res.json(pedido);
@@ -666,13 +672,7 @@ export const validarCodigoEntrega = async (req, res) => {
 export const subirComprobantePago = async (req, res) => {
 
     try {
-
-      console.log("===== SUBIR COMPROBANTE =====");
-        console.log("BODY:", req.body);
-        console.log("FILE:", req.file);
-        console.log("PARAMS:", req.params);
       
-
         const pedido = await Order.findById(req.params.id);
 
         if (!pedido) {

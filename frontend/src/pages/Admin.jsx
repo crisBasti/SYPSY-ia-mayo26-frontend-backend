@@ -50,7 +50,7 @@ function Admin() {
 
 }, [user]);
 
-//console.log(user);
+
 
 const loadProducts = async () => {
 
@@ -71,9 +71,6 @@ const loadProducts = async () => {
         error
       );
 
-      console.log("USER:", user);
-      console.log("TOKEN:", user?.token);
-
     }
 };
 
@@ -89,7 +86,6 @@ const addProduct = async (productData, token) => {
       token
     );
     
-//    console.log("NUEVO PRODUCTO", newProduct);
     
 setProductos(prev => [
   newProduct,
@@ -112,7 +108,7 @@ setProductos(prev => [
      const token =
     await auth.currentUser.getIdToken();
 
-//    console.log("ID recibido:", id);
+
     const confirmar =
       window.confirm("¿Eliminar producto?");
     if (!confirmar) return;
@@ -178,7 +174,7 @@ const updatedProduct =
     }
   };
 
-//  console.log("PRODUCTOS ADMIN", productos);
+
 
 return (
   <div className="admin-container">

@@ -140,9 +140,6 @@ const prevImage = (productId, total) => {
   });
 
 
-  console.log("PRODUCTOS DESDE API:", productos);
-
-
     return (
   <>
     <Helmet>

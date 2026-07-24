@@ -5,17 +5,26 @@ import axios from "axios";
 import { auth } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
 import { useState } from "react";
+import DrawerHeader from "./DrawerHeader";
+import DrawerInfo from "./DrawerInfo";
+import DrawerPayment from "./DrawerPayment";
+import DrawerActions from "./DrawerActions";
 
 
 function OrderDrawer({
 
     pedido,
 
-    onClose
+    onClose,
+
+    onActualizarPedido
+
 
 }){
 
-    const { user } = useAuth();
+    const { user, profile } = useAuth();
+
+    console.log("Usuario Logueado:", user);
 
 const esVendedor = user?.uid === pedido?.vendedor?.uid;
 
@@ -31,14 +40,6 @@ const [codigoValidado, setCodigoValidado] = useState(false);
 
     if(!pedido) return null;
 
-    console.log("Pedido completo:", pedido);
-console.log("Estado:", pedido.estado);
-console.log("Usuario:", user?.uid);
-console.log("Comprador:", pedido.comprador);
-console.log("Vendedor:", pedido.vendedor);
-console.log("esComprador:", esComprador);
-console.log("esVendedor:", esVendedor);
-
 
     const ejecutarAccion = async (accion) => {
 
@@ -47,44 +48,47 @@ console.log("esVendedor:", esVendedor);
         const token = await auth.currentUser.getIdToken();
 
         // Confirmación del comprador
-        if (accion === "FINALIZAR") {
+        // let response;
 
-            await axios.post(
+if (accion === "FINALIZAR") {
 
-                `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/confirmar`,
+    const response = await axios.post(
 
-                {},
+        `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/confirmar`,
 
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+        {},
 
-            );
-
+        {
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
         }
 
-        // Acciones normales del vendedor
-        else {
+    );
 
-            await axios.put(
+}else{
 
-                `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}`,
+    const response = await axios.put(
 
-                { accion },
+        `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}`,
 
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`
-                    }
-                }
+        { accion },
 
-            );
-
+        {
+            headers:{
+                Authorization:`Bearer ${token}`
+            }
         }
 
-        window.location.reload();
+    );
+
+}
+
+if (onActualizarPedido) {
+    onActualizarPedido(response.data);
+} else {
+    window.location.reload();
+}
 
     }
 
@@ -122,7 +126,7 @@ const subirComprobante = async () => {
             comprobante
         );
 
-        await axios.post(
+        const response = await axios.post(
 
             `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/comprobante`,
 
@@ -142,7 +146,11 @@ const subirComprobante = async () => {
 
         alert("Comprobante enviado correctamente.");
 
-        window.location.reload();
+        if (onActualizarPedido) {
+            onActualizarPedido(response.data);
+        } else {
+          window.location.reload();
+        }
 
     }
 
@@ -164,7 +172,7 @@ const validarCodigo = async () => {
         const token =
             await auth.currentUser.getIdToken();
 
-        await axios.post(
+        const response = await axios.post(
 
             `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/validar-codigo`,
 
@@ -213,7 +221,7 @@ const aprobarPago = async () => {
 
         const token = await auth.currentUser.getIdToken();
 
-        await axios.put(
+        const response = await axios.put(
 
             `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/verificar-pago`,
 
@@ -235,9 +243,15 @@ const aprobarPago = async () => {
 
         );
 
+        
+
         alert("Pago aprobado.");
 
-        window.location.reload();
+        if (onActualizarPedido) {
+            onActualizarPedido(response.data);
+        } else {
+            window.location.reload();
+        }
 
     }
 
@@ -257,7 +271,7 @@ const rechazarPago = async () => {
 
         const token = await auth.currentUser.getIdToken();
 
-        await axios.put(
+        const response = await axios.put(
 
             `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/verificar-pago`,
 
@@ -281,7 +295,11 @@ const rechazarPago = async () => {
 
         alert("Pago rechazado.");
 
-        window.location.reload();
+        if (onActualizarPedido) {
+            onActualizarPedido(response.data);
+        } else {
+          window.location.reload();
+        }
 
     }
 
@@ -305,234 +323,40 @@ const rechazarPago = async () => {
 
             <div className="order-drawer">
 
-                <button
+                <DrawerHeader
+                   pedido={pedido}
+                   onClose={onClose}
+                />
 
-                    className="drawer-close"
+                <DrawerInfo
+                   pedido={pedido}
+                   esVendedor={esVendedor}
+                />
 
-                    onClick={onClose}
 
-                >
+<DrawerPayment
 
-                    ✕
+    pedido={pedido}
 
-                </button>
+    user={profile}
 
-                <div className="drawer-header">
+    esComprador={esComprador}
 
-                  <div>
+    comprobante={comprobante}
 
-                    <h2>Pedido {pedido.numeroPedido}</h2>
+    setComprobante={setComprobante}
 
-                    <small>
+    subirComprobante={subirComprobante}
 
-                      Estado actual
+    aprobarPago={aprobarPago}
 
-                    </small>
+    rechazarPago={rechazarPago}
 
-                  </div>
+/>
 
-                  
 
-                  <span className={`status-badge ${pedido.estado}`}>
 
-                    {pedido.estado.replaceAll("_"," ").toUpperCase()}
-
-                  </span>
-
-                  
-
-                </div>
-
-                <p>
-                  <strong>Producto</strong>
-                  <br />
-
-                  <a
-                    href={`/producto/${pedido.producto?._id}`}
-                    className="seller-link"
-                  >
-                    {pedido.producto?.nombre}
-                  </a>
-                </p>
-
-
-                {!esVendedor && (
-
-                  <p>
-
-                    <strong>🏪 Vendedor</strong>
-
-                      <br />
-
-                    {pedido.vendedor?.name}
-
-                  </p>
-
-                )}
-                
-                  
-                {!esVendedor && (
-
-                  <a
-                    href={`/seller/${pedido.vendedor.uid}`}
-                    className="seller-link"
-                  >
-
-                    👤 Ver perfil del vendedor
-
-                  </a>
-
-                )}
-
-                <p>
-
-                    <strong>Total</strong>
-
-                    <br/>
-
-                    $
-
-                    {pedido.total.toLocaleString()}
-
-                </p>
-
-                
-
-
-               <hr />
-
-<h3>💳 Información del pago</h3>
-
-<p>
-
-<strong>Pago</strong>
-
-<br/>
-
-{
-
-pedido.estadoPago === "pendiente"
-
-&&
-
-"⚪ Esperando comprobante"
-
-}
-
-{
-
-pedido.estadoPago === "pendiente_verificacion"
-
-&&
-
-"🟡 Comprobante enviado"
-
-}
-
-{
-
-pedido.estadoPago === "retenido"
-
-&&
-
-"🟢 Pago confirmado"
-
-}
-
-{
-
-pedido.estadoPago === "rechazado"
-
-&&
-
-"🔴 Comprobante rechazado"
-
-}
-
-</p>
-
-
-<p>
-
-<strong>Estado:</strong>{" "}
-
-{pedido.estadoPago}
-
-</p>
-
-{/* ===============================
-   COMPROBANTE DE PAGO
-=============================== */}
-
-{pedido.comprobantePago && (
-
-  <div className="payment-proof">
-
-    <a
-      href={pedido.comprobantePago}
-      target="_blank"
-      rel="noreferrer"
-    >
-      📄 Ver comprobante
-    </a>
-
-  </div>
-
-)}
-
-{/* ===============================
-   PIN (SOLO ADMIN)
-=============================== */}
-
-<div className="admin-box">
-
-  <h3>🔐 Código de entrega</h3>
-
-  <div className="delivery-code">
-
-    {pedido.codigoEntrega}
-
-  </div>
-
-</div>
-
-
-{pedido.estadoPago === "pendiente_verificacion" && (
-
-<div className="payment-admin-actions">
-
-<button
-
-className="success"
-
-onClick={aprobarPago}
-
->
-
-✅ Aprobar pago
-
-</button>
-
-<button
-
-className="danger"
-
-onClick={rechazarPago}
-
->
-
-❌ Rechazar
-
-</button>
-
-</div>
-
-)}
-
-
-
-
-                {esVendedor && (
+{esVendedor && (
 
 <p>
 
@@ -548,197 +372,21 @@ $
 
 )}
 
-                {esComprador && pedido.estadoPago === "pendiente" && (
-
-<div className="payment-box">
-
-<h3>💳 Pago del pedido</h3>
-
-<p>
-
-Transferí el importe utilizando:
-
-</p>
-
-<p>
-
-<strong>Alias:</strong> sypsy.arg
-
-</p>
-
-<p>
-
-<strong>CVU:</strong>
-
-0000003100014719845478
-
-</p>
-
-<p>
-
-<strong>Titular:</strong>
-
-Cristian Alejandro Portillo
-
-</p>
-
-<input
-
-type="file"
-
-accept="image/*"
-
-onChange={(e)=>
-
-setComprobante(e.target.files[0])
-
-}
-
-/>
-
-<button
-
-onClick={subirComprobante}
-
->
-
-📤 Enviar comprobante
-
-</button>
-
-</div>
-
-)}
 
                 <hr />
 
-                
-
-                <div className="drawer-actions">
-
-    {/* ===============================
-        ACCIONES DEL VENDEDOR
-    ================================ */}
-
-    {esVendedor && pedido.estado === "pendiente" && (
-
-        <>
-            <button
-                onClick={() => ejecutarAccion("ACEPTAR")}
-            >
-                ✅ Aceptar pedido
-            </button>
-
-            <button
-                className="danger"
-                onClick={() => ejecutarAccion("CANCELAR")}
-            >
-                ❌ Cancelar pedido
-            </button>
-        </>
-
-    )}
-
-    {esVendedor && pedido.estado === "aceptado" && (
-
-        <button
-            onClick={() => ejecutarAccion("PREPARAR")}
-        >
-            📦 Preparar pedido
-        </button>
-
-    )}
-
-    {esVendedor && pedido.estado === "preparando" && (
-
-    <button
-        className="success"
-        onClick={() => ejecutarAccion("ENTREGAR_REPARTIDOR")}
-    >
-        🚚 Entregado al repartidor
-    </button>
-
-    )}
-
-    {/* ===============================
-        ACCIONES DEL COMPRADOR
-    ================================ */}
-
-    {esComprador &&
- pedido.estado === "entregado" &&
- pedido.estadoPago === "retenido" && (
-
-  <>
-
-    {!codigoValidado && (
-
-      <>
-
-        <div className="delivery-code-box">
-
-          <h3>📦 Producto recibido</h3>
-
-          <p>
-            Si ya recibiste correctamente el producto,
-            presioná el botón para revelar el código.
-          </p>
-
-          {!mostrarCodigo && (
-
-            <button onClick={() => setMostrarCodigo(true)}>
-              Mostrar código de confirmación
-            </button>
-
-          )}
-
-        </div>
-
-        {mostrarCodigo && (
-
-          <>
-
-            <div className="codigo-visible">
-
-              Código:
-              <strong> {pedido.codigoEntrega} </strong>
-
-            </div>
-
-            <input
-              type="text"
-              placeholder="Ingresá el código"
-              value={codigoEntrega}
-              onChange={(e)=>setCodigoEntrega(e.target.value)}
-            />
-
-            <button onClick={validarCodigo}>
-              🔐 Validar código
-            </button>
-
-          </>
-
-        )}
-
-      </>
-
-    )}
-
-    {codigoValidado && (
-
-      <button
-        className="success"
-        onClick={()=> ejecutarAccion("FINALIZAR")}
-      >
-        ✅ Confirmar recepción
-      </button>
-
-    )}
-
-  </>
-
-)}
-
-</div>
+                <DrawerActions
+                   pedido={pedido}
+                   esVendedor={esVendedor}
+                   esComprador={esComprador}
+                   mostrarCodigo={mostrarCodigo}
+                   setMostrarCodigo={setMostrarCodigo}
+                   codigoEntrega={codigoEntrega}
+                   setCodigoEntrega={setCodigoEntrega}
+                   codigoValidado={codigoValidado}
+                   validarCodigo={validarCodigo}
+                   ejecutarAccion={ejecutarAccion}
+                />
 
 
                 <OrderTimeline

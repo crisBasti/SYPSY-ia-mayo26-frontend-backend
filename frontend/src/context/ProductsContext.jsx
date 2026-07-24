@@ -32,29 +32,6 @@ export function ProductsProvider({
       }
     };
 
-  // =========================
-  // CREAR PRODUCTO
-  // =========================
-
-//const addProduct = async (productData, token) => {
-//  try {
-//    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`, {
-//     method: "POST",
-//      headers: {
-//        Authorization: `Bearer ${token}`
-//      },
-//      body: productData
-//    });
-
-//    const data = await res.json();
-
-//    setProductos((prev) => [data, ...prev]);
-//
-//  } catch (error) {
-//    console.log("Error creando producto:", error);
-//  }
-//};
-
 
 const actualizarProducto = (
   id,

@@ -12,6 +12,23 @@ function AdminOrders() {
 
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null);
 
+    const actualizarPedido = (pedidoActualizado) => {
+
+    setPedidos((prev) =>
+
+        prev.map((pedido) =>
+
+            pedido._id === pedidoActualizado._id
+                ? pedidoActualizado
+                : pedido
+        )
+
+    );
+
+    setPedidoSeleccionado(pedidoActualizado);
+
+};
+
     const resumen = {
 
     pendientes:
@@ -441,12 +458,10 @@ const pedidosFinalizados =
 
             </div>
 
-            <OrderDrawer
-
+                    <OrderDrawer
                       pedido={pedidoSeleccionado}
-
                       onClose={() => setPedidoSeleccionado(null)}
-
+                      onActualizarPedido={actualizarPedido}
                     />
             </>        
 

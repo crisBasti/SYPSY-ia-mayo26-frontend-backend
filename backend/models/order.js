@@ -78,7 +78,7 @@ const orderSchema = new mongoose.Schema(
         "pendiente",
         "pendiente_verificacion",
         "retenido",
-        "liberar",
+        "liberado",
         "pagado",
         "rechazado",
         "reembolsado"
@@ -123,14 +123,6 @@ metodoPago: {
 },
 
 referenciaTransferencia: {
-
-    type:String,
-
-    default:""
-
-},
-
-observacionPago: {
 
     type:String,
 
