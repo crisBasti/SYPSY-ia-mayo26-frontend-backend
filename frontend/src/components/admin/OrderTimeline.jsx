@@ -18,75 +18,76 @@ function OrderTimeline({ historial = [] }) {
 
     return (
 
-        <div className="order-timeline">
+        <div className="drawer-card">
 
-            <h3>📜 Historial del pedido</h3>
+            <div className="drawer-card-title">
 
-            {
+                📜 Historial del pedido
 
-                historial.map((evento,index)=>(
+            </div>
 
-                    <div
+            <div className="order-timeline">
 
-                        key={index}
+                {historial.length === 0 ? (
 
-                        className="timeline-step completed"
+                    <div className="timeline-empty">
 
-                    >
-
-                        <div className="timeline-icon">
-
-                            {
-
-                                iconos[evento.estado] ||
-
-                                "📍"
-
-                            }
-
-                        </div>
-
-                        <div className="timeline-content">
-
-                            <div className="timeline-title">
-
-                                {
-
-                                    evento.descripcion ||
-
-                                    evento.estado
-
-                                }
-
-                            </div>
-
-                            <div className="timeline-date">
-
-                                {
-
-                                    evento.fecha
-
-                                    ?
-
-                                    new Date(evento.fecha)
-
-                                    .toLocaleString()
-
-                                    :
-
-                                    ""
-
-                                }
-
-                            </div>
-
-                        </div>
+                        Sin movimientos registrados.
 
                     </div>
 
-                ))
+                ) : (
 
-            }
+                    historial.map((evento, index) => {
+
+                        const ultimo = index === historial.length - 1;
+
+                        return (
+
+                            <div
+
+                                key={index}
+
+                                className={`timeline-step ${ultimo ? "active" : "completed"}`}
+
+                            >
+
+                                <div className="timeline-icon">
+
+                                    {iconos[evento.estado] || "📍"}
+
+                                </div>
+
+                                <div className="timeline-content">
+
+                                    <div className="timeline-title">
+
+                                        {evento.descripcion || evento.estado}
+
+                                    </div>
+
+                                    {evento.fecha && (
+
+                                        <div className="timeline-date">
+
+                                            {new Date(evento.fecha).toLocaleString()}
+
+                                        </div>
+
+                                    )}
+
+                                </div>
+
+                            </div>
+
+                        );
+
+                    })
+
+                )}
+
+            </div>
+            
 
         </div>
 

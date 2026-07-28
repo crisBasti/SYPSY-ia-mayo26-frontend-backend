@@ -48,11 +48,11 @@ const [codigoValidado, setCodigoValidado] = useState(false);
         const token = await auth.currentUser.getIdToken();
 
         // Confirmación del comprador
-        // let response;
+        let response;
 
 if (accion === "FINALIZAR") {
 
-    const response = await axios.post(
+    response = await axios.post(
 
         `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/confirmar`,
 
@@ -68,7 +68,7 @@ if (accion === "FINALIZAR") {
 
 }else{
 
-    const response = await axios.put(
+    response = await axios.put(
 
         `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}`,
 
@@ -314,92 +314,77 @@ const rechazarPago = async () => {
 };
 
 
+return (
 
+    <div className="drawer-overlay">
 
+        <div className="order-drawer">
 
-    return(
+            <DrawerHeader
+                pedido={pedido}
+                onClose={onClose}
+            />
 
-        <div className="drawer-overlay">
-
-            <div className="order-drawer">
-
-                <DrawerHeader
-                   pedido={pedido}
-                   onClose={onClose}
-                />
+            <div className="drawer-body">
 
                 <DrawerInfo
-                   pedido={pedido}
-                   esVendedor={esVendedor}
+                    pedido={pedido}
+                    esVendedor={esVendedor}
                 />
 
+                <DrawerPayment
+                    pedido={pedido}
+                    user={profile}
+                    esComprador={esComprador}
+                    comprobante={comprobante}
+                    setComprobante={setComprobante}
+                    subirComprobante={subirComprobante}
+                    aprobarPago={aprobarPago}
+                    rechazarPago={rechazarPago}
+                />
 
-<DrawerPayment
+                {esVendedor && (
 
-    pedido={pedido}
+                    <p>
 
-    user={profile}
+                        <strong>Comisión SYPSY</strong>
 
-    esComprador={esComprador}
+                        <br />
 
-    comprobante={comprobante}
+                        $
 
-    setComprobante={setComprobante}
+                        {pedido.comision.toLocaleString()}
 
-    subirComprobante={subirComprobante}
+                    </p>
 
-    aprobarPago={aprobarPago}
-
-    rechazarPago={rechazarPago}
-
-/>
-
-
-
-{esVendedor && (
-
-<p>
-
-<strong>Comisión SYPSY</strong>
-
-<br/>
-
-$
-
-{pedido.comision.toLocaleString()}
-
-</p>
-
-)}
-
+                )}
 
                 <hr />
 
                 <DrawerActions
-                   pedido={pedido}
-                   esVendedor={esVendedor}
-                   esComprador={esComprador}
-                   mostrarCodigo={mostrarCodigo}
-                   setMostrarCodigo={setMostrarCodigo}
-                   codigoEntrega={codigoEntrega}
-                   setCodigoEntrega={setCodigoEntrega}
-                   codigoValidado={codigoValidado}
-                   validarCodigo={validarCodigo}
-                   ejecutarAccion={ejecutarAccion}
+                    pedido={pedido}
+                    esVendedor={esVendedor}
+                    esComprador={esComprador}
+                    mostrarCodigo={mostrarCodigo}
+                    setMostrarCodigo={setMostrarCodigo}
+                    codigoEntrega={codigoEntrega}
+                    setCodigoEntrega={setCodigoEntrega}
+                    codigoValidado={codigoValidado}
+                    validarCodigo={validarCodigo}
+                    ejecutarAccion={ejecutarAccion}
                 />
 
-
                 <OrderTimeline
-
                     historial={pedido.historial}
-
                 />
 
             </div>
 
         </div>
 
-    );
+    </div>
+
+);
 
 }
 

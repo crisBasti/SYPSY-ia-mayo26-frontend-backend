@@ -1,47 +1,113 @@
 function DrawerInfo({ pedido, esVendedor }) {
 
     return (
+
         <>
 
-            <p>
-                <strong>Producto</strong>
-                <br />
+            <div className="drawer-card">
 
-                <a
-                    href={`/producto/${pedido.producto?._id}`}
-                    className="seller-link"
-                >
-                    {pedido.producto?.nombre}
-                </a>
-            </p>
+                <div className="drawer-card-title">
+
+                    📦 Producto
+
+                </div>
+
+                <div className="drawer-card-content">
+
+                    <div className="product-preview">
+
+                      <div className="product-preview-info">
+
+                        <strong>
+
+                          {pedido.producto?.nombre}
+
+                        </strong>
+
+                        <a
+                          href={`/producto/${pedido.producto?._id}`}
+                          className="seller-link"
+                        >
+                          Ver publicación →
+                        </a>
+
+                     </div>
+
+                    </div>
+
+                </div>
+
+            </div>
 
             {!esVendedor && (
 
-                <>
-                    <p>
-                        <strong>🏪 Vendedor</strong>
-                        <br />
-                        {pedido.vendedor?.name}
-                    </p>
+                <div className="drawer-card">
 
-                    <a
-                        href={`/seller/${pedido.vendedor.uid}`}
-                        className="seller-link"
-                    >
-                        👤 Ver perfil del vendedor
-                    </a>
-                </>
+                    <div className="drawer-card-title">
+
+                        🏪 Vendedor
+
+                    </div>
+
+                    <div className="drawer-card-content">
+
+                        <div className="seller-avatar">
+
+                         {pedido.vendedor?.name?.charAt(0).toUpperCase()}
+
+                        </div>
+
+                          <div>
+
+                            <strong>
+
+                              {pedido.vendedor?.name}
+
+                            </strong>
+
+                          </div>
+
+                        <a
+                            href={`/seller/${pedido.vendedor.uid}`}
+                            className="seller-link"
+                        >
+                            👤 Ver perfil del vendedor
+                        </a>
+
+                    </div>
+
+                </div>
 
             )}
 
-            <p>
-                <strong>Total</strong>
-                <br />
-                $
-                {pedido.total.toLocaleString()}
-            </p>
+            <div className="drawer-card">
+
+                <div className="drawer-card-title">
+
+                    💰 Resumen
+
+                </div>
+
+                <div className="drawer-card-content">
+
+                    <div className="drawer-info-item">
+
+                        <strong>Total</strong>
+
+                        <span>
+
+                            ${pedido.total.toLocaleString()}
+
+                        </span>
+
+                    </div>
+
+                </div>
+
+            </div>
 
         </>
+
     );
 
 }

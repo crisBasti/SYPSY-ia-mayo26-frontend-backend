@@ -74,6 +74,46 @@ function AdminOrders() {
 };
 
 
+const pedidosUrgentes = pedidos.filter(p=>{
+
+    if(p.estado==="finalizado") return false;
+
+    const horas=(Date.now()-new Date(p.createdAt))/3600000;
+
+    return horas>=24;
+
+});
+
+
+const ordenarPedidos = (lista) => {
+
+    return [...lista].sort((a, b) => {
+
+        const fechaA = new Date(a.createdAt).getTime();
+        const fechaB = new Date(b.createdAt).getTime();
+
+        // Más antiguos primero
+        if (fechaA !== fechaB) {
+
+            return fechaA - fechaB;
+
+        }
+
+        // Si tienen la misma fecha, mayor importe primero
+        if (a.total !== b.total) {
+
+            return b.total - a.total;
+
+        }
+
+        // Último criterio: número de pedido
+        return a.numeroPedido.localeCompare(b.numeroPedido);
+
+    });
+
+};
+
+
 const pedidosFiltrados = pedidos.filter((pedido) => {
 
     const producto =
@@ -114,11 +154,6 @@ const pedidosPreparando =
 const pedidosEnviados =
     pedidosFiltrados.filter(
         pedido => pedido.estado === "enviado"
-    );
-
-const pedidosEnReparto =
-    pedidosFiltrados.filter(
-        pedido => pedido.estado === "en_reparto"
     );
 
 const pedidosEntregados =
@@ -241,9 +276,23 @@ const pedidosFinalizados =
 
                   <span>{resumen.cancelados}</span>
 
+              </div>
+
             </div>
 
-       </div>
+
+            {pedidosUrgentes.length > 0 && (
+
+              <div className="urgent-alert">
+
+                🚨 Hay <strong>{pedidosUrgentes.length}</strong> pedidos con más de 24 horas sin resolver.
+
+              </div>
+
+            )}
+
+
+
 
     <div className="kanban-board">
 
@@ -251,15 +300,25 @@ const pedidosFinalizados =
 
     <h3>
 
-        🟡 Pendientes
+          🟡 Pendientes
 
         ({pedidosPendientes.length})
+
+      <small>
+
+        $
+
+        {pedidosPendientes
+          .reduce((t,p)=>t+p.total,0)
+          .toLocaleString()}
+
+      </small>
 
     </h3>
 
     {
 
-        pedidosPendientes.map((pedido)=>(
+        ordenarPedidos(pedidosPendientes).map((pedido)=>(
 
             <OrderCard
 
@@ -281,15 +340,25 @@ const pedidosFinalizados =
 
                     <h3>
 
-                    🟢 Aceptados
+🟢 Aceptados
 
-                    ({pedidosAceptados.length})
+({pedidosAceptados.length})
 
-                    </h3>
+<small>
+
+$
+
+{pedidosAceptados
+.reduce((t,p)=>t+p.total,0)
+.toLocaleString()}
+
+</small>
+
+</h3>
 
                     {
 
-                    pedidosAceptados.map((pedido)=>(
+                    ordenarPedidos(pedidosAceptados).map((pedido)=>(
 
                     <OrderCard
 
@@ -311,15 +380,25 @@ const pedidosFinalizados =
 
     <h3>
 
-        📦 Preparando
+📦 Preparando
 
-        ({pedidosPreparando.length})
+({pedidosPreparando.length})
 
-    </h3>
+<small>
+
+$
+
+{pedidosPreparando
+.reduce((t,p)=>t+p.total,0)
+.toLocaleString()}
+
+</small>
+
+</h3>
 
     {
 
-        pedidosPreparando.map((pedido)=>(
+        ordenarPedidos(pedidosPreparando).map((pedido)=>(
 
             <OrderCard
 
@@ -328,6 +407,7 @@ const pedidosFinalizados =
                 pedido={pedido}
 
                 onSelect={setPedidoSeleccionado}
+                
 
             />
 
@@ -341,15 +421,25 @@ const pedidosFinalizados =
 
     <h3>
 
-        🚚 Enviados
+🚚 Enviados
 
-        ({pedidosEnviados.length})
+({pedidosEnviados.length})
 
-    </h3>
+<small>
+
+$
+
+{pedidosEnviados
+.reduce((t,p)=>t+p.total,0)
+.toLocaleString()}
+
+</small>
+
+</h3>
 
     {
 
-        pedidosEnviados.map((pedido)=>(
+        ordenarPedidos(pedidosEnviados).map((pedido)=>(
 
             <OrderCard
 
@@ -366,48 +456,30 @@ const pedidosFinalizados =
     }
 
 </div>
-
-                <div className="kanban-column">
-
-                    <h3>
-
-                      🚚 En reparto
-
-                      ({pedidosEnReparto.length})
-
-                    </h3>
-
-                    {
-
-                      pedidosEnReparto.map((pedido)=>(
-
-                      <OrderCard
-
-                      key={pedido._id}
-
-                      pedido={pedido}
-
-                      onSelect={setPedidoSeleccionado}
-
-                    />
-
-                      ))
-                    }
-                </div>
 
                 <div className="kanban-column">
 
     <h3>
 
-        📬 Entregados
+📬 Entregados
 
-        ({pedidosEntregados.length})
+({pedidosEntregados.length})
 
-    </h3>
+<small>
+
+$
+
+{pedidosEntregados
+.reduce((t,p)=>t+p.total,0)
+.toLocaleString()}
+
+</small>
+
+</h3>
 
     {
 
-        pedidosEntregados.map((pedido)=>(
+        ordenarPedidos(pedidosEntregados).map((pedido)=>(
 
             <OrderCard
 
@@ -429,15 +501,25 @@ const pedidosFinalizados =
 
                     <h3>
 
-                      ✅ Finalizados
+✅ Finalizados
 
-                      ({pedidosFinalizados.length})
+({pedidosFinalizados.length})
 
-                    </h3>
+<small>
+
+$
+
+{pedidosFinalizados
+.reduce((t,p)=>t+p.total,0)
+.toLocaleString()}
+
+</small>
+
+</h3>
 
                     {
 
-                      pedidosFinalizados.map((pedido)=>(
+                      ordenarPedidos(pedidosFinalizados).map((pedido)=>(
 
                         <OrderCard
 

@@ -1,6 +1,7 @@
 import "../styles/products.css";
 import SellerBadge from "./SellerBadge";
 import { useState } from "react";
+import { Link } from "react-router-dom";
 
 function ProductCard({
   product,
@@ -12,7 +13,7 @@ function ProductCard({
   updateProduct
 }) {
 
-  const [currentImage, setCurrentImage] =
+const [currentImage, setCurrentImage] =
   useState(0);
 
 const images =
@@ -20,65 +21,81 @@ const images =
     ? product.images
     : [product.image];
 
+
+const modoVendedor =
+
+deleteProduct &&
+startEdit &&
+updateProduct;
+
   return (
 
     <div className="product-card">
 
-      <div className="product-carousel">
+      <Link
+  to={`/producto/${product._id}`}
+  className="product-carousel"
+>
 
   <img
-    src={
-      images[currentImage]
-    }
+    src={images[currentImage]}
     alt={product.nombre}
     className="product-image"
   />
 
   {images.length > 1 && (
-
     <>
-
       <button
+        type="button"
         className="carousel-btn left"
-        onClick={() =>
+        onClick={(e)=>{
+          e.preventDefault();
+          e.stopPropagation();
 
           setCurrentImage(
-
-            currentImage === 0
-              ? images.length - 1
-              : currentImage - 1
-          )
-        }
+            currentImage===0
+            ? images.length-1
+            : currentImage-1
+          );
+        }}
       >
         ‹
       </button>
 
       <button
+        type="button"
         className="carousel-btn right"
-        onClick={() =>
+        onClick={(e)=>{
+          e.preventDefault();
+          e.stopPropagation();
 
           setCurrentImage(
-
-            currentImage === images.length - 1
-              ? 0
-              : currentImage + 1
-          )
-        }
+            currentImage===images.length-1
+            ? 0
+            : currentImage+1
+          );
+        }}
       >
         ›
       </button>
 
     </>
-
   )}
 
-</div>
+</Link>
 
       <div className="product-info">
 
-        <h2 className="product-title">
-          {product.nombre}
-        </h2>
+        <Link
+          to={`/producto/${product._id}`}
+          className="product-title-link"
+        >
+
+            <h2 className="product-title">
+              {product.nombre}
+            </h2>
+
+        </Link>
 
         <p className="product-description">
           {product.descripcion}
@@ -96,42 +113,45 @@ const images =
 
         <div className="product-buttons">
 
-          <button
-            className="delete-btn"
-            onClick={() =>
-              deleteProduct(product._id)
-            }
-          >
-            Eliminar
-          </button>
+{modoVendedor && (
 
-          <button
-            className="edit-btn"
-            onClick={() =>
-              startEdit(product)
-            }
-          >
-            Editar
-          </button>
+<>
 
-          <a href={`https://wa.me/5491164521118?text=${encodeURIComponent(
-                   `Hola SYPSY! Quiero consultar por este producto:
+<button
+className="delete-btn"
+onClick={()=>deleteProduct(product._id)}
+>
 
-                  📦 Producto: ${product.nombre}
-                  💲 Precio: $${product.precio}
-                  🆔 ID: ${product._id}`
-          )}`}
-                target="_blank"
-                rel="noopener noreferrer"
-        >
-        <button className="buy-btn">
-            Comprar por WhatsApp
-        </button>
-        </a>
+Eliminar
 
-        </div>
+</button>
+
+<button
+className="edit-btn"
+onClick={()=>startEdit(product)}
+>
+
+Editar
+
+</button>
+
+</>
+
+)}
+
+<Link
+to={`/producto/${product._id}`}
+className="details-btn"
+>
+
+Ver producto
+
+</Link>
+
+</div>
 
         {
+          modoVendedor &&
           editingId === product._id && (
 
             <div className="edit-box">

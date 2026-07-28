@@ -1,8 +1,11 @@
 function DrawerHeader({ pedido, onClose }) {
 
+    const fecha = new Date(pedido.createdAt).toLocaleString();
+
     return (
 
         <>
+
             <button
                 className="drawer-close"
                 onClick={onClose}
@@ -12,27 +15,38 @@ function DrawerHeader({ pedido, onClose }) {
 
             <div className="drawer-header">
 
-                <div>
+                <div className="drawer-header-info">
 
-                    <h2>
-                        Pedido {pedido.numeroPedido}
-                    </h2>
+    <span className="drawer-label">
 
-                    <small>
-                        Estado actual
-                    </small>
+        📦 Pedido #{pedido.numeroPedido}
 
-                </div>
+    </span>
+
+    <h2>
+
+        ${pedido.total.toLocaleString()}
+
+    </h2>
+
+    <small>
+
+        {fecha}
+
+    </small>
+
+</div>
 
                 <span
                     className={`status-badge ${pedido.estado}`}
                 >
                     {pedido.estado
-                        .replaceAll("_"," ")
+                        .replaceAll("_", " ")
                         .toUpperCase()}
                 </span>
 
             </div>
+
         </>
 
     );

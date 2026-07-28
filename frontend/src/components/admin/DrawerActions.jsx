@@ -26,14 +26,12 @@ function DrawerActions({
 
         <div className="drawer-actions">
 
-            {/* ===============================
-                ACCIONES DEL VENDEDOR
-            ================================ */}
-
             {esVendedor && pedido.estado === "pendiente" && (
 
                 <>
+
                     <button
+                        className="primary"
                         onClick={() => ejecutarAccion("ACEPTAR")}
                     >
                         ✅ Aceptar pedido
@@ -45,6 +43,7 @@ function DrawerActions({
                     >
                         ❌ Cancelar pedido
                     </button>
+
                 </>
 
             )}
@@ -52,6 +51,7 @@ function DrawerActions({
             {esVendedor && pedido.estado === "aceptado" && (
 
                 <button
+                    className="primary"
                     onClick={() => ejecutarAccion("PREPARAR")}
                 >
                     📦 Preparar pedido
@@ -69,10 +69,6 @@ function DrawerActions({
                 </button>
 
             )}
-
-            {/* ===============================
-                ACCIONES DEL COMPRADOR
-            ================================ */}
 
             {esComprador && pedido.estado === "entregado" && (
 
@@ -94,7 +90,9 @@ function DrawerActions({
                             <h3>🔐 Código de confirmación</h3>
 
                             <div className="codigo-visible">
+
                                 <strong>{pedido.codigoEntrega}</strong>
+
                             </div>
 
                             <input
@@ -107,6 +105,7 @@ function DrawerActions({
                             />
 
                             <button
+                                className="primary"
                                 onClick={validarCodigo}
                             >
                                 🔐 Validar código

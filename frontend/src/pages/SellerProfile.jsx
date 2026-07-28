@@ -1,6 +1,7 @@
 import { useContext } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
+import ProductCard from "../components/ProductCard";
 
 function SellerProfile() {
   const { id } = useParams();
@@ -29,76 +30,97 @@ const seller = sellerProducts[0]?.vendedor;
       {/* HEADER */}
       <div className="seller-header">
 
-        <h1>👤 {seller?.name || "Vendedor"}</h1>
-        <p>{seller?.email}</p>
-        <p>
-          ID: {id}
-        </p>
-        <p>
-  <a
-    href="https://www.sypsy.com.ar"
-    target="_blank"
-    rel="noreferrer"
-  >
-    🌐 www.sypsy.com.ar
-  </a>
-</p>
+<h1>
+👤 {seller?.name || "Vendedor SYPSY"}
+</h1>
 
-      </div>
+
+<div className="seller-badge">
+⭐ Vendedor SYPSY
+</div>
+
+
+<div className="seller-stats">
+
+
+<div>
+<strong>
+{sellerProducts.length}
+</strong>
+<span>
+Productos publicados
+</span>
+</div>
+
+
+<div>
+<strong>
+{
+[...new Set(
+sellerProducts.map(
+p=>p.categoria
+)
+)].length
+}
+</strong>
+<span>
+Categorías
+</span>
+</div>
+
+
+<div>
+<strong>
+100%
+</strong>
+<span>
+Perfil activo
+</span>
+</div>
+
+
+</div>
+
+
+</div>
 
       {/* PRODUCTOS */}
-      <h2>Productos publicados</h2>
 
-      <div className="products-grid">
+<h2>
+Productos publicados
+</h2>
 
-        {sellerProducts.map((product) => (
-          <div key={product._id} className="product-card">
+<div className="products-grid">
 
-            <img
-              src={product.images?.[0]}
-              alt={product.nombre}
-            />
+{
+sellerProducts.length > 0 ?
 
-            <div className="product-info">
+sellerProducts.map(product => (
 
-              <span className="category-badge">
-                {product.categoria}
-              </span>
+<ProductCard
+ key={product._id}
+ product={product}
+/>
 
-              <h3>{product.nombre}</h3>
+))
 
-              <p>{product.descripcion}</p>
+:
 
-              <span className="price">
-                ${product.precio}
-              </span>
+<div className="empty-category">
 
-              {/* WHATSAPP */}
-              <a
-  className="contact-btn"
-  href={`https://wa.me/54${seller?.telefono}?text=${encodeURIComponent(
-    `Hola ${seller?.name} 👋
+<h2>
+Todavía no tiene publicaciones
+</h2>
 
-Vi este producto en SYPSY:
+<p>
+Este vendedor aún no publicó productos.
+</p>
 
-📦 ${product.nombre}
-💰 $${product.precio}
+</div>
 
-🌐 https://www.sypsy.com.ar
+}
 
-¿Sigue disponible?`
-  )}`}
-  target="_blank"
-  rel="noreferrer"
->
-  Contactar vendedor
-</a>
-
-            </div>
-          </div>
-        ))}
-
-      </div>
+</div>
 
     </div>
   );

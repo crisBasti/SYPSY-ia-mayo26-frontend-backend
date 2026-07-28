@@ -11,61 +11,85 @@ function DrawerPayment({
 
 }) {
 
+    const estadoPago = {
+
+        pendiente: {
+            texto: "⚪ Esperando comprobante"
+        },
+
+        pendiente_verificacion: {
+            texto: "🟡 Comprobante enviado"
+        },
+
+        retenido: {
+            texto: "🟢 Pago confirmado"
+        },
+
+        pagado: {
+            texto: "💰 Pago liberado"
+        },
+
+        rechazado: {
+            texto: "🔴 Comprobante rechazado"
+        }
+
+    };
+
+    const pago =
+        estadoPago[pedido.estadoPago] || {
+            texto: pedido.estadoPago
+        };
+
     return (
 
         <>
 
-            <hr />
+            <div className="drawer-card">
 
-            <h3>💳 Información del pago</h3>
+                <div className="drawer-card-title">
 
-            <p>
-
-                <strong>Pago</strong>
-
-                <br />
-
-                {pedido.estadoPago === "pendiente" && "⚪ Esperando comprobante"}
-
-                {pedido.estadoPago === "pendiente_verificacion" && "🟡 Comprobante enviado"}
-
-                {pedido.estadoPago === "retenido" && "🟢 Pago confirmado"}
-
-                {pedido.estadoPago === "pagado" && "💰 Pago liberado"}
-
-                {pedido.estadoPago === "rechazado" && "🔴 Comprobante rechazado"}
-
-            </p>
-
-            <p>
-
-                <strong>Estado:</strong> {pedido.estadoPago}
-
-            </p>
-
-            {pedido.comprobantePago && (
-
-                <div className="payment-proof">
-
-                    <a
-                        href={pedido.comprobantePago}
-                        target="_blank"
-                        rel="noreferrer"
-                    >
-                        📄 Ver comprobante
-                    </a>
+                    💳 Información del pago
 
                 </div>
 
-            )}
+                <div className="drawer-card-content">
 
-            <div className="admin-box">
+                    <div className="drawer-info-item">
 
-                <h3>🔐 Código de entrega</h3>
+                        <strong>Estado</strong>
 
-                <div className="delivery-code">
+                        <span>
 
-                    {pedido.codigoEntrega}
+                            {pago.texto}
+
+                        </span>
+
+                    </div>
+
+                    <div className="drawer-info-item">
+
+                        <strong>Código de entrega</strong>
+
+                        <span>
+
+                            {pedido.codigoEntrega}
+
+                        </span>
+
+                    </div>
+
+                    {pedido.comprobantePago && (
+
+                        <a
+                            href={pedido.comprobantePago}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="seller-link"
+                        >
+                            📄 Ver comprobante
+                        </a>
+
+                    )}
 
                 </div>
 
@@ -74,21 +98,31 @@ function DrawerPayment({
             {user?.role === "admin" &&
                 pedido.estadoPago === "pendiente_verificacion" && (
 
-                <div className="payment-admin-actions">
+                <div className="drawer-card">
 
-                    <button
-                        className="success"
-                        onClick={aprobarPago}
-                    >
-                        ✅ Aprobar pago
-                    </button>
+                    <div className="drawer-card-title">
 
-                    <button
-                        className="danger"
-                        onClick={rechazarPago}
-                    >
-                        ❌ Rechazar
-                    </button>
+                        🛡 Administración
+
+                    </div>
+
+                    <div className="drawer-actions">
+
+                        <button
+                            className="success"
+                            onClick={aprobarPago}
+                        >
+                            ✅ Aprobar pago
+                        </button>
+
+                        <button
+                            className="danger"
+                            onClick={rechazarPago}
+                        >
+                            ❌ Rechazar pago
+                        </button>
+
+                    </div>
 
                 </div>
 
@@ -97,53 +131,56 @@ function DrawerPayment({
             {esComprador &&
                 pedido.estadoPago === "pendiente" && (
 
-                <div className="payment-box">
+                <div className="drawer-card">
 
-                    <h3>💳 Pago del pedido</h3>
+                    <div className="drawer-card-title">
 
-                    <p>Transferí el importe utilizando:</p>
+                        🏦 Datos para la transferencia
 
-                    <p>
+                    </div>
 
-                        <strong>Alias:</strong>
+                    <div className="drawer-card-content">
 
-                        sypsy.arg
+                        <div className="drawer-info-item">
 
-                    </p>
+                            <strong>Alias</strong>
 
-                    <p>
+                            <span>sypsy.arg</span>
 
-                        <strong>CVU:</strong>
+                        </div>
 
-                        0000003100014719845478
+                        <div className="drawer-info-item">
 
-                    </p>
+                            <strong>CVU</strong>
 
-                    <p>
+                            <span>0000003100014719845478</span>
 
-                        <strong>Titular:</strong>
+                        </div>
 
-                        Cristian Alejandro Portillo
+                        <div className="drawer-info-item">
 
-                    </p>
+                            <strong>Titular</strong>
 
-                    <input
+                            <span>Cristian Alejandro Portillo</span>
 
-                        type="file"
+                        </div>
 
-                        accept="image/*"
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e)=>
+                                setComprobante(e.target.files[0])
+                            }
+                        />
 
-                        onChange={(e)=>
-                            setComprobante(e.target.files[0])
-                        }
+                        <button
+                            className="primary"
+                            onClick={subirComprobante}
+                        >
+                            📤 Enviar comprobante
+                        </button>
 
-                    />
-
-                    <button
-                        onClick={subirComprobante}
-                    >
-                        📤 Enviar comprobante
-                    </button>
+                    </div>
 
                 </div>
 

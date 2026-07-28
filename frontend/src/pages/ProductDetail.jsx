@@ -2,12 +2,12 @@ import { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
 import { Helmet } from "react-helmet-async";
-import { FaWhatsapp } from "react-icons/fa";
 import { slugify } from "../utils/slugify";
-import { incrementViewService,
-         incrementWhatsappService, 
+import { incrementViewService, 
          reportProductService 
         } from "../services/productService";
+import ProductCard from "../components/ProductCard";
+import { Link } from "react-router-dom";
 
 function ProductDetail() {
 
@@ -29,6 +29,13 @@ const [showReport, setShowReport] = useState(false);
 const [reportReason, setReportReason] = useState("");
 const [reportDescription, setReportDescription] = useState("");
 const [reportLoading, setReportLoading] = useState(false);
+const [imagenActual,setImagenActual]=useState(0);
+const productosSimilares =
+productos.filter(
+(p)=>
+p.categoria === producto.categoria &&
+p._id !== producto._id
+).slice(0,4);
 
   useEffect(() => {
     if (productos.length === 0) {
@@ -97,24 +104,6 @@ if (!producto) {
     </h2>
   );
 }
-
-const handleWhatsappClick =
-  async () => {
-
-    try {
-
-      await incrementWhatsappService(
-        producto._id,
-        "product"
-      );
-
-    } catch (error) {
-
-      console.error(error);
-
-    }
-
-};
 
 const handleReportSubmit = async () => {
 
@@ -234,11 +223,53 @@ const handleReportSubmit = async () => {
 
       <div className="product-detail">
 
-        <img
-           src={producto.images?.[0]}
-           alt={producto.nombre}
-           loading="lazy"
-        />
+        <div className="detail-gallery">
+
+<img
+src={
+producto.images?.[imagenActual]
+}
+alt={producto.nombre}
+/>
+
+
+{
+producto.images?.length > 1 && (
+
+<div className="gallery-buttons">
+
+<button
+onClick={()=>setImagenActual(
+imagenActual===0
+?
+producto.images.length-1
+:
+imagenActual-1
+)}
+>
+‹
+</button>
+
+
+<button
+onClick={()=>setImagenActual(
+imagenActual===producto.images.length-1
+?
+0
+:
+imagenActual+1
+)}
+>
+›
+</button>
+
+</div>
+
+)
+
+}
+
+</div>
 
         <h1>{producto.nombre}</h1>
 
@@ -250,26 +281,34 @@ const handleReportSubmit = async () => {
           Categoría: {producto.categoria}
         </p>
 
-        <a
-          className="contact-btn"
-          onClick={handleWhatsappClick}
-          href={`https://wa.me/54${producto.vendedor?.telefono}?text=${encodeURIComponent(
-            `Hola ${producto.vendedor?.name} 👋
+        <div className="seller-product-box">
 
-Estoy interesado en este producto:
+<h3>
+🏪 Vendedor
+</h3>
 
-📦 ${producto.nombre}
+<p>
+{producto.vendedor?.name}
+</p>
 
-💰 $${producto.precio}
+<Link
 
-🌐 https://www.sypsy.com.ar/producto/${slugify(producto.nombre)}-${producto._id}`
-          )}`}
-          target="_blank"
-          rel="noreferrer"
+to={`/seller/${producto.vendedor?.uid}`}
+
+className="seller-profile-btn"
+
+>
+👤 Ver perfil del vendedor
+</Link>
+
+</div>
+
+        <button
+            className="buy-sypsy-btn"
         >
-          <FaWhatsapp />
-          Contactar vendedor
-        </a>
+            🛒 Comprar en SYPSY
+        </button>
+
 
         <button
           className="report-btn"
@@ -278,7 +317,57 @@ Estoy interesado en este producto:
           🚩 Reportar publicación
         </button>
 
+        <div className="sypsy-trust-box">
+
+            <h3>
+                🛡️ Compra segura en SYPSY
+            </h3>
+
+            <p>
+                Publicaciones revisadas por nuestra comunidad.
+                Si encontrás algo irregular podés reportarlo.
+            </p>
+
+        </div>
+
       </div>
+
+      {
+
+productosSimilares.length > 0 && (
+
+<section className="similar-products">
+
+<h2>
+También te puede interesar
+</h2>
+
+
+<div className="products-grid">
+
+{
+productosSimilares.map((item)=>(
+
+<ProductCard
+
+key={item._id}
+
+product={item}
+
+/>
+
+))
+
+}
+
+</div>
+
+
+</section>
+
+)
+
+}
 
       {showReport && (
   <div className="report-modal">

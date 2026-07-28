@@ -49,6 +49,51 @@ function OrderCard({
             color: "#777"
         };
 
+
+        const tiempoTranscurrido = () => {
+
+    const creado = new Date(pedido.createdAt);
+
+    const ahora = new Date();
+
+    const minutos = Math.floor((ahora - creado) / 60000);
+
+    if (minutos < 60) {
+
+        return {
+            texto: `🟢 Hace ${minutos} min`,
+            clase: "recent"
+        };
+
+    }
+
+    const horas = Math.floor(minutos / 60);
+
+    if (horas < 24) {
+
+        return {
+            texto: `🟡 Hace ${horas} h`,
+            clase: "medium"
+        };
+
+    }
+
+    const dias = Math.floor(horas / 24);
+
+    return {
+
+        texto: `🔴 Hace ${dias} día${dias > 1 ? "s" : ""}`,
+        clase: "old"
+
+    };
+
+};
+
+const antiguedad = tiempoTranscurrido();
+
+
+
+
     return (
 
         <div
@@ -73,111 +118,89 @@ function OrderCard({
 
             <div className="order-header">
 
-                <div>
+              <div>
 
-                    <strong>
+                <strong>
+                  📦 Pedido #{pedido.numeroPedido}
+                </strong>
 
-                        📦 {pedido.numeroPedido}
+                <div className="order-date">
 
-                    </strong>
+                  <small>
 
-                    <br />
+                    {new Date(pedido.createdAt).toLocaleString()}
 
-                    <small>
+                  </small>
 
-                        {
+                  <span className={`order-age ${antiguedad.clase}`}>
 
-                            new Date(
+                    {antiguedad.texto}
 
-                                pedido.createdAt
-
-                            ).toLocaleString()
-
-                        }
-
-                    </small>
+                  </span>
 
                 </div>
 
-                <span>
+              </div>
 
-                    {
+              <span className="order-state">
 
-                        ORDER_STATUS[pedido.estado]?.text
+                {ORDER_STATUS[pedido.estado]?.text}
 
-                    }
-
-                </span>
+              </span>
 
             </div>
 
             <div className="order-body">
 
-                <h3>
+    <h3>
 
-                    {pedido.producto?.nombre}
+        {pedido.producto?.nombre}
 
-                </h3>
+    </h3>
 
-                <p>
+    <p>
 
-                    💰
+        💰 <strong>${pedido.total.toLocaleString()}</strong>
 
-                    <strong>
+    </p>
 
-                        {" "}
+    <p>
 
-                        $
+        👤 {pedido.comprador?.name || "Sin comprador"}
 
-                        {pedido.total.toLocaleString()}
+    </p>
 
-                    </strong>
+    <p>
 
-                </p>
+        🏪 {pedido.vendedor?.name || "Sin vendedor"}
 
-                <p>
+    </p>
 
-                    👤 {pedido.comprador?.name}
+    <p>
 
-                </p>
+        💸 Comisión <strong>${pedido.comision.toLocaleString()}</strong>
 
-                <p>
+    </p>
 
-                    🏪 {pedido.vendedor?.name}
+    <div
 
-                </p>
+        className="payment-status"
 
-                <p>
+        style={{
 
-                    💸 Comisión:
+            color:pago.color,
 
-                    {" "}
+            border:`1px solid ${pago.color}30`
 
-                    $
+        }}
 
-                    {pedido.comision.toLocaleString()}
+    >
 
-                </p>
+        ● {pago.texto}
 
-                <div
+    </div>
 
-                    className="payment-status"
-
-                    style={{
-
-                        color: pago.color,
-
-                        fontWeight: "bold"
-
-                    }}
-
-                >
-
-                    ● {pago.texto}
-
-                </div>
-
-            </div>
+</div>
 
         </div>
 
