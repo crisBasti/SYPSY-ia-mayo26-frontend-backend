@@ -30,12 +30,25 @@ const [reportReason, setReportReason] = useState("");
 const [reportDescription, setReportDescription] = useState("");
 const [reportLoading, setReportLoading] = useState(false);
 const [imagenActual,setImagenActual]=useState(0);
+
+const producto = productos.find(
+  (p) => p._id === realId
+);
+
 const productosSimilares =
-productos.filter(
-(p)=>
-p.categoria === producto.categoria &&
-p._id !== producto._id
-).slice(0,4);
+
+producto
+
+? productos
+    .filter(
+      (p) =>
+        p.categoria === producto.categoria &&
+        p._id !== producto._id
+    )
+    .slice(0,4)
+
+: [];
+
 
   useEffect(() => {
     if (productos.length === 0) {
@@ -43,9 +56,7 @@ p._id !== producto._id
     }
   }, []);
 
- const producto = productos.find(
-  (p) => p._id === realId
-);
+ 
 
 useEffect(() => {
 
