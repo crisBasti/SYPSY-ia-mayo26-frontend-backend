@@ -33,15 +33,34 @@ updateProduct;
     <div className="product-card">
 
       <Link
-  to={`/producto/${product._id}`}
-  className="product-carousel"
->
+        to={`/producto/${product._id}`}
+        className="product-carousel"
+      >
 
-  <img
-    src={images[currentImage]}
-    alt={product.nombre}
-    className="product-image"
-  />
+        <div className="card-top-badges">
+
+          <span className="badge-new">
+
+            NUEVO
+
+          </span>
+
+        </div>
+
+        <button
+          type="button"
+          className="favorite-btn"
+        >
+
+          🤍
+
+        </button>
+
+      <img
+        src={images[currentImage]}
+        alt={product.nombre}
+        className="product-image"
+      />
 
   {images.length > 1 && (
     <>
@@ -104,6 +123,14 @@ updateProduct;
         <p className="price">
           ${product.precio}
         </p>
+
+        <div className="product-status">
+
+          <span className="status-dot"></span>
+
+             Disponible
+
+        </div>
 
         <p className="product-category">
           {product.categoria}

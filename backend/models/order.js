@@ -22,6 +22,36 @@ const orderSchema = new mongoose.Schema(
 
   },
 
+  direccionEntrega: {
+
+    nombre: String,
+
+    telefono: String,
+
+    calle: String,
+
+    numero: String,
+
+    piso: String,
+
+    departamento: String,
+
+    barrio: String,
+
+    ciudad: String,
+
+    provincia: String,
+
+    codigoPostal: String,
+
+    referencias: String,
+
+    latitud: Number,
+
+    longitud: Number
+
+},
+
     vendedor: {
   uid: {
     type: String,

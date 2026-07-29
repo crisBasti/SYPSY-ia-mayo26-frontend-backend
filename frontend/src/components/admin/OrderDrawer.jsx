@@ -24,7 +24,7 @@ function OrderDrawer({
 
     const { user, profile } = useAuth();
 
-    console.log("Usuario Logueado:", user);
+
 
 const esVendedor = user?.uid === pedido?.vendedor?.uid;
 
@@ -353,7 +353,7 @@ return (
 
                         $
 
-                        {pedido.comision.toLocaleString()}
+                        {(pedido.comision ?? 0).toLocaleString()}
 
                     </p>
 

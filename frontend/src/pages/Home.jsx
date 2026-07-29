@@ -2,12 +2,11 @@ import { useContext, useState, useEffect } from "react";
 import { ProductsContext } from "../context/ProductsContext";
 import SellerBadge from "../components/SellerBadge";
 import { Link } from "react-router-dom";
-import { FaWhatsapp } from "react-icons/fa";
 import { Helmet } from "react-helmet-async";
 import { slugify } from "../utils/slugify";
-import { incrementWhatsappService } from "../services/productService";
 import AdvertisementCarousel from "../components/AdvertisementCarousel";
 import { useAuth } from "../context/AuthContext";
+
 
 
 import { crearPedidoService } from "../services/orderService";
@@ -24,16 +23,9 @@ function Home({ search }) {
 
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const [showConfirmBuy, setShowConfirmBuy] = useState(false);
+  const [productToBuy, setProductToBuy] = useState(null);
   const [imgIndex, setImgIndex] = useState({});
-
-
-  const handleWhatsappClick = async (productId) => {
-  try {
-    await incrementWhatsappService(productId);
-  } catch (error) {
-    console.error(error);
-  }
-};
 
 const handleComprar = async (product) => {
 
@@ -275,38 +267,14 @@ const prevImage = (productId, total) => {
                 ${product.precio}
               </span>
 
-               
-              {/* WHATSAPP */}
-              <a
-                className="contact-btn"
-                  onClick={() =>
-                      incrementWhatsappService(
-                      product._id,
-                      "home",
-                      search
-                  )
-                }
-                href={`https://wa.me/54${product.vendedor?.telefono}?text=${encodeURIComponent(
-                `Hola ${product.vendedor?.name} 👋
+              <div className="product-status">
 
-Estoy interesado en este producto de SYPSY:
+          <span className="status-dot"></span>
 
- 📦 Producto: ${product.nombre}
- 💰 Precio: $${product.precio}
+             Disponible
 
- 🌐 https://www.sypsy.com.ar
+        </div>
 
- ¿Sigue disponible?`
-              )}`}
-              
-              target="_blank"
-              rel="noreferrer"
-              >
-              <>
-              <FaWhatsapp />
-                Contactar vendedor
-              </>
-              </a>
 
               {/* VER PRODUCTO */}
               <Link
@@ -320,7 +288,10 @@ Estoy interesado en este producto de SYPSY:
 
                 <button
                   className="buy-btn"
-                  onClick={() => handleComprar(product)}
+                  onClick={() => {
+                    setProductToBuy(product);
+                    setShowConfirmBuy(true);
+                  }}
                 >
                   🛒 Comprar ahora
                 </button>
@@ -408,6 +379,107 @@ Estoy interesado en este producto de SYPSY:
           </div>
         </div>
       )}
+
+
+      {
+showConfirmBuy && productToBuy && (
+
+<div className="confirm-buy-overlay">
+
+    <div className="confirm-buy-box">
+
+        <h2>
+            🛒 Confirmar compra
+        </h2>
+
+        <p>
+
+            Estás por comprar:
+
+        </p>
+
+        <h3>
+
+            {productToBuy.nombre}
+
+        </h3>
+
+        <p>
+
+            Precio:
+
+            <strong>
+
+                ${productToBuy.precio}
+
+            </strong>
+
+        </p>
+
+        <p>
+
+            Si confirmás,
+
+            se creará el pedido y el vendedor será notificado.
+
+        </p>
+
+        <small>
+
+            🔒 Tus datos personales permanecerán ocultos hasta que SYPSY valide el pago.
+
+        </small>
+
+        <div className="confirm-actions">
+
+            <button
+
+                className="cancel-btn"
+
+                onClick={()=>{
+
+                    setShowConfirmBuy(false);
+
+                    setProductToBuy(null);
+
+                }}
+
+            >
+
+                Cancelar
+
+            </button>
+
+            <button
+
+                className="buy-btn"
+
+                onClick={async()=>{
+
+                    await handleComprar(productToBuy);
+
+                    setShowConfirmBuy(false);
+
+                    setProductToBuy(null);
+
+                }}
+
+            >
+
+                Confirmar compra
+
+            </button>
+
+        </div>
+
+    </div>
+
+</div>
+
+)
+}
+
+      
 
     </div>
     </>

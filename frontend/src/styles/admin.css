@@ -1733,8 +1733,19 @@ text-align:center;
 
 .admin-content button{
 
-    color:white;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:12px;
+font-weight:700;
+padding:12px 18px;
+cursor:pointer;
+transition:.25s;
 
+}
+
+.admin-content button:hover {
+    background:#1d4ed8;
 }
 
 
@@ -2272,5 +2283,164 @@ text-align:center;
     background:#fee2e2;
 
     color:#b91c1c;
+
+}
+
+
+.confirm-buy-overlay{
+
+position:fixed;
+
+inset:0;
+
+background:rgba(0,0,0,.65);
+
+display:flex;
+
+justify-content:center;
+
+align-items:center;
+
+z-index:9999;
+
+}
+
+.confirm-buy-box{
+
+background:#fff;
+
+color:#111827;
+
+width:95%;
+
+max-width:520px;
+
+padding:30px;
+
+border-radius:18px;
+
+text-align:center;
+
+box-shadow:0 10px 30px rgba(0,0,0,.25);
+
+}
+
+.confirm-buy-box h2,
+.confirm-buy-box h3,
+.confirm-buy-box p,
+.confirm-buy-box small,
+.confirm-buy-box strong{
+
+color:#111827;
+
+}
+
+.confirm-buy-box h2{
+
+margin-bottom:15px;
+
+}
+
+.confirm-buy-box h3{
+
+margin:18px 0;
+
+}
+
+.confirm-buy-box small{
+
+display:block;
+
+margin-top:18px;
+
+color:#64748b;
+
+line-height:1.5;
+
+}
+
+.confirm-actions{
+
+display:flex;
+
+justify-content:center;
+
+gap:15px;
+
+margin-top:30px;
+
+}
+
+.cancel-btn{
+
+background:#e5e7eb;
+
+color:#111827;
+
+border:none;
+
+padding:12px 20px;
+
+border-radius:10px;
+
+cursor:pointer;
+
+}
+
+.cancel-btn:hover{
+
+background:#d1d5db;
+
+}
+
+.shipping-preview{
+
+    margin-top:12px;
+
+    padding:10px;
+
+    border-radius:10px;
+
+    background:#eff6ff;
+
+}
+
+.shipping-preview h4{
+
+    color:#2563eb;
+
+    margin-bottom:6px;
+
+}
+
+.shipping-info{
+
+    margin-top:12px;
+
+    padding:12px;
+
+    border-radius:10px;
+
+    background:#ecfdf5;
+
+    border:1px solid #10b98140;
+
+}
+
+.shipping-info h4{
+
+    color:#059669;
+
+    margin-bottom:8px;
+
+}
+
+.shipping-info p,
+
+.shipping-preview p{
+
+    color:#1f2937;
+
+    margin:4px 0;
 
 }

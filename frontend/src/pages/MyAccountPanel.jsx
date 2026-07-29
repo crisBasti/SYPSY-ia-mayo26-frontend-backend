@@ -6,6 +6,7 @@ import MyOrders from "./MyOrders";
 import MySales from "./MySales";
 import MyProducts from "./MyProducts";
 import SellerPanel from "./SellerPanel";
+import MyAccount from "./MyAccount";
 
 
 function MyAccountPanel(){
@@ -83,14 +84,9 @@ function MyAccountPanel(){
                 }
 
                 {
-
                     section==="settings" &&
 
-                    <h2>
-
-                        ⚙ Configuración
-
-                    </h2>
+                    <MyAccount />
 
                 }
 

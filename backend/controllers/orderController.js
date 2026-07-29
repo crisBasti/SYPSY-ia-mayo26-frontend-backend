@@ -3,6 +3,7 @@ import User from "../models/User.js";
 import Configuration from "../models/Configuration.js";
 import { executeAction } from "../services/orderStateMachine.js";
 import Product from "../models/Product.js";
+import UserProfile from "../models/UserProfile.js";
 
 
 
@@ -24,6 +25,30 @@ export const crearPedido = async (req, res) => {
       await User.findOne({
         uid: req.user.uid
       });
+      
+
+      const perfil = await UserProfile.findOne({
+        uid:req.user.uid
+      });
+
+
+      if (
+    !perfil ||
+    !perfil.direccion ||
+    !perfil.direccion.provincia ||
+    !perfil.direccion.ciudad ||
+    !perfil.direccion.barrio ||
+    !perfil.direccion.calle ||
+    !perfil.direccion.numero
+) {
+
+    return res.status(400).json({
+        message: "Debes completar tu dirección de entrega antes de comprar."
+    });
+
+}
+
+
 
       const productoDB = await Product.findById(producto);
 
@@ -133,6 +158,36 @@ const nuevoPedido = new Order({
     name:`${comprador.nombre} ${comprador.apellido}`,
 
     telefono:comprador.telefono
+
+},
+
+  direccionEntrega:{
+
+    nombre: comprador.nombre,
+
+    telefono: perfil?.telefono || "",
+
+    provincia: perfil?.direccion?.provincia || "",
+
+    ciudad: perfil?.direccion?.ciudad || "",
+
+    barrio: perfil?.direccion?.barrio || "",
+
+    calle: perfil?.direccion?.calle || "",
+
+    numero: perfil?.direccion?.numero || "",
+
+    piso: perfil?.direccion?.piso || "",
+
+    departamento: perfil?.direccion?.departamento || "",
+
+    codigoPostal: perfil?.direccion?.codigoPostal || "",
+
+    referencias: perfil?.direccion?.referencias || "",
+
+    latitud: perfil?.ubicacion?.lat,
+
+    longitud: perfil?.ubicacion?.lng
 
 },
 

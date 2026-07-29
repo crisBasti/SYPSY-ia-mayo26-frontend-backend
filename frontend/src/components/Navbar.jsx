@@ -21,37 +21,32 @@ function Navbar({ search, setSearch }) {
             className="logo-img"
           />
 
-          <span>
-            LO QUE QUERES YA!
+          <span className="navbar-slogan">
+            LO QUE QUERÉS YA!
           </span>
         </div>
 
-        <div className="navbar-search">
-          <input
-            type="text"
-            placeholder="🔍 Buscar productos..."
-            value={search}
-            onChange={(e) =>
-              setSearch(e.target.value)
-            }
-          />
-        </div>
+                <div className="auth-section">
+                  {user ? (
+                <>
+                <span className="user-name">
+                  👋 {user?.displayName?.split(" ")[0]}
+                </span>
 
-        <div className="auth-section">
-          {user ? (
-            <>
-  <span className="user-name">
-    👋 {(user?.displayName || "Usuario").split(" ")[0]}
-  </span>
+                  <Link
+                    to="/admin"
+                    title="Panel"
+                  >
+                    ⚙️
+                  </Link>
 
-  <Link to="/admin">
-    🛠 Administración
-  </Link>
-
-  <button onClick={logout}>
-    Salir
-  </button>
-</>
+                  <button
+                    title="Salir"
+                    onClick={logout}
+                  >
+                    🚪
+                  </button>
+                </>
           ) : (
             <>
               <Link to="/login">
@@ -73,6 +68,24 @@ function Navbar({ search, setSearch }) {
         >
           ☰
         </button>
+
+
+        <div className="navbar-search">
+          <input
+            type="text"
+            placeholder="Buscar en SYPSY..."
+            value={search}
+            onChange={(e) =>
+              setSearch(e.target.value)
+            }
+          />
+        </div>
+
+        <div className="location-bar">
+
+            📍 Salta Capital
+
+        </div>
 
       </nav>
 

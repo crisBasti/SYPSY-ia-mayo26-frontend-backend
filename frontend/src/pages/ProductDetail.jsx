@@ -8,6 +8,9 @@ import { incrementViewService,
         } from "../services/productService";
 import ProductCard from "../components/ProductCard";
 import { Link } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { crearPedidoService } from "../services/orderService";
+import { auth } from "../firebase";
 
 function ProductDetail() {
 
@@ -24,6 +27,8 @@ function ProductDetail() {
     productos,
     fetchProducts
   } = useContext(ProductsContext);
+
+  const { user } = useAuth();
 
 const [showReport, setShowReport] = useState(false);
 const [reportReason, setReportReason] = useState("");
@@ -149,6 +154,53 @@ const handleReportSubmit = async () => {
     setReportLoading(false);
 
   }
+
+};
+
+
+const handleComprar = async () => {
+
+    if (user?.uid === producto.vendedor?.uid) {
+
+        alert("No puedes comprar tus propios productos.");
+
+        return;
+
+    }
+
+    try {
+
+        const token =
+            await auth.currentUser.getIdToken();
+
+        const pedido = {
+
+            vendedor: producto.vendedor,
+
+            producto: producto._id,
+
+            precio: producto.precio,
+
+            cantidad: 1,
+
+            costoEnvio: 0
+
+        };
+
+        await crearPedidoService(
+            pedido,
+            token
+        );
+
+        alert("Pedido creado correctamente");
+
+    } catch (error) {
+
+        console.error(error);
+
+        alert("Error creando pedido");
+
+    }
 
 };
 
@@ -314,11 +366,33 @@ className="seller-profile-btn"
 
 </div>
 
-        <button
-            className="buy-sypsy-btn"
-        >
-            🛒 Comprar en SYPSY
-        </button>
+        {user?.uid !== producto.vendedor?.uid ? (
+
+<button
+className="buy-sypsy-btn"
+onClick={handleComprar}
+>
+
+🛒 Comprar ahora
+
+</button>
+
+) : (
+
+<button
+className="buy-sypsy-btn"
+disabled
+style={{
+background:"#9ca3af",
+cursor:"not-allowed"
+}}
+>
+
+📦 Es tu publicación
+
+</button>
+
+)}
 
 
         <button

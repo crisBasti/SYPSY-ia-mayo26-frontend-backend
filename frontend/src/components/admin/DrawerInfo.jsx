@@ -96,7 +96,7 @@ function DrawerInfo({ pedido, esVendedor }) {
 
                         <span>
 
-                            ${pedido.total.toLocaleString()}
+                            ${(pedido.total ?? 0).toLocaleString()}
 
                         </span>
 

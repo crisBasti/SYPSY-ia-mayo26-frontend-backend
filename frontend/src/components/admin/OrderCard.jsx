@@ -160,25 +160,94 @@ const antiguedad = tiempoTranscurrido();
 
     <p>
 
-        💰 <strong>${pedido.total.toLocaleString()}</strong>
+        💰 <strong>${pedido.total?.toLocaleString() || 0}</strong>
 
     </p>
 
     <p>
+    👤 {pedido.comprador?.name || "Sin comprador"}
+</p>
 
-        👤 {pedido.comprador?.name || "Sin comprador"}
+<p>
+    🏪 {pedido.vendedor?.name || "Sin vendedor"}
+</p>
 
+{
+pedido.direccionEntrega ?
+
+(
+pedido.estadoPago === "retenido" ||
+pedido.estadoPago === "liberado" ||
+pedido.estadoPago === "pagado"
+
+)
+
+?
+
+(
+<div className="shipping-info">
+
+    <h4>📦 Dirección de entrega</h4>
+
+    <p>
+        📍 {pedido.direccionEntrega.calle || ""} {pedido.direccionEntrega.numero || ""}
     </p>
 
     <p>
-
-        🏪 {pedido.vendedor?.name || "Sin vendedor"}
-
+        🏘 {pedido.direccionEntrega.barrio || "Sin barrio"}
     </p>
 
     <p>
+        🏙 {pedido.direccionEntrega.ciudad || "Sin ciudad"}
+    </p>
 
-        💸 Comisión <strong>${pedido.comision.toLocaleString()}</strong>
+    <p>
+        🌎 {pedido.direccionEntrega.provincia || "Sin provincia"}
+    </p>
+
+</div>
+
+)
+
+:
+
+(
+<div className="shipping-preview">
+
+    <h4>📍 Zona aproximada</h4>
+
+    <p>
+        {pedido.direccionEntrega.barrio || "Sin barrio"}
+    </p>
+
+    <p>
+        {pedido.direccionEntrega.ciudad || "Sin ciudad"}
+    </p>
+
+</div>
+
+)
+
+:
+
+(
+<div className="shipping-preview">
+
+<h4>📍 Dirección pendiente</h4>
+
+<p>
+El comprador aún no cargó dirección.
+</p>
+
+</div>
+
+)
+
+}
+
+    <p>
+
+        💸 Comisión <strong>${pedido.comision?.toLocaleString() || 0}</strong>
 
     </p>
 
