@@ -8,6 +8,8 @@ function MyAccount() {
 
         telefono: "",
 
+        
+
         direccion:{
 
             provincia:"",
@@ -19,7 +21,17 @@ function MyAccount() {
             departamento:"",
             codigoPostal:""
 
-        }
+        },
+
+        descripcion:"",
+
+        whatsapp:"",
+
+        instagram:"",
+
+        facebook:"",
+
+        sitioWeb:"",
 
     });
 
@@ -51,29 +63,39 @@ function MyAccount() {
 
             setProfile({
 
-                telefono:data.telefono || "",
+              telefono:data.telefono || "",
 
-                direccion:{
+              descripcion:data.descripcion || "",
 
-                    provincia:data.direccion?.provincia || "",
+              whatsapp:data.whatsapp || "",
 
-                    ciudad:data.direccion?.ciudad || "",
+              instagram:data.instagram || "",
 
-                    barrio:data.direccion?.barrio || "",
+              facebook:data.facebook || "",
 
-                    calle:data.direccion?.calle || "",
+              sitioWeb:data.sitioWeb || "",
 
-                    numero:data.direccion?.numero || "",
+            direccion:{
 
-                    piso:data.direccion?.piso || "",
+              provincia:data.direccion?.provincia || "",
 
-                    departamento:data.direccion?.departamento || "",
+              ciudad:data.direccion?.ciudad || "",
 
-                    codigoPostal:data.direccion?.codigoPostal || ""
+              barrio:data.direccion?.barrio || "",
 
-                }
+              calle:data.direccion?.calle || "",
 
-            });
+              numero:data.direccion?.numero || "",
+
+              piso:data.direccion?.piso || "",
+
+              departamento:data.direccion?.departamento || "",
+
+             codigoPostal:data.direccion?.codigoPostal || ""
+
+            }
+
+          });
 
         }
 
@@ -147,6 +169,68 @@ function MyAccount() {
 
             <h1>👤 Mi Cuenta</h1>
 
+            <h2>🏪 Perfil del vendedor</h2>
+
+<textarea
+    placeholder="Contale a los compradores quién sos..."
+    rows={4}
+    value={profile.descripcion}
+    onChange={(e)=>
+        setProfile({
+            ...profile,
+            descripcion:e.target.value
+        })
+    }
+/>
+
+<input
+    type="text"
+    placeholder="WhatsApp"
+    value={profile.whatsapp}
+    onChange={(e)=>
+        setProfile({
+            ...profile,
+            whatsapp:e.target.value
+        })
+    }
+/>
+
+<input
+    type="text"
+    placeholder="Instagram"
+    value={profile.instagram}
+    onChange={(e)=>
+        setProfile({
+            ...profile,
+            instagram:e.target.value
+        })
+    }
+/>
+
+<input
+    type="text"
+    placeholder="Facebook"
+    value={profile.facebook}
+    onChange={(e)=>
+        setProfile({
+            ...profile,
+            facebook:e.target.value
+        })
+    }
+/>
+
+<input
+    type="text"
+    placeholder="Sitio web"
+    value={profile.sitioWeb}
+    onChange={(e)=>
+        setProfile({
+            ...profile,
+            sitioWeb:e.target.value
+        })
+    }
+/>
+
             <h2>📍 Dirección de entrega</h2>
 
             <input
@@ -209,7 +293,7 @@ function MyAccount() {
 
             <button onClick={guardarPerfil}>
 
-                Guardar dirección
+                Guardar perfil
 
             </button>
 

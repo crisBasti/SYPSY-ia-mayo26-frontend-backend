@@ -1,11 +1,41 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
 import ProductCard from "../components/ProductCard";
+import axios from "axios";
 
 function SellerProfile() {
   const { id } = useParams();
+  const [perfil, setPerfil] = useState(null);
   const { productos } = useContext(ProductsContext);
+
+  useEffect(() => {
+
+    const cargarPerfil = async () => {
+
+        try {
+
+            const { data } = await axios.get(
+
+                `${import.meta.env.VITE_API_URL}/api/profile/${id}`
+
+            );
+
+            setPerfil(data);
+
+        }
+
+        catch(error){
+
+            console.error(error);
+
+        }
+
+    };
+
+    cargarPerfil();
+
+}, [id]);
 
   // 🔥 productos del vendedor por UID
   const sellerProducts = productos.filter(
@@ -31,13 +61,23 @@ const seller = sellerProducts[0]?.vendedor;
       <div className="seller-header">
 
 <h1>
-👤 {seller?.name || "Vendedor SYPSY"}
+👤 {perfil?.name || seller?.name || "Vendedor SYPSY"}
 </h1>
 
 
 <div className="seller-badge">
 ⭐ Vendedor SYPSY
 </div>
+
+<p>
+
+📍 {perfil?.direccion?.ciudad || ""}
+
+{perfil?.direccion?.provincia
+    ? `, ${perfil.direccion.provincia}`
+    : ""}
+
+</p>
 
 
 <div className="seller-stats">
@@ -78,6 +118,84 @@ Perfil activo
 </span>
 </div>
 
+
+</div>
+
+
+{
+
+perfil?.descripcion && (
+
+<div className="seller-description">
+
+<h3>
+
+Sobre el vendedor
+
+</h3>
+
+<p>
+
+{perfil.descripcion}
+
+</p>
+
+</div>
+
+)
+
+}
+
+
+<div className="seller-contact">
+
+{
+
+perfil?.whatsapp &&
+
+<p>
+
+📱 {perfil.whatsapp}
+
+</p>
+
+}
+
+{
+
+perfil?.instagram &&
+
+<p>
+
+📸 {perfil.instagram}
+
+</p>
+
+}
+
+{
+
+perfil?.facebook &&
+
+<p>
+
+📘 {perfil.facebook}
+
+</p>
+
+}
+
+{
+
+perfil?.sitioWeb &&
+
+<p>
+
+🌐 {perfil.sitioWeb}
+
+</p>
+
+}
 
 </div>
 

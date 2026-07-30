@@ -246,10 +246,48 @@ historialPago:[
 
 ],
 
+calificacion:{
+
+    realizada:{
+        type:Boolean,
+        default:false
+    },
+
+    estrellas:{
+        type:Number,
+        default:0
+    },
+
+    comentario:{
+        type:String,
+        default:""
+    },
+
+    fecha:Date
+
+},
+
+reseña:{
+
+    puntuacion:{
+        type:Number,
+        min:1,
+        max:5
+    },
+
+    comentario:{
+        type:String,
+        default:""
+    },
+
+    fecha:Date
+
+},
+
   },
   {
     timestamps: true,
   }
 );
 
-export default mongoose.model("Order", orderSchema);
+export default mongoose.model("order", orderSchema);

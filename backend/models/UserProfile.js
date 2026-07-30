@@ -14,6 +14,150 @@ const userProfileSchema = new mongoose.Schema({
 
     telefono:String,
 
+    descripcion:{
+
+    type:String,
+
+    default:""
+
+},
+
+whatsapp:{
+
+    type:String,
+
+    default:""
+
+},
+
+instagram:{
+
+    type:String,
+
+    default:""
+
+},
+
+facebook:{
+
+    type:String,
+
+    default:""
+
+},
+
+sitioWeb:{
+
+    type:String,
+
+    default:""
+
+},
+
+logo:{
+
+    type:String,
+
+    default:""
+
+},
+
+verificado:{
+
+    type:Boolean,
+
+    default:false
+
+},
+
+ventasRealizadas:{
+
+    type:Number,
+
+    default:0
+
+},
+
+calificacionPromedio:{
+
+    type:Number,
+
+    default:0
+
+},
+
+cantidadCalificaciones:{
+
+    type:Number,
+
+    default:0
+
+},
+
+reseñasRecibidas:[
+
+{
+
+    pedido:{
+
+        type:mongoose.Schema.Types.ObjectId,
+
+        ref:"Order"
+
+    },
+
+    compradorUid:String,
+
+    compradorNombre:String,
+
+    estrellas:Number,
+
+    comentario:String,
+
+    fecha:{
+
+        type:Date,
+
+        default:Date.now
+
+    }
+
+}
+
+],
+
+nivelVendedor:{
+
+    type:String,
+
+    default:"Bronce"
+
+},
+
+porcentajeEntregas:{
+
+    type:Number,
+
+    default:100
+
+},
+
+porcentajeCancelaciones:{
+
+    type:Number,
+
+    default:0
+
+},
+
+trustScore:{
+
+    type:Number,
+
+    default:100
+
+},
+
     direccion:{
 
         calle:String,

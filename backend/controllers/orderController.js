@@ -596,13 +596,13 @@ export const confirmarRecepcion = async (req, res) => {
 
     pedido.estado = "finalizado";
 
-pedido.estadoPago = "liberado";
+    pedido.estadoPago = "liberado";
 
-pedido.fechaFinalizado = new Date();
+    pedido.fechaFinalizado = new Date();
 
-pedido.fechaLiberacion = new Date();
+    pedido.fechaLiberacion = new Date();
 
-pedido.historial.push({
+    pedido.historial.push({
 
     estado: "finalizado",
 
@@ -620,8 +620,20 @@ pedido.historial.push({
 
 await pedido.save();
 
+// Incrementar ventas realizadas del vendedor
+const perfilVendedor = await UserProfile.findOne({
+    uid: pedido.vendedor.uid
+});
 
-    res.json(pedido);
+if (perfilVendedor) {
+
+    perfilVendedor.ventasRealizadas += 1;
+
+    await perfilVendedor.save();
+
+}
+
+res.json(pedido);
 
 
   } catch(error) {
@@ -813,6 +825,113 @@ export const verificarPago = async (req, res) => {
         await pedido.save();
 
         res.json(pedido);
+
+    }
+
+    catch(error){
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+    }
+
+};
+
+
+export const dejarReseña = async (req,res)=>{
+
+    try{
+
+        const { puntuacion, comentario } = req.body;
+
+        const pedido = await Order.findById(req.params.id);
+
+        if(!pedido){
+
+            return res.status(404).json({
+                message:"Pedido inexistente."
+            });
+
+        }
+
+        if(pedido.comprador.uid !== req.user.uid){
+
+            return res.status(403).json({
+                message:"No autorizado."
+            });
+
+        }
+
+        if(pedido.estado !== "finalizado"){
+
+            return res.status(400).json({
+                message:"Solo puedes calificar compras finalizadas."
+            });
+
+        }
+
+        if(pedido.reseña?.puntuacion){
+
+            return res.status(400).json({
+                message:"Ya calificaste este pedido."
+            });
+
+        }
+
+        pedido.reseña={
+
+            puntuacion,
+
+            comentario,
+
+            fecha:new Date()
+
+        };
+
+        await pedido.save();
+
+        const perfil = await UserProfile.findOne({
+
+            uid:pedido.vendedor.uid
+
+        });
+
+        if(perfil){
+
+            const totalAnterior =
+                perfil.calificacionPromedio *
+                perfil.cantidadCalificaciones;
+
+            perfil.cantidadCalificaciones += 1;
+
+            perfil.calificacionPromedio = Number(
+
+              (
+
+                (totalAnterior + puntuacion)
+
+                 /
+
+                perfil.cantidadCalificaciones
+
+              ).toFixed(2)
+
+            );
+
+            await perfil.save();
+
+        }
+
+        res.json({
+
+            message:"Gracias por tu reseña.",
+
+            pedido
+
+        });
 
     }
 

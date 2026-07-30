@@ -13,7 +13,8 @@ import {
   confirmarRecepcion,
   validarCodigoEntrega,
   subirComprobantePago,
-  verificarPago
+  verificarPago,
+  dejarReseña
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -56,6 +57,13 @@ router.put(
     "/:id/verificar-pago",
     authFirebase,
     verificarPago
+);
+
+// Dejar reseña del vendedor
+router.post(
+    "/:id/review",
+    authFirebase,
+    dejarReseña
 );
 
 export default router;

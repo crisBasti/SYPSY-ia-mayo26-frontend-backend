@@ -6,30 +6,20 @@ import {
 
 getProfile,
 
-updateProfile
+updateProfile,
+
+getPublicProfile
 
 } from "../controllers/userProfileController.js";
 
 const router = express.Router();
 
-router.get(
+router.get("/public/:uid", getPublicProfile);
 
-"/",
+router.get("/", authFirebase, getProfile);
 
-authFirebase,
+router.get("/:uid", getPublicProfile);
 
-getProfile
-
-);
-
-router.put(
-
-"/",
-
-authFirebase,
-
-updateProfile
-
-);
+router.put("/", authFirebase, updateProfile);
 
 export default router;

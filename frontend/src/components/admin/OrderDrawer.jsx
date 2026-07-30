@@ -4,11 +4,12 @@ import OrderTimeline from "./OrderTimeline";
 import axios from "axios";
 import { auth } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DrawerHeader from "./DrawerHeader";
 import DrawerInfo from "./DrawerInfo";
 import DrawerPayment from "./DrawerPayment";
 import DrawerActions from "./DrawerActions";
+import StarRating from "../StarRating";
 
 
 function OrderDrawer({
@@ -22,13 +23,7 @@ function OrderDrawer({
 
 }){
 
-    const { user, profile } = useAuth();
-
-
-
-const esVendedor = user?.uid === pedido?.vendedor?.uid;
-
-const esComprador = user?.uid === pedido?.comprador?.uid;
+const { user, profile } = useAuth();
 
 const [mostrarCodigo, setMostrarCodigo] = useState(false);
 
@@ -38,7 +33,22 @@ const [codigoEntrega, setCodigoEntrega] = useState("");
 
 const [codigoValidado, setCodigoValidado] = useState(false);
 
-    if(!pedido) return null;
+const [puntuacion, setPuntuacion] = useState(5);
+
+const [comentario, setComentario] = useState("");
+
+const [pedidoActual, setPedidoActual] = useState(pedido);
+
+const esComprador = user?.uid === pedidoActual?.comprador?.uid;
+
+const esVendedor = user?.uid === pedidoActual?.vendedor?.uid;
+
+
+useEffect(() => {
+    setPedidoActual(pedido);
+}, [pedido]);
+
+    if(!pedidoActual) return null;
 
 
     const ejecutarAccion = async (accion) => {
@@ -54,7 +64,7 @@ if (accion === "FINALIZAR") {
 
     response = await axios.post(
 
-        `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/confirmar`,
+        `${import.meta.env.VITE_API_URL}/api/orders/${pedidoActual._id}/confirmar`,
 
         {},
 
@@ -70,7 +80,7 @@ if (accion === "FINALIZAR") {
 
     response = await axios.put(
 
-        `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}`,
+        `${import.meta.env.VITE_API_URL}/api/orders/${pedidoActual._id}`,
 
         { accion },
 
@@ -84,11 +94,9 @@ if (accion === "FINALIZAR") {
 
 }
 
-if (onActualizarPedido) {
-    onActualizarPedido(response.data);
-} else {
-    window.location.reload();
-}
+setPedidoActual(response.data);
+
+onActualizarPedido?.(response.data);
 
     }
 
@@ -128,7 +136,7 @@ const subirComprobante = async () => {
 
         const response = await axios.post(
 
-            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/comprobante`,
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedidoActual._id}/comprobante`,
 
             formData,
 
@@ -146,11 +154,9 @@ const subirComprobante = async () => {
 
         alert("Comprobante enviado correctamente.");
 
-        if (onActualizarPedido) {
-            onActualizarPedido(response.data);
-        } else {
-          window.location.reload();
-        }
+        setPedidoActual(response.data.pedido);
+
+        onActualizarPedido?.(response.data.pedido);
 
     }
 
@@ -174,7 +180,7 @@ const validarCodigo = async () => {
 
         const response = await axios.post(
 
-            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/validar-codigo`,
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedidoActual._id}/validar-codigo`,
 
             {
 
@@ -223,7 +229,7 @@ const aprobarPago = async () => {
 
         const response = await axios.put(
 
-            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/verificar-pago`,
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedidoActual._id}/verificar-pago`,
 
             {
 
@@ -247,11 +253,9 @@ const aprobarPago = async () => {
 
         alert("Pago aprobado.");
 
-        if (onActualizarPedido) {
-            onActualizarPedido(response.data);
-        } else {
-            window.location.reload();
-        }
+        setPedidoActual(response.data);
+
+        onActualizarPedido?.(response.data);
 
     }
 
@@ -273,7 +277,7 @@ const rechazarPago = async () => {
 
         const response = await axios.put(
 
-            `${import.meta.env.VITE_API_URL}/api/orders/${pedido._id}/verificar-pago`,
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedidoActual._id}/verificar-pago`,
 
             {
 
@@ -295,11 +299,9 @@ const rechazarPago = async () => {
 
         alert("Pago rechazado.");
 
-        if (onActualizarPedido) {
-            onActualizarPedido(response.data);
-        } else {
-          window.location.reload();
-        }
+        setPedidoActual(response.data);
+
+        onActualizarPedido?.(response.data);
 
     }
 
@@ -314,6 +316,60 @@ const rechazarPago = async () => {
 };
 
 
+const enviarReseña = async () => {
+
+    try{
+
+        const token =
+            await auth.currentUser.getIdToken();
+
+        const response = await axios.post(
+
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedidoActual._id}/review`,
+
+            {
+
+                puntuacion,
+
+                comentario
+
+            },
+
+            {
+
+                headers:{
+
+                    Authorization:`Bearer ${token}`
+
+                }
+
+            }
+
+        );
+
+        alert("¡Gracias por tu reseña!");
+
+        setPedidoActual(response.data.pedido);
+
+        onActualizarPedido?.(response.data.pedido);
+
+    }
+
+    catch(error){
+
+        alert(
+
+            error.response?.data?.message ||
+
+            "No se pudo guardar la reseña."
+
+        );
+
+    }
+
+};
+
+
 return (
 
     <div className="drawer-overlay">
@@ -321,19 +377,19 @@ return (
         <div className="order-drawer">
 
             <DrawerHeader
-                pedido={pedido}
+                pedido={pedidoActual}
                 onClose={onClose}
             />
 
             <div className="drawer-body">
 
                 <DrawerInfo
-                    pedido={pedido}
+                    pedido={pedidoActual}
                     esVendedor={esVendedor}
                 />
 
                 <DrawerPayment
-                    pedido={pedido}
+                    pedido={pedidoActual}
                     user={profile}
                     esComprador={esComprador}
                     comprobante={comprobante}
@@ -353,7 +409,7 @@ return (
 
                         $
 
-                        {(pedido.comision ?? 0).toLocaleString()}
+                        {(pedidoActual?.comision ?? 0).toLocaleString()}
 
                     </p>
 
@@ -362,7 +418,7 @@ return (
                 <hr />
 
                 <DrawerActions
-                    pedido={pedido}
+                    pedido={pedidoActual}
                     esVendedor={esVendedor}
                     esComprador={esComprador}
                     mostrarCodigo={mostrarCodigo}
@@ -374,8 +430,73 @@ return (
                     ejecutarAccion={ejecutarAccion}
                 />
 
+                {esComprador &&
+                    pedidoActual?.estado === "finalizado" &&
+                    !pedidoActual?.reseña?.puntuacion && (
+
+                  <div className="drawer-card">
+
+                    <div className="drawer-card-title">
+
+                      ⭐ Calificar vendedor
+
+                    </div>
+
+                    <div className="drawer-card-content">
+
+                      <label>
+
+                        Puntuación
+
+                      </label>
+
+                      <StarRating
+
+                        value={puntuacion}
+
+                        onChange={setPuntuacion}
+
+                      />
+
+                    <br/><br/>
+
+                    <textarea
+
+                      rows="4"
+
+                      placeholder="Contanos tu experiencia..."
+
+                      value={comentario}
+
+                      onChange={(e)=>
+
+                        setComentario(e.target.value)
+
+                      }
+
+                    />
+
+                    <br/><br/>
+
+                      <button
+
+                        onClick={enviarReseña}
+
+                      >
+
+                        ⭐ Enviar reseña
+
+                      </button>
+
+                    </div>
+
+                  </div>
+
+                )  
+            }
+
                 <OrderTimeline
-                    historial={pedido.historial}
+                  historial={pedidoActual?.historial || []}
                 />
 
             </div>

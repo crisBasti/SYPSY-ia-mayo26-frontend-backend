@@ -15,6 +15,7 @@ import orderRoutes from "../routes/orderRoutes.js";
 import configurationRoutes from "../routes/configurationRoutes.js";
 import financeRoutes from "../routes/financeRoutes.js";
 import userProfileRoutes from "../routes/userProfileRoutes.js";
+import reviewRoutes from "../routes/reviewRoutes.js";
 
 
 connectDB();
@@ -45,6 +46,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/configuration", configurationRoutes);
 app.use("/api/finance", financeRoutes);
 app.use("/api/profile", userProfileRoutes);
+app.use("/api/reviews", reviewRoutes);
 
 app.get("/", (req, res) => {
   res.json({
