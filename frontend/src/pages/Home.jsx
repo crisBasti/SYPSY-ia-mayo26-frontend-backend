@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { slugify } from "../utils/slugify";
 import AdvertisementCarousel from "../components/AdvertisementCarousel";
+import { getAdvertisementsService } from "../services/advertisementService";
 import { useAuth } from "../context/AuthContext";
 
 
@@ -17,7 +18,29 @@ function Home({ search }) {
 
   const { user } = useAuth();
   
-  useEffect(() => { fetchProducts(); }, []);
+useEffect(() => {
+
+    const loadData = async () => {
+
+        await fetchProducts();
+
+        try {
+
+            const ads = await getAdvertisementsService();
+
+            setAdvertisements(ads);
+
+        } catch (error) {
+
+            console.error(error);
+
+        }
+
+    };
+
+    loadData();
+
+}, []);
 
   
 
@@ -26,6 +49,7 @@ function Home({ search }) {
   const [showConfirmBuy, setShowConfirmBuy] = useState(false);
   const [productToBuy, setProductToBuy] = useState(null);
   const [imgIndex, setImgIndex] = useState({});
+  const [advertisements, setAdvertisements] = useState([]);
 
 const handleComprar = async (product) => {
 
@@ -119,17 +143,43 @@ const prevImage = (productId, total) => {
   // =========================
   // FILTRO
   // =========================
-  const filteredProducts = productos.filter((product) => {
+  const filteredProducts = productos
+
+.filter((product) => {
+
     const textoBusqueda = search.toLowerCase();
 
     return (
-      product.nombre.toLowerCase().includes(textoBusqueda) ||
-      product.descripcion.toLowerCase().includes(textoBusqueda) ||
-      product.categoria.toLowerCase().includes(textoBusqueda)
-    ) &&
-      (categoriaActiva === "Todos" ||
-        product.categoria === categoriaActiva);
-  });
+
+        product.nombre.toLowerCase().includes(textoBusqueda) ||
+
+        product.descripcion.toLowerCase().includes(textoBusqueda) ||
+
+        product.categoria.toLowerCase().includes(textoBusqueda)
+
+    ) && (
+
+        categoriaActiva === "Todos" ||
+
+        product.categoria === categoriaActiva
+
+    );
+
+})
+
+.sort((a, b) => {
+
+    // Prioridad por nivel de promoción
+    if ((a.nivelPromocion || 0) !== (b.nivelPromocion || 0)) {
+
+        return (b.nivelPromocion || 0) - (a.nivelPromocion || 0);
+
+    }
+
+    // Si tienen el mismo nivel, mostrar primero los más nuevos
+    return new Date(b.createdAt) - new Date(a.createdAt);
+
+});
 
 
     return (
@@ -175,14 +225,15 @@ const prevImage = (productId, total) => {
     <div className="advertisement-container">
 
       <AdvertisementCarousel
-
         position="home_top"
-
+        advertisements={advertisements}
       />
 
       <AdvertisementCarousel
 
-         position="home_middle"
+        position="home_middle"
+
+        advertisements={advertisements}
 
       />
 
@@ -259,6 +310,27 @@ const prevImage = (productId, total) => {
                 {product.categoria}
               </span>
 
+              {product.promocionado && (
+
+                <div className="promotion-badge">
+
+                  🚀 DESTACADO
+
+                </div>
+
+              )}
+
+
+              {product.nivelPromocion === 3 && (
+
+                <div className="premium-badge">
+
+                  👑 PREMIUM
+
+                </div>
+
+              )}
+
               <h3>{product.nombre}</h3>
 
               <p>{product.descripcion}</p>
@@ -318,7 +390,9 @@ const prevImage = (productId, total) => {
 
       <AdvertisementCarousel
 
-           position="home_bottom"
+        position="home_bottom"
+
+        advertisements={advertisements}
 
       />
 

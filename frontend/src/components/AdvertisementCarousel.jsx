@@ -1,24 +1,28 @@
 import { useEffect, useState } from "react";
 
-import { getAdvertisementsService }
 
-from "../services/advertisementService";
 
 function AdvertisementCarousel({
 
-    position
+    position,
+
+    advertisements = []
 
 }) {
 
-    const [ads, setAds] = useState([]);
+    const ads = advertisements.filter(
+
+    ad =>
+
+        ad.position === position &&
+
+        ad.active
+
+);
 
     const [current, setCurrent] = useState(0);
 
-    useEffect(() => {
 
-        loadAds();
-
-    }, [position]);
 
     useEffect(() => {
 
@@ -38,59 +42,11 @@ function AdvertisementCarousel({
 
     }, [ads]);
 
-    const loadAds = async () => {
 
-        try {
 
-            const data =
-
-                await getAdvertisementsService();
-
-            const banners =
-
-                data.filter(ad =>
-
-                    ad.position === position &&
-
-                    ad.active
-
-                );
-
-            setAds(banners);
-
-        }
-
-        catch (error) {
-
-            console.error(error);
-
-        }
-
-    };
-
-    if (!ads.length) {
-
-        return (
-
-            <div className="default-banner">
-
-                <h2>
-
-                    SYPSY
-
-                </h2>
-
-                <p>
-
-                    LO QUE QUERÉS YA
-
-                </p>
-
-            </div>
-
-        );
-
-    }
+    if (ads.length === 0) {
+    return null;
+}
 
     return (
 

@@ -23,10 +23,10 @@ const productSchema = new mongoose.Schema(
     default: 0
   },
 
-  whatsappClicks: {
-    type: Number,
-    default: 0
-  },
+  ordersGenerated: {
+  type: Number,
+  default: 0
+},
 
   hidden: {
     type: Boolean,
@@ -47,7 +47,46 @@ estado: {
 fechaPausado: {
     type: Date,
     default: null
-}
+},
+
+    // =========================
+    // MONETIZACIÓN SYPSY
+    // =========================
+
+    promocionado:{
+        type:Boolean,
+        default:false
+    },
+
+    estadoPromocion:{
+
+    type:String,
+
+    enum:[
+        "ninguna",
+        "pendiente",
+        "activa",
+        "vencida"
+    ],
+
+    default:"ninguna"
+
+},
+
+    nivelPromocion:{
+        type:Number,
+        default:0
+    },
+
+    fechaPromocionInicio:{
+        type:Date,
+        default:null
+    },
+
+    fechaPromocionFin:{
+        type:Date,
+        default:null
+    }
 
 },
 { timestamps: true }

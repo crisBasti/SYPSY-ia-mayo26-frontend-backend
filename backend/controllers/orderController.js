@@ -235,6 +235,23 @@ const nuevoPedido = new Order({
 
   }
 
+
+  await Product.findByIdAndUpdate(
+
+pedido.producto,
+
+{
+
+$inc:{
+
+ordersGenerated:1
+
+}
+
+}
+
+);
+
 };
 
 // Obtener todos los pedidos

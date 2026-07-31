@@ -2,38 +2,164 @@ import Product from "../models/Product.js";
 import User from "../models/User.js";
 import Analytics from "../models/Analytics.js";
 import Report from "../models/Report.js";
+import PromotionCampaign from "../models/PromotionCampaign.js";
 
 export const getProducts = async (req, res) => {
 
-  try {
+    try {
 
-    const products = await Product.find({
+        // =====================================
+        // Finalizar campañas vencidas
+        // =====================================
 
-      estado: "activo",
+        await PromotionCampaign.updateMany(
 
-      $or: [
+            {
 
-        { hidden: false },
+                estado: "activa",
 
-        { hidden: { $exists: false } }
+                fechaFin: {
 
-      ]
+                    $lte: new Date()
 
-    });
+                }
 
-    res.json(products);
+            },
 
-  }
+            {
 
-  catch (error) {
+                estado: "finalizada"
 
-    res.status(500).json({
+            }
 
-      mensaje: "Error obteniendo productos"
+        );
 
-    });
+        await Product.updateMany(
 
-  }
+{
+
+promocionado: true,
+
+fechaPromocionFin:{
+
+$lte:new Date()
+
+}
+
+},
+
+{
+
+$set:{
+
+promocionado:false,
+
+nivelPromocion:0,
+
+fechaPromocionInicio:null,
+
+fechaPromocionFin:null
+
+}
+
+}
+
+);
+
+        // =====================================
+        // Buscar campañas activas
+        // =====================================
+
+        const campañasActivas = await PromotionCampaign.find({
+
+            estado: "activa"
+
+        });
+
+        const productosDestacados = new Set(
+
+          campañasActivas.map(
+
+              campaña => campaña.producto.toString()
+
+          )
+
+        );
+
+        // =====================================
+        // Obtener productos
+        // =====================================
+
+        const products = await Product.find({
+
+  estado: "activo",
+
+  $or: [
+    { hidden: false },
+    { hidden: { $exists: false } }
+  ]
+
+})
+.sort({
+
+  nivelPromocion: -1,
+
+  createdAt: -1
+
+});
+
+        // =====================================
+        // Ordenar
+        // =====================================
+
+        products.sort((a, b) => {
+
+    const aDestacado = productosDestacados.has(
+
+        a._id.toString()
+
+    );
+
+    const bDestacado = productosDestacados.has(
+
+        b._id.toString()
+
+    );
+
+    if (aDestacado && !bDestacado) return -1;
+
+    if (!aDestacado && bDestacado) return 1;
+
+    return new Date(b.createdAt) - new Date(a.createdAt);
+
+});
+
+
+const productsResponse = products.map(product => ({
+
+    ...product.toObject(),
+
+    destacado: productosDestacados.has(
+
+        product._id.toString()
+
+    )
+
+}));
+
+        res.json(productsResponse);
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            mensaje: "Error obteniendo productos"
+
+        });
+
+    }
 
 };
 
@@ -446,21 +572,21 @@ export const getMyStats = async (req, res) => {
       0
     );
 
-    const totalWhatsappClicks = products.reduce(
-      (acc, product) => acc + (product.whatsappClicks || 0),
-      0
-    );
+    const totalOrders = products.reduce(
+  (acc, product) => acc + (product.ordersGenerated || 0),
+  0
+);
 
     const conversionRate =
-      totalViews === 0
-        ? 0
-        : Number(
-            (
-              totalWhatsappClicks /
-              totalViews *
-              100
-            ).toFixed(2)
-          );
+totalViews === 0
+? 0
+: Number(
+(
+totalOrders /
+totalViews *
+100
+).toFixed(2)
+);
 
     // =====================
     // Producto más visto
@@ -500,27 +626,27 @@ export const getMyStats = async (req, res) => {
     // Promedio de contactos
     // =====================
 
-    const averageWhatsappClicks =
-      totalProducts === 0
-        ? 0
-        : Number(
-            (
-              totalWhatsappClicks /
-              totalProducts
-            ).toFixed(1)
-          );
+    const averageOrders =
+totalProducts === 0
+? 0
+: Number(
+(
+totalOrders /
+totalProducts
+).toFixed(1)
+);
 
     res.json({
       totalProducts,
       totalViews,
-      totalWhatsappClicks,
+      totalOrders,
       conversionRate,
       averageViews,
-      averageWhatsappClicks,
+      averageOrders,
       mostViewed,
       mostContacted,
       products
-    });
+});
 
   } catch (error) {
 

@@ -16,6 +16,8 @@ import configurationRoutes from "../routes/configurationRoutes.js";
 import financeRoutes from "../routes/financeRoutes.js";
 import userProfileRoutes from "../routes/userProfileRoutes.js";
 import reviewRoutes from "../routes/reviewRoutes.js";
+import promotionRoutes from "../routes/promotionRoutes.js";
+import { iniciarSchedulerPromociones } from "../services/promotionScheduler.js";
 
 
 connectDB();
@@ -47,6 +49,7 @@ app.use("/api/configuration", configurationRoutes);
 app.use("/api/finance", financeRoutes);
 app.use("/api/profile", userProfileRoutes);
 app.use("/api/reviews", reviewRoutes);
+app.use("/api/promotions", promotionRoutes);
 
 app.get("/", (req, res) => {
   res.json({
@@ -130,3 +133,5 @@ const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Servidor corriendo en puerto ${PORT}`);
 });
+
+iniciarSchedulerPromociones();

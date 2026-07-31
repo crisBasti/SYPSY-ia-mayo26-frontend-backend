@@ -2,6 +2,8 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { auth } from "../../firebase";
+import PromotionModal from "./PromotionModal";
+import { useState } from "react";
 
 
 
@@ -9,6 +11,8 @@ function ProductSellerCard({
     producto,
 
     onDelete }) {
+
+    const [mostrarPromocion, setMostrarPromocion] = useState(false);  
 
     const navigate = useNavigate();
 
@@ -89,6 +93,8 @@ const cambiarEstado = async () => {
 
     return (
 
+      <>
+
         <div className="seller-product-card">
 
             <img
@@ -109,20 +115,27 @@ const cambiarEstado = async () => {
 
                 <p><strong>💬 WhatsApp:</strong> {producto.whatsappClicks || 0}</p>
 
-                <p>
+                <div>
 
-                    <strong>Estado:</strong>
+                  <strong>Estado:</strong>{" "}
 
-                    <p>
-                        <strong>Estado:</strong>{" "}
-                          {producto.estado === "activo" ? (
-                        <span className="status-active">🟢 Activo</span>
-                      ) : (
-                        <span className="status-paused">🟡 Pausado</span>
-                      )}
-                    </p>
+                  {producto.estado === "activo"
 
-                </p>
+                  ? <span className="status-active">
+
+                    🟢 Activo
+
+                  </span>
+
+                  : <span className="status-paused">
+
+                    🟡 Pausado
+
+                    </span>
+
+                  }
+
+                </div>
 
             </div>
 
@@ -144,6 +157,13 @@ const cambiarEstado = async () => {
                   📊 Estadísticas
                 </button>
 
+                <button
+                    className="promote-btn"
+                    onClick={() => setMostrarPromocion(true)}
+                >
+                  🚀 Promocionar
+                </button>
+
                 <button onClick={cambiarEstado}>
                   {producto.estado === "activo"
                   ? "⏸ Pausar"
@@ -158,7 +178,25 @@ const cambiarEstado = async () => {
 
             </div>
 
+            
+
         </div>
+
+        {mostrarPromocion && (
+
+        <PromotionModal
+
+            producto={producto}
+
+            onClose={()=>
+                setMostrarPromocion(false)
+            }
+
+        />
+
+        )}
+    </>
+        
 
     );
 
