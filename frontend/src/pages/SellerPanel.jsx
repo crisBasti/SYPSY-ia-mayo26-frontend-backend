@@ -1,6 +1,8 @@
 import ProductFormSeller from "../components/seller/ProductFormSeller";
 import MyProducts from "./MyProducts";
 
+import MonetizationCenter from "./MonetizationCenter";
+
 function SellerPanel({ section }) {
 
     return (
@@ -21,6 +23,12 @@ function SellerPanel({ section }) {
 
                 <MyProducts />
 
+            }
+
+            {
+               section==="monetization" &&
+
+              <MonetizationCenter />
             }
 
         </>

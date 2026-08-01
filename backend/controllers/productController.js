@@ -3,155 +3,21 @@ import User from "../models/User.js";
 import Analytics from "../models/Analytics.js";
 import Report from "../models/Report.js";
 import PromotionCampaign from "../models/PromotionCampaign.js";
+import { obtenerProductosHome } from "../services/exposureService.js";
 
 export const getProducts = async (req, res) => {
 
     try {
 
-        // =====================================
-        // Finalizar campañas vencidas
-        // =====================================
+        const productos = await obtenerProductosHome();
 
-        await PromotionCampaign.updateMany(
-
-            {
-
-                estado: "activa",
-
-                fechaFin: {
-
-                    $lte: new Date()
-
-                }
-
-            },
-
-            {
-
-                estado: "finalizada"
-
-            }
-
-        );
-
-        await Product.updateMany(
-
-{
-
-promocionado: true,
-
-fechaPromocionFin:{
-
-$lte:new Date()
-
-}
-
-},
-
-{
-
-$set:{
-
-promocionado:false,
-
-nivelPromocion:0,
-
-fechaPromocionInicio:null,
-
-fechaPromocionFin:null
-
-}
-
-}
-
-);
-
-        // =====================================
-        // Buscar campañas activas
-        // =====================================
-
-        const campañasActivas = await PromotionCampaign.find({
-
-            estado: "activa"
-
-        });
-
-        const productosDestacados = new Set(
-
-          campañasActivas.map(
-
-              campaña => campaña.producto.toString()
-
-          )
-
-        );
-
-        // =====================================
-        // Obtener productos
-        // =====================================
-
-        const products = await Product.find({
-
-  estado: "activo",
-
-  $or: [
-    { hidden: false },
-    { hidden: { $exists: false } }
-  ]
-
-})
-.sort({
-
-  nivelPromocion: -1,
-
-  createdAt: -1
-
-});
-
-        // =====================================
-        // Ordenar
-        // =====================================
-
-        products.sort((a, b) => {
-
-    const aDestacado = productosDestacados.has(
-
-        a._id.toString()
-
-    );
-
-    const bDestacado = productosDestacados.has(
-
-        b._id.toString()
-
-    );
-
-    if (aDestacado && !bDestacado) return -1;
-
-    if (!aDestacado && bDestacado) return 1;
-
-    return new Date(b.createdAt) - new Date(a.createdAt);
-
-});
-
-
-const productsResponse = products.map(product => ({
-
-    ...product.toObject(),
-
-    destacado: productosDestacados.has(
-
-        product._id.toString()
-
-    )
-
-}));
-
-        res.json(productsResponse);
+        res.json(productos);
 
     }
 
     catch (error) {
+
+        console.error(error);
 
         res.status(500).json({
 
@@ -565,6 +431,42 @@ export const getMyStats = async (req, res) => {
       "vendedor.uid": req.user.uid
     });
 
+    // =====================
+    // MONETIZACIÓN
+    // =====================
+
+const campaigns = await PromotionCampaign.find({
+    "vendedor.uid": req.user.uid
+});
+
+const activePromotions =
+    campaigns.filter(c => c.estado === "activa").length;
+
+const premiumProducts =
+    campaigns.filter(
+        c =>
+            c.estado === "activa" &&
+            c.tipo === "premium"
+    ).length;
+
+const featuredProducts =
+    campaigns.filter(
+        c =>
+            c.estado === "activa" &&
+            c.tipo === "destacado"
+    ).length;
+
+const totalRevenue =
+    campaigns
+        .filter(c =>
+            ["pagada", "activa", "finalizada"].includes(c.estado)
+        )
+        .reduce(
+            (acc, campaign) =>
+                acc + (campaign.plan?.precio || 0),
+            0
+        );
+
     const totalProducts = products.length;
 
     const totalViews = products.reduce(
@@ -645,8 +547,12 @@ totalProducts
       averageOrders,
       mostViewed,
       mostContacted,
-      products
-});
+      products,
+      activePromotions,
+      premiumProducts,
+      featuredProducts,
+      totalRevenue
+    });
 
   } catch (error) {
 
@@ -735,5 +641,30 @@ await product.save();
     });
 
   }
+
+};
+
+
+const calcularRanking = (producto)=>{
+
+    const views = producto.views || 0;
+
+    const whatsapp = producto.whatsappClicks || 0;
+
+    const promocion = producto.nivelPromocion || 0;
+
+    return (
+
+        views
+
+        +
+
+        whatsapp * 8
+
+        +
+
+        promocion * 500
+
+    );
 
 };

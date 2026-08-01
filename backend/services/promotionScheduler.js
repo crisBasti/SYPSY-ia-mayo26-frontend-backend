@@ -21,7 +21,11 @@ export const iniciarSchedulerPromociones = () => {
 
             if (!promociones.length) return;
 
-            console.log(`Finalizando ${promociones.length} promoción(es)...`);
+            console.log(
+
+              `[PROMOTION SCHEDULER] ${promociones.length} promociones vencidas`
+
+            );
 
             for (const promo of promociones) {
 

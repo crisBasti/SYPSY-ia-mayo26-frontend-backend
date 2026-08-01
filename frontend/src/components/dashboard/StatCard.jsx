@@ -1,7 +1,8 @@
 function StatCard({
     title,
     value,
-    icon
+    icon,
+    subtitle = ""
 }) {
 
     return (
@@ -23,6 +24,14 @@ function StatCard({
                 <span className="value">
                     {value}
                 </span>
+
+                {
+                    subtitle && (
+                        <span className="stat-subtitle">
+                            {subtitle}
+                        </span>
+                    )
+                }
 
             </div>
 

@@ -243,6 +243,20 @@ const prevImage = (productId, total) => {
         {filteredProducts.map((product) => (
           <div key={product._id} className="product-card">
 
+          {product.promocionado && (
+
+            <div className="promotion-badge">
+
+              {product.nivelPromocion === 3
+                ? "👑 PREMIUM"
+                : product.nivelPromocion === 2
+                ? "🚀 DESTACADO"
+                : "⭐ PROMOCIONADO"}
+
+            </div>
+
+           )}
+
             {/* IMAGEN */}
             <div className="card-image">
 

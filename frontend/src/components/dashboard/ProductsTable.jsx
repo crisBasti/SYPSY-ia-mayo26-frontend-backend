@@ -14,7 +14,7 @@ function ProductsTable({
 
                     <th>Visitas</th>
 
-                    <th>WhatsApp</th>
+                    <th>Contactos</th>
 
                 </tr>
 

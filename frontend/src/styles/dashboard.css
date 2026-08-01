@@ -440,3 +440,258 @@ background:#dc2626;
 color:white;
 
 }
+
+
+/* ===================================
+   HEADER DASHBOARD
+=================================== */
+
+.dashboard-header{
+
+    display:flex;
+
+    justify-content:space-between;
+
+    align-items:center;
+
+    margin-bottom:35px;
+
+    gap:20px;
+
+    flex-wrap:wrap;
+
+}
+
+.dashboard-header h1{
+
+    margin:0;
+
+    color:#0d47a1;
+
+    font-size:2rem;
+
+}
+
+.dashboard-subtitle{
+
+    margin-top:8px;
+
+    color:#666;
+
+    font-size:1rem;
+
+}
+
+.dashboard-date{
+
+    background:white;
+
+    padding:14px 18px;
+
+    border-radius:14px;
+
+    box-shadow:0 6px 16px rgba(0,0,0,.08);
+
+    font-weight:600;
+
+    color:#444;
+
+}
+
+.stat-info{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    gap:8px;
+
+}
+
+.stat-title{
+
+    font-size:.95rem;
+
+    font-weight:600;
+
+    color:#555;
+
+}
+
+.stat-subtitle{
+
+    font-size:.82rem;
+
+    color:#888;
+
+}
+
+
+/* ===================================
+   DASHBOARD INSIGHTS
+=================================== */
+
+.dashboard-insights{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    margin-bottom:35px;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.dashboard-insights h2{
+
+    margin-bottom:20px;
+
+    color:#0d47a1;
+
+}
+
+.insight-card{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:15px;
+
+    padding:15px;
+
+    margin-bottom:12px;
+
+    border-radius:12px;
+
+    border-left:6px solid #2563eb;
+
+    background:#f8fbff;
+
+}
+
+.insight-card span{
+
+    font-size:1.5rem;
+
+}
+
+.insight-card p{
+
+    margin:0;
+
+    font-size:.95rem;
+
+}
+
+.insight-card.success{
+
+    border-color:#22c55e;
+
+}
+
+.insight-card.warning{
+
+    border-color:#f59e0b;
+
+}
+
+.insight-card.info{
+
+    border-color:#3b82f6;
+
+}
+
+/* ===================================
+   QUICK ACTIONS
+=================================== */
+
+.dashboard-actions{
+
+    margin-bottom:40px;
+
+}
+
+.dashboard-actions h2{
+
+    color:#0d47a1;
+
+    margin-bottom:20px;
+
+}
+
+.dashboard-actions-grid{
+
+    display:grid;
+
+    grid-template-columns:
+    repeat(auto-fit,minmax(220px,1fr));
+
+    gap:20px;
+
+}
+
+.dashboard-action-card{
+
+    background:white;
+
+    border-radius:18px;
+
+    padding:25px;
+
+    cursor:pointer;
+
+    transition:.25s;
+
+    box-shadow:
+    0 8px 20px rgba(0,0,0,.08);
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:15px;
+
+    border:2px solid transparent;
+
+}
+
+.dashboard-action-card:hover{
+
+    transform:translateY(-5px);
+
+    border-color:#2563eb;
+
+    box-shadow:
+    0 16px 30px rgba(37,99,235,.15);
+
+}
+
+.dashboard-action-icon{
+
+    font-size:2.2rem;
+
+}
+
+.dashboard-action-card h3{
+
+    margin:0;
+
+    color:#111;
+
+}
+
+.dashboard-action-card p{
+
+    margin:0;
+
+    color:#666;
+
+    line-height:1.4;
+
+}

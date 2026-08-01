@@ -20,6 +20,7 @@ import AdminRoute from "./components/AdminRoute";
 import RoleRoute from "./components/RoleRoute";
 import ProductFormSeller from "./components/seller/ProductFormSeller";
 import Payments from "./pages/admin/Payments";
+import MonetizationCenter from "./pages/MonetizationCenter";
 
 
 function App() {
@@ -121,6 +122,8 @@ function App() {
             path="/register"
             element={<Register />}
           />
+
+          <Route path="/micuenta/monetizacion" element={<MonetizationCenter />} />
 
           <Route path="*" element={<NotFound />} />
 

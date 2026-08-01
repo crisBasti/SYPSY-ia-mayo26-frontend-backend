@@ -1078,6 +1078,29 @@ text-decoration:underline;
 
 }
 
+
+.monetization-container {
+    padding: 20px;
+    color:#212529;
+
+}
+
+.campaigns-list {
+    display: grid;
+    gap: 16px;
+    margin-top: 20px;
+}
+
+.campaign-card {
+    background: #fff;
+    border-radius: 14px;
+    padding: 16px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    color:#212529;
+}
+
+
+
 /*=====================================================
         CONTENIDO
 =====================================================*/

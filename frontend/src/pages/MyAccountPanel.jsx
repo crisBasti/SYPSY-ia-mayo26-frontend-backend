@@ -7,6 +7,7 @@ import MySales from "./MySales";
 import MyProducts from "./MyProducts";
 import SellerPanel from "./SellerPanel";
 import MyAccount from "./MyAccount";
+import Dashboard from "./Dashboard";
 
 
 function MyAccountPanel(){
@@ -31,18 +32,14 @@ function MyAccountPanel(){
 
                     section==="dashboard" &&
 
-                    <h2>
-
-                        👤 Bienvenido a tu cuenta
-
-                    </h2>
+                    <Dashboard />
 
                 }
 
                 {
-                    (section==="publish" || section==="products") &&
+                  ["publish", "products", "monetization"].includes(section) &&
 
-                    <SellerPanel section={section} />
+                  <SellerPanel section={section} />
                 }
 
                 {

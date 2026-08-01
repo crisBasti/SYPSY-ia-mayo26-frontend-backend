@@ -86,7 +86,15 @@ fechaPausado: {
     fechaPromocionFin:{
         type:Date,
         default:null
-    }
+    },
+
+    rankingScore:{
+
+    type:Number,
+
+    default:0
+
+}
 
 },
 { timestamps: true }

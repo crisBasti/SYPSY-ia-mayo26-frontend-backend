@@ -1,3 +1,7 @@
+
+import { useNavigate } from "react-router-dom";
+
+
 function MyAccountSidebar({
 
     section,
@@ -5,6 +9,8 @@ function MyAccountSidebar({
     setSection
 
 }){
+
+    const navigate = useNavigate();
 
     return(
 
@@ -21,6 +27,7 @@ function MyAccountSidebar({
                 🏠 Inicio
 
             </button>
+
 
             <button
 
@@ -91,6 +98,18 @@ function MyAccountSidebar({
             >
 
                 📈 Estadísticas
+
+            </button>
+
+            <button
+
+              className={section==="monetization" ? "active" : ""}
+
+              onClick={()=>setSection("monetization")}
+
+            >
+
+              🚀 Monetización
 
             </button>
 

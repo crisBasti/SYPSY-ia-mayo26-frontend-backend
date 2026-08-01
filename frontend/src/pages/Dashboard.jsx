@@ -7,6 +7,8 @@ import StatCard from "../components/dashboard/StatCard";
 import ProductsTable from "../components/dashboard/ProductsTable";
 import ProductsChart from "../components/dashboard/ProductsChart";
 import "../styles/dashboard.css";
+import DashboardInsights from "../components/dashboard/DashboardInsights";
+import DashboardQuickActions from "../components/dashboard/DashboardQuickActions";
 
 function Dashboard() {
 
@@ -60,73 +62,165 @@ function Dashboard() {
 
         <div className="dashboard">
 
-            <h1>
+          <div className="dashboard-header">
 
-                📊 Panel del vendedor
+            <div>
 
-            </h1>
+              <h1>
+                  👋 Hola {auth.currentUser?.displayName || "Vendedor"}
+              </h1>
+
+              <p className="dashboard-subtitle">
+                  Centro de Control de tu negocio en SYPSY
+              </p>
+
+            </div>
+
+            <div className="dashboard-date">
+
+              <span>
+                  📅 {new Date().toLocaleDateString("es-AR")}
+              </span>
+
+            </div>
+
+          </div>
 
             <div className="stats-grid">
 
                 <StatCard
-                    title="Productos"
-                    value={stats.totalProducts}
-                    icon="📦"
+                  title="Productos"
+                  value={stats.totalProducts}
+                  subtitle="Publicados"
+                  icon="📦"
                 />
 
                 <StatCard
-                    title="Visualizaciones"
-                    value={stats.totalViews}
-                    icon="👁"
+                  title="Visualizaciones"
+                  value={stats.totalViews}
+                  subtitle="Acumuladas"
+                  icon="👁"
                 />
 
                 <StatCard
-                    title="WhatsApp"
-                    value={stats.totalWhatsappClicks}
-                    icon="📲"
+                  title="Pedidos"
+                  value={stats.totalOrders}
+                  subtitle="Generados"
+                  icon="🛒"
                 />
 
                 <StatCard
-                    title="Conversión"
-                    value={`${stats.conversionRate}%`}
-                    icon="📈"
+                  title="Conversión"
+                  value={`${stats.conversionRate}%`}
+                  subtitle="Rendimiento"
+                  icon="📈"
+                />
+
+                <StatCard
+                  title="Promociones"
+                  subtitle="En curso"
+                  value={stats.activePromotions}
+                  icon="📢"
+                />
+
+                <StatCard
+                  title="Premium"
+                  subtitle="Activos"
+                  value={stats.premiumProducts}
+                  icon="⭐"
+                />
+
+                <StatCard
+                  title="Destacados"
+                  subtitle="Publicados"
+                  value={stats.featuredProducts}
+                  icon="🚀"
+                />
+
+                <StatCard
+                  title="Ingresos"
+                  subtitle="Acumulados"
+                  value={`$ ${stats.totalRevenue.toLocaleString()}`}
+                  icon="💰"
                 />
 
             </div>
 
             <div className="summary-box">
 
-    <h2>📌 Resumen</h2>
+              <h2>📌 Resumen</h2>
 
-    <p>
-        🔥 Producto más visto:
-        <strong>
-            {" "}
-            {stats.mostViewedProduct
-                ? stats.mostViewedProduct.nombre
-                : "Sin datos"}
-        </strong>
-    </p>
+                <p>
+                  🔥 Producto más visto:
+                  <strong>
+                    {" "}
+                    {stats.mostViewed
+                      ? stats.mostViewed.nombre
+                      : "Sin datos"}
+                  </strong>
+                </p>
 
-    <p>
-        📲 Producto más consultado:
-        <strong>
-            {" "}
-            {stats.mostWhatsappProduct
-                ? stats.mostWhatsappProduct.nombre
-                : "Sin datos"}
-        </strong>
-    </p>
+                <p>
+                  📲 Producto con más contactos:
+                  <strong>
+                    {" "}
+                    {stats.mostContacted
+                      ? stats.mostContacted.nombre
+                      : "Sin datos"}
+                  </strong>
+                </p>
 
-    <p>
-        👁 Promedio de vistas por producto:
-        <strong>
-            {" "}
-            {stats.averageViews}
-        </strong>
-    </p>
+                <p>
+                  👁 Promedio de vistas por producto:
+                    <strong>
+                      {" "}
+                      {stats.averageViews}
+                    </strong>
+                </p>
 
-</div>
+            </div>
+
+
+            <div className="summary-box">
+
+              <h2>💰 Centro de Monetización</h2>
+
+              <p>
+                📢 Promociones activas:
+                <strong> {stats.activePromotions}</strong>
+              </p>
+
+              <p>
+                ⭐ Productos Premium:
+                <strong> {stats.premiumProducts}</strong>
+              </p>
+
+              <p>
+                🚀 Productos Destacados:
+                <strong> {stats.featuredProducts}</strong>
+              </p>
+
+              <p>
+                💰 Ingresos generados:
+                  <strong>
+                    {" "}
+                    $ {stats.totalRevenue.toLocaleString()}
+                  </strong>
+              </p>
+
+            </div>
+
+
+            <DashboardInsights
+              stats={stats}
+            />
+
+            <DashboardInsights
+              stats={stats}
+            />
+
+            <DashboardQuickActions />
+
 
             <h2>
 
@@ -152,7 +246,7 @@ function Dashboard() {
         <ProductsChart
             products={stats.products}
             dataKey="whatsappClicks"
-            title="📲 Consultas por WhatsApp"
+            title="📲 Contactos generados"
             color="#22c55e"
         />
 

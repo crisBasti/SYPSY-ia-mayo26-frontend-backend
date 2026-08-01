@@ -1,5 +1,6 @@
 import Promotion from "../models/Promotion.js";
 import Product from "../models/Product.js";
+import { PROMOTION_PLANS } from "../config/promotionPlans.js";
 
 
 
@@ -75,38 +76,10 @@ if(promocionExistente){
 
 
 
-        const planes = {
-
-            DESTACADO_24H:{
-
-                precio:1500,
-
-                duracionHoras:24
-
-            },
+        const planSeleccionado = PROMOTION_PLANS[plan];
 
 
-            DESTACADO_7D:{
-
-                precio:7000,
-
-                duracionHoras:168
-
-            },
-
-
-            PREMIUM_30D:{
-
-                precio:20000,
-
-                duracionHoras:720
-
-            }
-
-        };
-
-
-        if(!planes[plan]){
+        if(!planSeleccionado){
 
             return res.status(400).json({
 
@@ -127,12 +100,11 @@ if(promocionExistente){
 
                 plan:{
 
-                    nombre:plan,
+                  nombre:planSeleccionado.id,
 
-                    precio:planes[plan].precio,
+                  precio:planSeleccionado.precio,
 
-                    duracionHoras:
-                    planes[plan].duracionHoras
+                  duracionHoras:planSeleccionado.duracionHoras
 
                 },
 
@@ -230,11 +202,8 @@ export const activarPromocion = async(req,res)=>{
               estadoPromocion: "activa",
 
               nivelPromocion:
-                promocion.plan.nombre === "PREMIUM_30D"
-                  ? 3
-                  : promocion.plan.nombre === "DESTACADO_7D"
-                  ? 2
-                  : 1,
+
+                PROMOTION_PLANS[promocion.plan.nombre].nivel,
 
               fechaPromocionInicio: fechaInicio,
 
@@ -463,46 +432,11 @@ export const estadisticasPromocion = async(req,res)=>{
 
 export const obtenerPlanes = (req, res) => {
 
-    res.json([
+    res.json(
 
-        {
-            id: "DESTACADO_24H",
-            nombre: "Destacado 24 horas",
-            precio: 1500,
-            duracionHoras: 24,
-            nivel: 1,
-            beneficios: [
-                "Aparece antes que publicaciones normales",
-                "Etiqueta DESTACADO"
-            ]
-        },
+        Object.values(PROMOTION_PLANS)
 
-        {
-            id: "DESTACADO_7D",
-            nombre: "Destacado 7 días",
-            precio: 7000,
-            duracionHoras: 168,
-            nivel: 2,
-            beneficios: [
-                "Mayor exposición durante 7 días",
-                "Prioridad en búsquedas"
-            ]
-        },
-
-        {
-            id: "PREMIUM_30D",
-            nombre: "Premium 30 días",
-            precio: 20000,
-            duracionHoras: 720,
-            nivel: 3,
-            beneficios: [
-                "Máxima prioridad",
-                "Etiqueta PREMIUM",
-                "Mayor visibilidad en Home"
-            ]
-        }
-
-    ]);
+    );
 
 };
 
