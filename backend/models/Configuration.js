@@ -15,7 +15,31 @@ const configurationSchema = new mongoose.Schema({
     comisionServicios:{
         type:Number,
         default:8
+    },
+
+    mercadoPago:{
+
+    alias:{
+        type:String,
+        default:""
+    },
+
+    cvu:{
+        type:String,
+        default:""
+    },
+
+    titular:{
+        type:String,
+        default:""
+    },
+
+    qr:{
+        type:String,
+        default:""
     }
+
+}
 
 },{
     timestamps:true

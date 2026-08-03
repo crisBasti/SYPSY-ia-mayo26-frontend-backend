@@ -13,13 +13,25 @@ function AdminSettings() {
 
     const [config, setConfig] = useState({
 
-        comisionGeneral:5,
+    comisionGeneral: 5,
 
-        comisionPremium:3,
+    comisionPremium: 3,
 
-        comisionServicios:8
+    comisionServicios: 8,
 
-    });
+    mercadoPago: {
+
+        alias: "",
+
+        cvu: "",
+
+        titular: "",
+
+        qr: ""
+
+    }
+
+});
 
     useEffect(() => {
 
@@ -193,6 +205,109 @@ function AdminSettings() {
                     </button>
 
                 </section>
+
+
+                <section className="settings-card">
+
+    <h3>💳 Mercado Pago</h3>
+
+    <div className="settings-field">
+
+        <label>Alias</label>
+
+        <input
+
+            type="text"
+
+            value={config.mercadoPago?.alias || ""}
+
+            onChange={(e)=>
+
+                setConfig({
+
+                    ...config,
+
+                    mercadoPago:{
+
+                        ...config.mercadoPago,
+
+                        alias:e.target.value
+
+                    }
+
+                })
+
+            }
+
+        />
+
+    </div>
+
+    <div className="settings-field">
+
+        <label>CVU</label>
+
+        <input
+
+            type="text"
+
+            value={config.mercadoPago?.cvu || ""}
+
+            onChange={(e)=>
+
+                setConfig({
+
+                    ...config,
+
+                    mercadoPago:{
+
+                        ...config.mercadoPago,
+
+                        cvu:e.target.value
+
+                    }
+
+                })
+
+            }
+
+        />
+
+    </div>
+
+    <div className="settings-field">
+
+        <label>Titular</label>
+
+        <input
+
+            type="text"
+
+            value={config.mercadoPago?.titular || ""}
+
+            onChange={(e)=>
+
+                setConfig({
+
+                    ...config,
+
+                    mercadoPago:{
+
+                        ...config.mercadoPago,
+
+                        titular:e.target.value
+
+                    }
+
+                })
+
+            }
+
+        />
+
+    </div>
+
+</section>
 
             </div>
 

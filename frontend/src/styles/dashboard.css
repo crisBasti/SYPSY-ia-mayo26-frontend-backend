@@ -695,3 +695,89 @@ color:white;
     line-height:1.4;
 
 }
+
+/* ===================================
+   DASHBOARD SKELETON
+=================================== */
+
+@keyframes skeleton-loading{
+
+    0%{
+        opacity:.55;
+    }
+
+    50%{
+        opacity:1;
+    }
+
+    100%{
+        opacity:.55;
+    }
+
+}
+
+.skeleton{
+
+    background:#e5e7eb;
+
+    border-radius:10px;
+
+    animation:skeleton-loading 1.2s infinite;
+
+}
+
+.skeleton-title{
+
+    width:260px;
+
+    height:36px;
+
+    margin-bottom:30px;
+
+}
+
+.skeleton-icon{
+
+    width:70px;
+
+    height:70px;
+
+    border-radius:50%;
+
+}
+
+.skeleton-text{
+
+    width:120px;
+
+    height:18px;
+
+}
+
+.skeleton-number{
+
+    width:80px;
+
+    height:30px;
+
+}
+
+.skeleton-subtitle{
+
+    width:220px;
+
+    height:28px;
+
+    margin-bottom:20px;
+
+}
+
+.skeleton-line{
+
+    width:100%;
+
+    height:18px;
+
+    margin:12px 0;
+
+}

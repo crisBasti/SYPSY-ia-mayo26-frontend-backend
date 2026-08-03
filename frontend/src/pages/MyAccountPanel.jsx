@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 
 import MyAccountSidebar from "../components/MyAccountSidebar";
 import Admin from "./Admin";
@@ -12,7 +13,27 @@ import Dashboard from "./Dashboard";
 
 function MyAccountPanel(){
 
-    const [section,setSection]=useState("dashboard");
+    const [searchParams] = useSearchParams();
+
+const [section, setSection] = useState(
+
+    searchParams.get("section") || "dashboard"
+
+);
+
+useEffect(() => {
+
+    const currentSection =
+
+        searchParams.get("section");
+
+    if(currentSection){
+
+        setSection(currentSection);
+
+    }
+
+}, [searchParams]);
 
     return(
 

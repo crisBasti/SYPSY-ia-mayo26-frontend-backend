@@ -2,7 +2,7 @@ import Product from "../models/Product.js";
 import User from "../models/User.js";
 import Analytics from "../models/Analytics.js";
 import Report from "../models/Report.js";
-import PromotionCampaign from "../models/PromotionCampaign.js";
+import Promotion from "../models/Promotion.js";
 import { obtenerProductosHome } from "../services/exposureService.js";
 
 export const getProducts = async (req, res) => {
@@ -435,8 +435,8 @@ export const getMyStats = async (req, res) => {
     // MONETIZACIÓN
     // =====================
 
-const campaigns = await PromotionCampaign.find({
-    "vendedor.uid": req.user.uid
+const campaigns = await Promotion.find({
+    sellerUid: req.user.uid
 });
 
 const activePromotions =

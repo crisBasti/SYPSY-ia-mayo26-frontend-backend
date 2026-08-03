@@ -1,11 +1,16 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { auth } from "../firebase";
+import CampaignDrawer from "../components/monetization/CampaignDrawer";
+import { obtenerConfiguracion } from "../services/configurationService";
+
 
 function MonetizationCenter() {
 
     const [promociones, setPromociones] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [selectedCampaign, setSelectedCampaign] = useState(null);
+    const [config, setConfig] = useState(null);
 
     useEffect(() => {
 
@@ -33,6 +38,11 @@ function MonetizationCenter() {
             );
 
             setPromociones(res.data);
+
+        const configuration =
+          await obtenerConfiguracion(token);
+
+            setConfig(configuration);
 
         } catch (error) {
 
@@ -66,48 +76,121 @@ function MonetizationCenter() {
 
             ) : (
 
-                <div className="campaigns-list">
+                <table className="campaigns-table">
 
-                    {promociones.map(promo => (
+    <thead>
 
-                        <div
-                            key={promo._id}
-                            className="campaign-card"
-                        >
+        <tr>
 
-                            <h3>
-                                {promo.productId?.nombre}
-                            </h3>
+            <th>Producto</th>
 
-                            <p>
-                                Plan: {promo.plan.nombre}
-                            </p>
+            <th>Plan</th>
 
-                            <p>
-                                Estado: {promo.estado}
-                            </p>
+            <th>Estado</th>
 
-                            <p>
-                                Inicio: {promo.fechaInicio
-                                    ? new Date(promo.fechaInicio).toLocaleDateString()
-                                    : "-"
-                                }
-                            </p>
+            <th>Inversión</th>
 
-                            <p>
-                                Fin: {promo.fechaFin
-                                    ? new Date(promo.fechaFin).toLocaleDateString()
-                                    : "-"
-                                }
-                            </p>
+            <th>👁 Imp.</th>
 
-                        </div>
+            <th>🖱 Clicks</th>
 
-                    ))}
+            <th>💬 Contactos</th>
 
-                </div>
+            <th>🛒 Compras</th>
+
+            <th>Acciones</th>
+
+        </tr>
+
+    </thead>
+
+    <tbody>
+
+        {promociones.map((promo) => (
+
+            <tr key={promo._id}>
+
+                <td>
+
+                    {promo.productId?.nombre || "-"}
+
+                </td>
+
+                <td>
+
+                    {promo.plan?.nombre}
+
+                </td>
+
+                <td>
+
+                    {promo.estado}
+
+                </td>
+
+                
+
+                <td>
+
+                    ${promo.plan?.precio}
+
+                </td>
+
+                <td>
+
+                    {promo.impresiones ?? promo.estadisticas?.impresiones ?? 0}
+
+                </td>
+
+                <td>
+
+                    {promo.clicks ?? promo.estadisticas?.clicks ?? 0}
+
+                </td>
+
+                <td>
+
+                    {promo.contactosWhatsapp ??
+                        promo.estadisticas?.contactosWhatsapp ??
+                        0}
+
+                </td>
+
+                <td>
+
+                    {promo.orders ??
+                        promo.estadisticas?.compras ??
+                        0}
+
+                </td>
+
+                <td>
+
+                    <button
+                      onClick={() => setSelectedCampaign(promo)}
+                    >
+
+                      📈 Ver
+
+                    </button>
+
+                </td>
+
+            </tr>
+
+        ))}
+
+    </tbody>
+
+</table>
 
             )}
+
+            <CampaignDrawer
+    campaign={selectedCampaign}
+    config={config}
+    onClose={() => setSelectedCampaign(null)}
+/>
 
         </div>
 

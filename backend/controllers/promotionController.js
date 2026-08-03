@@ -161,8 +161,7 @@ export const activarPromocion = async(req,res)=>{
 
 
 
-        const fechaInicio =
-            new Date();
+        const fechaInicio = new Date();
 
 
         const fechaFin =
@@ -533,3 +532,180 @@ export const registrarClick = async(req,res)=>{
     }
 
 };
+
+
+// =====================================
+// PROMOCIONES PENDIENTES (ADMIN)
+// =====================================
+
+export const obtenerPromocionesPendientes = async (req,res)=>{
+
+    try{
+
+        const promociones = await Promotion.find({
+
+            paymentStatus:"pendiente_verificacion"
+
+        })
+
+        .populate("productId")
+
+        .sort({
+
+            createdAt:-1
+
+        });
+
+        res.json(promociones);
+
+    }
+
+    catch(error){
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+    }
+
+};
+
+
+export const subirComprobantePromocion = async (req, res) => {
+
+    try {
+
+        const promocion = await Promotion.findById(req.params.id);
+
+        if (!promocion) {
+
+            return res.status(404).json({
+                message: "Promoción no encontrada."
+            });
+
+        }
+
+        if (promocion.sellerUid !== req.user.uid) {
+
+            return res.status(403).json({
+                message: "Esta promoción no pertenece a tu cuenta."
+            });
+
+        }
+
+        if (!req.file) {
+
+            return res.status(400).json({
+                message: "No se recibió ningún comprobante."
+            });
+
+        }
+
+        promocion.comprobantePago = req.file.path;
+
+        promocion.fechaPago = new Date();
+
+        promocion.estado = "pendiente_verificacion";
+
+        promocion.paymentStatus = "pendiente_verificacion";
+
+        await promocion.save();
+
+        res.json({
+
+            message: "Comprobante recibido.",
+
+            promocion
+
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+    }
+
+};
+
+
+export const verificarPagoPromocion = async (req, res) => {
+
+    try {
+
+        const { accion } = req.body;
+
+        const promocion = await Promotion.findById(req.params.id);
+
+        if (!promocion) {
+
+            return res.status(404).json({
+                message: "Promoción no encontrada."
+            });
+
+        }
+
+        if (accion === "APROBAR") {
+
+            const fechaInicio = new Date();
+
+            const fechaFin = new Date(
+                fechaInicio.getTime() +
+                promocion.plan.duracionHoras * 60 * 60 * 1000
+            );
+
+            promocion.estado = "activo";
+            promocion.paymentStatus = "approved";
+            promocion.fechaVerificacion = new Date();
+            promocion.fechaInicio = fechaInicio;
+            promocion.fechaFin = fechaFin;
+            promocion.spent = promocion.plan.precio;
+
+            await promocion.save();
+
+            await Product.findByIdAndUpdate(
+                promocion.productId,
+                {
+                    promocionado: true,
+                    estadoPromocion: "activa",
+                    nivelPromocion:
+                        PROMOTION_PLANS[promocion.plan.nombre].nivel,
+                    fechaPromocionInicio: fechaInicio,
+                    fechaPromocionFin: fechaFin
+                }
+            );
+
+        }
+
+        if (accion === "RECHAZAR") {
+
+            promocion.estado = "rechazado";
+            promocion.paymentStatus = "rejected";
+            promocion.fechaVerificacion = new Date();
+            promocion.spent = 0;
+
+          await promocion.save();
+
+        }
+
+        res.json(promocion);
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+            message: error.message
+        });
+
+    }
+
+};
+

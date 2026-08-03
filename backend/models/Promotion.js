@@ -70,6 +70,8 @@ const promotionSchema = new mongoose.Schema(
 
             "pendiente_pago",
 
+            "pendiente_verificacion",
+
             "activo",
 
             "finalizado",
@@ -126,6 +128,22 @@ const promotionSchema = new mongoose.Schema(
 
 },
 
+contacts:{
+
+    type:Number,
+
+    default:0
+
+},
+
+spent:{
+
+    type:Number,
+
+    default:0
+
+},
+
 paymentId:{
 
     type:String,
@@ -148,6 +166,21 @@ paymentMethod:{
 
     default:null
 
+},
+
+comprobantePago: {
+    type: String,
+    default: null
+},
+
+fechaPago: {
+    type: Date,
+    default: null
+},
+
+fechaVerificacion: {
+    type: Date,
+    default: null
 }
 
 

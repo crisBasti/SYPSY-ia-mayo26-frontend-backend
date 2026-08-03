@@ -7,32 +7,29 @@ function DashboardQuickActions() {
     const actions = [
 
         {
-            icon: "➕",
-            title: "Publicar producto",
-            description: "Creá una nueva publicación.",
-            path: "/publish"
-        },
-
-        {
-            icon: "📦",
-            title: "Mis productos",
-            description: "Administrá tu catálogo.",
-            path: "/my-products"
-        },
-
-        {
-            icon: "🛒",
-            title: "Mis ventas",
-            description: "Gestioná tus pedidos.",
-            path: "/my-sales"
-        },
-
-        {
-            icon: "🚀",
-            title: "Monetización",
-            description: "Promocioná tus productos.",
-            path: "/monetization"
-        }
+    icon:"➕",
+    title:"Publicar producto",
+    description:"Creá una nueva publicación.",
+    path:"/micuenta?section=publish"
+},
+{
+    icon:"📦",
+    title:"Mis productos",
+    description:"Administrá tu catálogo.",
+    path:"/micuenta?section=products"
+},
+{
+    icon:"🛒",
+    title:"Mis ventas",
+    description:"Gestioná tus pedidos.",
+    path:"/micuenta?section=sales"
+},
+{
+    icon:"🚀",
+    title:"Monetización",
+    description:"Promocioná tus productos.",
+    path:"/micuenta?section=monetization"
+}
 
     ];
 

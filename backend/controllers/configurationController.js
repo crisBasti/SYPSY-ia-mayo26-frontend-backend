@@ -8,7 +8,19 @@ export const getConfiguration = async (req, res) => {
 
         if (!config) {
 
-            config = await Configuration.create({});
+            config = await Configuration.create({
+
+                mercadoPago: {
+
+                    alias: "sypsy.arg",
+
+                    cvu: "0000003100014719845478",
+
+                    titular: "Cristian Alejandro Portillo"
+
+                }
+
+            });
 
         }
 

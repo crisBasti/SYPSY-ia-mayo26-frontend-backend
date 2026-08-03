@@ -8,6 +8,11 @@ import AdvertisementCarousel from "../components/AdvertisementCarousel";
 import { getAdvertisementsService } from "../services/advertisementService";
 import { useAuth } from "../context/AuthContext";
 
+import {
+    registrarImpresion,
+    registrarClick
+} from "../services/promotionService";
+
 
 
 import { crearPedidoService } from "../services/orderService";
@@ -182,6 +187,9 @@ const prevImage = (productId, total) => {
 });
 
 
+
+
+
     return (
   <>
     <Helmet>
@@ -241,7 +249,11 @@ const prevImage = (productId, total) => {
       <div className="products-grid">
 
         {filteredProducts.map((product) => (
-          <div key={product._id} className="product-card">
+          <div
+            key={product._id}
+            className="product-card"
+            ref={() => registrarImpresion(product._id)}
+          >
 
           {product.promocionado && (
 
@@ -324,27 +336,6 @@ const prevImage = (productId, total) => {
                 {product.categoria}
               </span>
 
-              {product.promocionado && (
-
-                <div className="promotion-badge">
-
-                  🚀 DESTACADO
-
-                </div>
-
-              )}
-
-
-              {product.nivelPromocion === 3 && (
-
-                <div className="premium-badge">
-
-                  👑 PREMIUM
-
-                </div>
-
-              )}
-
               <h3>{product.nombre}</h3>
 
               <p>{product.descripcion}</p>
@@ -366,6 +357,7 @@ const prevImage = (productId, total) => {
               <Link
                 to={`/producto/${slugify(product.nombre)}-${product._id}`}
                 className="view-btn"
+                onClick={() => registrarClick(product._id)}
               >
               Ver producto
               </Link>

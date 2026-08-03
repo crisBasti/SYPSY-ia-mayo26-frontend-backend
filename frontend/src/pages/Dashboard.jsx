@@ -9,6 +9,8 @@ import ProductsChart from "../components/dashboard/ProductsChart";
 import "../styles/dashboard.css";
 import DashboardInsights from "../components/dashboard/DashboardInsights";
 import DashboardQuickActions from "../components/dashboard/DashboardQuickActions";
+import DashboardSkeleton from "../components/dashboard/DashboardSkeleton";
+
 
 function Dashboard() {
 
@@ -48,7 +50,7 @@ function Dashboard() {
 
     if (loading) {
 
-        return <h2>Cargando estadísticas...</h2>;
+        return <DashboardSkeleton />;
 
     }
 
@@ -210,10 +212,6 @@ function Dashboard() {
 
             </div>
 
-
-            <DashboardInsights
-              stats={stats}
-            />
 
             <DashboardInsights
               stats={stats}

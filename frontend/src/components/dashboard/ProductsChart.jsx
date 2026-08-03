@@ -20,6 +20,8 @@ function ProductsChart({
     valor: product[dataKey]
   }));
 
+  
+
   return (
 
     <div
@@ -42,6 +44,10 @@ function ProductsChart({
 
           <XAxis
             dataKey="nombre"
+            angle={-45}
+            textAnchor="end"
+            interval={2}
+            height={100}
           />
 
           <YAxis />
@@ -50,6 +56,7 @@ function ProductsChart({
 
           <Bar
             dataKey="valor"
+            maxBarSize={5}
             fill={color}
             radius={[8,8,0,0]}
           />

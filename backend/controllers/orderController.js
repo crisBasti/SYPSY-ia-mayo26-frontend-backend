@@ -4,6 +4,7 @@ import Configuration from "../models/Configuration.js";
 import { executeAction } from "../services/orderStateMachine.js";
 import Product from "../models/Product.js";
 import UserProfile from "../models/UserProfile.js";
+import Promotion from "../models/Promotion.js";
 
 
 
@@ -220,6 +221,46 @@ const nuevoPedido = new Order({
     await nuevoPedido.save();
 
 
+    await Product.findByIdAndUpdate(
+
+nuevoPedido.producto,
+
+{
+
+$inc:{
+
+ordersGenerated:1
+
+}
+
+}
+
+);
+
+
+await Promotion.updateMany(
+
+{
+
+productId: nuevoPedido.producto,
+
+estado: "activo"
+
+},
+
+{
+
+$inc:{
+
+orders:1
+
+}
+
+}
+
+);
+
+
     res.status(201).json(nuevoPedido);
 
 
@@ -234,23 +275,6 @@ const nuevoPedido = new Order({
 
 
   }
-
-
-  await Product.findByIdAndUpdate(
-
-pedido.producto,
-
-{
-
-$inc:{
-
-ordersGenerated:1
-
-}
-
-}
-
-);
 
 };
 
