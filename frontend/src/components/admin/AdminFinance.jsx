@@ -11,17 +11,25 @@ function AdminFinance() {
 
     const [resumen, setResumen] = useState({
 
-        totalPedidos: 0,
+    totalPedidos: 0,
 
-        comisionTotal: 0,
+    facturacionTotal: 0,
 
-        dineroRetenido: 0,
+    comisionTotal: 0,
 
-        dineroLiberado: 0,
+    dineroRetenido: 0,
 
-        pendienteLiquidar: 0
+    dineroLiberado: 0,
 
-    });
+    pendienteLiquidar: 0,
+
+    promocionesActivas: 0,
+
+    promocionesCobradas: 0,
+
+    ingresosPromociones: 0
+
+});
 
     useEffect(() => {
 
@@ -115,17 +123,55 @@ function AdminFinance() {
 
                 <div className="finance-card">
 
-                    <h3>📈 Ganancia Total</h3>
+    <h3>💰 Facturación Total</h3>
 
-                    <span>
+    <span>
 
-                        $
+        $
 
-                        {resumen.comisionTotal.toLocaleString()}
+        {resumen.facturacionTotal.toLocaleString()}
 
-                    </span>
+    </span>
 
-                </div>
+</div>
+
+<div className="finance-card">
+
+    <h3>📢 Ingresos Promociones</h3>
+
+    <span>
+
+        $
+
+        {resumen.ingresosPromociones.toLocaleString()}
+
+    </span>
+
+</div>
+
+<div className="finance-card">
+
+    <h3>🚀 Promociones Activas</h3>
+
+    <span>
+
+        {resumen.promocionesActivas}
+
+    </span>
+
+</div>
+
+<div className="finance-card">
+
+    <h3>✅ Promociones Cobradas</h3>
+
+    <span>
+
+        {resumen.promocionesCobradas}
+
+    </span>
+
+</div>
 
                 <div className="finance-card">
 

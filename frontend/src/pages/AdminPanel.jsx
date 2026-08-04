@@ -11,6 +11,7 @@ import AdminSettings from "../components/admin/AdminSettings";
 import AdminFinance from "../components/admin/AdminFinance";
 import AdminPayments from "../components/admin/AdminPayments";
 import AdminPromotionPayments from "../components/admin/AdminPromotionPayments";
+import AdminLiquidaciones from "../components/admin/AdminLiquidaciones";
 
 
 function AdminPanel() {
@@ -72,6 +73,12 @@ function AdminPanel() {
 
                 {section === "finance" && (
                     <AdminFinance />
+                )}
+
+                {section === "liquidaciones" && (
+
+                    <AdminLiquidaciones />
+
                 )}
 
                 {section === "reports" && (

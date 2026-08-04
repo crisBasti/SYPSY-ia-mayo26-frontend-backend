@@ -142,8 +142,6 @@ fechaRetencion: Date,
 
 fechaLiberacion: Date,
 
-fechaTransferencia: Date,
-
 metodoPago: {
 
     type:String,
@@ -157,6 +155,44 @@ referenciaTransferencia: {
     type:String,
 
     default:""
+
+},
+
+comprobanteTransferencia: {
+
+    type: String,
+
+    default: ""
+
+},
+
+transferidoPor: {
+
+    uid: String,
+
+    email: String,
+
+    name: String
+
+},
+
+fechaTransferencia: Date,
+
+comprobanteTransferencia:{
+
+    type:String,
+
+    default:""
+
+},
+
+transferidoPor:{
+
+    uid:String,
+
+    email:String,
+
+    name:String
 
 },
 

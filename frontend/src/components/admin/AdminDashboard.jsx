@@ -82,6 +82,16 @@ function AdminDashboard() {
                     <p>{stats.activeAds}</p>
                 </div>
 
+                <div className="stat-card">
+                  <h3>📦 Pedidos</h3>
+                  <p>{stats.totalOrders}</p>
+                </div>
+
+                <div className="stat-card">
+                  <h3>🚀 Promociones Activas</h3>
+                  <p>{stats.promocionesActivas}</p>
+                </div>
+
             </div>
 
         </div>

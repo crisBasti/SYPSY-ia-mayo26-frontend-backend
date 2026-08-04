@@ -108,6 +108,18 @@ function AdminSidebar({ section, setSection }) {
 
 </button>
 
+<button
+
+    className={section === "liquidaciones" ? "activo" : ""}
+
+    onClick={() => setSection("liquidaciones")}
+
+>
+
+    💸 Liquidaciones
+
+</button>
+
       <button
 
     className={section === "reports" ? "activo" : ""}

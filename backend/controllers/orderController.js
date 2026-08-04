@@ -882,6 +882,77 @@ export const verificarPago = async (req, res) => {
 };
 
 
+export const subirComprobanteTransferencia = async (req,res)=>{
+
+    try{
+
+        const pedido = await Order.findById(req.params.id);
+
+        if(!pedido){
+
+            return res.status(404).json({
+
+                message:"Pedido inexistente"
+
+            });
+
+        }
+
+        if(!req.file){
+
+            return res.status(400).json({
+
+                message:"Debe subir un comprobante."
+
+            });
+
+        }
+
+        pedido.comprobanteTransferencia = req.file.path;
+
+        pedido.fechaTransferencia = new Date();
+
+        pedido.estadoPago = "pagado";
+
+        pedido.transferidoPor = {
+
+            uid:req.user.uid,
+
+            email:req.user.email,
+
+            name:req.user.name
+
+        };
+
+        pedido.historialPago.push({
+
+            estado:"pagado",
+
+            descripcion:"Transferencia realizada al vendedor",
+
+            usuario:req.user.email
+
+        });
+
+        await pedido.save();
+
+        res.json(pedido);
+
+    }
+
+    catch(error){
+
+        res.status(500).json({
+
+            message:error.message
+
+        });
+
+    }
+
+};
+
+
 export const dejarReseña = async (req,res)=>{
 
     try{
@@ -981,6 +1052,67 @@ export const dejarReseña = async (req,res)=>{
         res.status(500).json({
 
             message:error.message
+
+        });
+
+    }
+
+};
+
+
+// =====================================
+// PAGOS PENDIENTES AL VENDEDOR (ADMIN)
+// =====================================
+
+export const obtenerPagosPendientes = async (req, res) => {
+
+    try {
+
+        const pedidos = await Order.find({
+
+            estadoPago: "liberado"
+
+        })
+
+        .populate("producto")
+
+        .sort({
+
+            fechaLiberacion: -1
+
+        });
+
+        const resultado = await Promise.all(
+
+            pedidos.map(async (pedido) => {
+
+                const perfil = await UserProfile.findOne({
+
+                    uid: pedido.vendedor.uid
+
+                });
+
+                return {
+
+                    ...pedido.toObject(),
+
+                    datosBancarios: perfil?.datosBancarios || {}
+
+                };
+
+            })
+
+        );
+
+        res.json(resultado);
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            message: error.message
 
         });
 

@@ -33,6 +33,20 @@ function MyAccount() {
 
         sitioWeb:"",
 
+        datosBancarios: {
+
+          titular: "",
+
+          banco: "",
+
+          alias: "",
+
+          cvu: "",
+
+          cbu: ""
+
+        }
+ 
     });
 
     useEffect(()=>{
@@ -93,6 +107,18 @@ function MyAccount() {
 
              codigoPostal:data.direccion?.codigoPostal || ""
 
+            },
+
+            datosBancarios:{
+
+              titular: data.datosBancarios?.titular || "",
+
+              alias: data.datosBancarios?.alias || "",
+
+              cvu: data.datosBancarios?.cvu || "",
+
+              banco: data.datosBancarios?.banco || ""
+
             }
 
           });
@@ -130,6 +156,9 @@ function MyAccount() {
         try{
 
             const token=await auth.currentUser.getIdToken();
+
+            console.log("DATOS QUE ENVIO:", profile);
+
 
             await axios.put(
 
@@ -290,6 +319,97 @@ function MyAccount() {
             />
 
             <br/><br/>
+
+            <div className="account-section">
+
+    <h3>💳 Datos de Cobro</h3>
+
+    <div className="form-group">
+        <label>Titular</label>
+        <input
+            type="text"
+            value={profile.datosBancarios?.titular || ""}
+            onChange={(e) =>
+                setProfile({
+                    ...profile,
+                    datosBancarios: {
+                        ...profile.datosBancarios,
+                        titular: e.target.value
+                    }
+                })
+            }
+        />
+    </div>
+
+    <div className="form-group">
+        <label>Banco</label>
+        <input
+            type="text"
+            value={profile.datosBancarios?.banco || ""}
+            onChange={(e) =>
+                setProfile({
+                    ...profile,
+                    datosBancarios: {
+                        ...profile.datosBancarios,
+                        banco: e.target.value
+                    }
+                })
+            }
+        />
+    </div>
+
+    <div className="form-group">
+        <label>Alias</label>
+        <input
+            type="text"
+            value={profile.datosBancarios?.alias || ""}
+            onChange={(e) =>
+                setProfile({
+                    ...profile,
+                    datosBancarios: {
+                        ...profile.datosBancarios,
+                        alias: e.target.value
+                    }
+                })
+            }
+        />
+    </div>
+
+    <div className="form-group">
+        <label>CVU</label>
+        <input
+            type="text"
+            value={profile.datosBancarios?.cvu || ""}
+            onChange={(e) =>
+                setProfile({
+                    ...profile,
+                    datosBancarios: {
+                        ...profile.datosBancarios,
+                        cvu: e.target.value
+                    }
+                })
+            }
+        />
+    </div>
+
+    <div className="form-group">
+        <label>CBU</label>
+        <input
+            type="text"
+            value={profile.datosBancarios?.cbu || ""}
+            onChange={(e) =>
+                setProfile({
+                    ...profile,
+                    datosBancarios: {
+                        ...profile.datosBancarios,
+                        cbu: e.target.value
+                    }
+                })
+            }
+        />
+    </div>
+
+</div>
 
             <button onClick={guardarPerfil}>
 

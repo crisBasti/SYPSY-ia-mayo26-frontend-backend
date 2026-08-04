@@ -1,4 +1,5 @@
 import Order from "../models/order.js";
+import Promotion from "../models/Promotion.js";
 
 export const obtenerResumenFinanciero = async (req, res) => {
 
@@ -70,19 +71,51 @@ export const obtenerResumenFinanciero = async (req, res) => {
 
             );
 
+        const promociones = await Promotion.find();
+
+const promocionesActivas =
+    promociones.filter(
+        p => p.estado === "activo"
+    ).length;
+
+const promocionesCobradas =
+    promociones.filter(
+        p => p.paymentStatus === "approved"
+    ).length;
+
+const ingresosPromociones =
+    promociones.reduce(
+        (acc, promo) => acc + (promo.spent || 0),
+        0
+    );
+
+const facturacionTotal =
+    pedidos.reduce(
+        (acc, pedido) => acc + (pedido.total || 0),
+        0
+    );    
+
         res.json({
 
-            totalPedidos,
+    totalPedidos,
 
-            comisionTotal,
+    facturacionTotal,
 
-            dineroRetenido,
+    comisionTotal,
 
-            dineroLiberado,
+    dineroRetenido,
 
-            pendienteLiquidar
+    dineroLiberado,
 
-        });
+    pendienteLiquidar,
+
+    promocionesActivas,
+
+    promocionesCobradas,
+
+    ingresosPromociones
+
+});
 
     }
 

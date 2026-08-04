@@ -1,6 +1,13 @@
 import express from "express";
 import authFirebase from "../middleware/authFirebase.js";
-import upload from "../middleware/upload.js";
+
+
+import multer from "multer";
+import { storage } from "../config/cloudinary.js";
+
+const upload = multer({
+    storage
+});
 
 import {
   crearPedido,
@@ -14,7 +21,9 @@ import {
   validarCodigoEntrega,
   subirComprobantePago,
   verificarPago,
-  dejarReseña
+  dejarReseña,
+  subirComprobanteTransferencia,
+  obtenerPagosPendientes
 } from "../controllers/orderController.js";
 
 const router = express.Router();
@@ -64,6 +73,19 @@ router.post(
     "/:id/review",
     authFirebase,
     dejarReseña
+);
+
+router.get(
+    "/admin/pagos-pendientes",
+    authFirebase,
+    obtenerPagosPendientes
+);
+
+router.post(
+    "/:id/transfer-proof",
+    authFirebase,
+    upload.single("comprobante"),
+    subirComprobanteTransferencia
 );
 
 export default router;

@@ -184,7 +184,36 @@ trustScore:{
 
         lng:Number
 
+    },
+
+    datosBancarios:{
+
+    alias:{
+        type:String,
+        default:""
+    },
+
+    cvu:{
+        type:String,
+        default:""
+    },
+
+     cbu:{
+        type:String,
+        default:""
+    },
+
+    titular:{
+        type:String,
+        default:""
+    },
+
+    banco:{
+        type:String,
+        default:""
     }
+
+}
 
 },
 {timestamps:true});
