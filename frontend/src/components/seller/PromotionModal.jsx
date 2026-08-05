@@ -1,11 +1,15 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { auth } from "../../firebase";
+import { useNavigate } from "react-router-dom";
 
 function PromotionModal({ producto, onClose }) {
 
     const [planes, setPlanes] = useState([]);
     const [loading, setLoading] = useState(false);
+
+    const navigate = useNavigate();
+
 
     useEffect(() => {
 
@@ -66,13 +70,15 @@ function PromotionModal({ producto, onClose }) {
 
             );
 
-            alert(
-                "Promoción creada correctamente."
-            );
-
-            console.log(response.data);
+            const promocion = response.data;
 
             onClose();
+
+            navigate(
+
+                `/promotion-payment/${promocion._id}`
+
+            );
 
         } catch (error) {
 

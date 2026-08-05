@@ -98,6 +98,20 @@ function AdminPayments() {
 
                         </p>
 
+
+                        {pedido.comprobanteTransferencia && (
+
+                          <a
+                            href={pedido.comprobanteTransferencia}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="btn-secondary"
+                          >
+                            📄 Ver comprobante de transferencia
+                          </a>
+
+                        )}
+
                     </div>
 
                 ))

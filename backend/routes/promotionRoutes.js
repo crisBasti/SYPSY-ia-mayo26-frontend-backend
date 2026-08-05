@@ -5,6 +5,7 @@ import {
     crearPromocion,
     activarPromocion,
     obtenerMisPromociones,
+    obtenerPromocionPorId,
     finalizarPromocion,
     estadisticasPromocion,
     subirComprobantePromocion,
@@ -36,6 +37,8 @@ router.put("/:id/activar", verifyFirebaseToken, activarPromocion);
 
 // Mis promociones como vendedor
 router.get("/mine", verifyFirebaseToken, obtenerMisPromociones);
+
+router.get("/:id", verifyFirebaseToken, obtenerPromocionPorId);
 
 router.get("/pending-verification", verifyFirebaseToken, obtenerPromocionesPendientes);
 

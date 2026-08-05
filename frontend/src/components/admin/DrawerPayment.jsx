@@ -186,6 +186,50 @@ function DrawerPayment({
 
             )}
 
+            {/* ==========================================
+   COMPROBANTE DE TRANSFERENCIA AL VENDEDOR
+========================================== */}
+
+{pedido.transferProof && (
+
+    <div className="drawer-card">
+
+        <div className="drawer-card-title">
+
+            💸 Transferencia al vendedor
+
+        </div>
+
+        <div className="drawer-card-content">
+
+            <p>
+
+                <strong>Estado:</strong> Pago enviado
+
+            </p>
+
+            <a
+
+                href={pedido.transferProof}
+
+                target="_blank"
+
+                rel="noreferrer"
+
+                className="btn-secondary"
+
+            >
+
+                📄 Ver comprobante de transferencia
+
+            </a>
+
+        </div>
+
+    </div>
+
+)}
+
         </>
 
     );

@@ -1,6 +1,61 @@
 import Product from "../models/Product.js";
 
-export const obtenerProductosHome = async () => {
+function calcularDistancia(lat1, lng1, lat2, lng2) {
+
+    if (
+        !lat1 ||
+        !lng1 ||
+        !lat2 ||
+        !lng2
+    ) {
+        return 999999;
+    }
+
+    const R = 6371;
+
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+
+    const dLng = (lng2 - lng1) * Math.PI / 180;
+
+    const a =
+
+        Math.sin(dLat / 2) *
+
+        Math.sin(dLat / 2)
+
+        +
+
+        Math.cos(lat1 * Math.PI / 180)
+
+        *
+
+        Math.cos(lat2 * Math.PI / 180)
+
+        *
+
+        Math.sin(dLng / 2)
+
+        *
+
+        Math.sin(dLng / 2);
+
+    const c =
+
+        2 *
+
+        Math.atan2(
+
+            Math.sqrt(a),
+
+            Math.sqrt(1 - a)
+
+        );
+
+    return Number((R * c).toFixed(2));
+
+}
+
+export const obtenerProductosHome = async ({ lat, lng } = {}) => {
 
     // Productos visibles
     const productos = await Product.find({
@@ -21,30 +76,107 @@ export const obtenerProductosHome = async () => {
 
     });
 
+
+    if(lat && lng){
+
+    productos.forEach(producto=>{
+
+        producto._doc.distancia = calcularDistancia(
+
+            lat,
+
+            lng,
+
+            producto?.ubicacion?.lat,
+
+            producto?.ubicacion?.lng
+
+        );
+
+    });
+
+}
+
     // Separar por tipo
-    const premium = productos.filter(
+    const premium = productos
 
-        p => p.nivelPromocion === 3
+.filter(
 
-    );
+    p=>p.nivelPromocion===3
 
-    const destacados = productos.filter(
+)
 
-        p => p.nivelPromocion === 2
+.sort(
 
-    );
+(a,b)=>
 
-    const promocionados = productos.filter(
+(a.distancia||999999)
 
-        p => p.nivelPromocion === 1
+-
 
-    );
+(b.distancia||999999)
 
-    const normales = productos.filter(
+);
 
-        p => !p.promocionado
+    const destacados = productos
 
-    );
+.filter(
+
+p=>p.nivelPromocion===2
+
+)
+
+.sort(
+
+(a,b)=>
+
+(a.distancia||999999)
+
+-
+
+(b.distancia||999999)
+
+);
+
+    const promocionados = productos
+
+.filter(
+
+p=>p.nivelPromocion===1
+
+)
+
+.sort(
+
+(a,b)=>
+
+(a.distancia||999999)
+
+-
+
+(b.distancia||999999)
+
+);
+
+    const normales = productos
+
+.filter(
+
+p=>!p.promocionado
+
+)
+
+.sort(
+
+(a,b)=>
+
+(a.distancia||999999)
+
+-
+
+(b.distancia||999999)
+
+);
 
     // Mezclar inteligentemente
     const promociones=

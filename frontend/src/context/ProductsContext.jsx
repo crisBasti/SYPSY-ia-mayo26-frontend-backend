@@ -1,4 +1,6 @@
 import { createContext, useEffect, useState } from "react";
+import { useLocation } from "./LocationContext";
+
 
 export const ProductsContext = createContext();
 
@@ -6,31 +8,52 @@ export function ProductsProvider({
   children
 }) {
 
+  const location = useLocation();
   const [productos, setProductos] = useState([]);
 
   // =========================
   // OBTENER PRODUCTOS
   // =========================
 
-  const fetchProducts =
-    async () => {
+  const fetchProducts = async () => {
 
-      try {
+    try{
 
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/products`);
+        const params = new URLSearchParams();
+
+        if(location?.lat && location?.lng){
+
+            params.append("lat",location.lat);
+
+            params.append("lng",location.lng);
+
+        }
+
+        const res = await fetch(
+
+            `${import.meta.env.VITE_API_URL}/api/products?${params.toString()}`
+
+        );
 
         const data = await res.json();
 
         setProductos(data);
 
-      } catch (error) {
+    }
+
+    catch(error){
 
         console.log(
-          "Error obteniendo productos:",
-          error
+
+            "Error obteniendo productos:",
+
+            error
+
         );
-      }
-    };
+
+    }
+
+};
 
 
 const actualizarProducto = (
@@ -66,9 +89,9 @@ const eliminarProducto = (id) => {
   // CARGAR AL INICIAR
   // =========================
 
-//  useEffect(() => {
-//    fetchProducts();
-//  }, []);
+  useEffect(() => {
+    fetchProducts();
+  }, [location]);
 
   return (
     <ProductsContext.Provider

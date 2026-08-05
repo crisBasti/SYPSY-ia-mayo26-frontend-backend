@@ -17,6 +17,38 @@ const productSchema = new mongoose.Schema(
     telefono: { type: String }
   },
 
+  ubicacion: {
+
+    provincia: {
+
+        type: String,
+
+        default: ""
+
+    },
+
+    ciudad: {
+
+        type: String,
+
+        default: ""
+
+    },
+
+    barrio: {
+
+        type: String,
+
+        default: ""
+
+    },
+
+    lat: Number,
+
+    lng: Number
+
+},
+
   // NUEVO
   views: {
     type: Number,
@@ -93,6 +125,20 @@ fechaPausado: {
     type:Number,
 
     default:0
+
+},
+
+ubicacion: {
+
+    provincia: String,
+
+    ciudad: String,
+
+    barrio: String,
+
+    lat: Number,
+
+    lng: Number
 
 }
 

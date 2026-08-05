@@ -4,24 +4,35 @@ import Analytics from "../models/Analytics.js";
 import Report from "../models/Report.js";
 import Promotion from "../models/Promotion.js";
 import { obtenerProductosHome } from "../services/exposureService.js";
+import UserProfile from "../models/UserProfile.js";
 
-export const getProducts = async (req, res) => {
+export const getProducts = async (req,res)=>{
 
-    try {
+    try{
 
-        const productos = await obtenerProductosHome();
+        const lat = Number(req.query.lat);
+
+        const lng = Number(req.query.lng);
+
+        const productos = await obtenerProductosHome({
+
+            lat,
+
+            lng
+
+        });
 
         res.json(productos);
 
     }
 
-    catch (error) {
+    catch(error){
 
         console.error(error);
 
         res.status(500).json({
 
-            mensaje: "Error obteniendo productos"
+            mensaje:"Error obteniendo productos"
 
         });
 
@@ -42,6 +53,12 @@ export const createProduct = async (req, res) => {
 
 const usuario = await User.findOne({
   uid: req.user.uid,
+});
+
+const perfil = await UserProfile.findOne({
+
+    uid: req.user.uid
+
 });
 
 if (!usuario) {
@@ -70,6 +87,14 @@ vendedor: {
   email: usuario.email,
   name: `${usuario.nombre} ${usuario.apellido}`,
   telefono: usuario.telefono
+},
+
+ubicacion: {
+    provincia: perfil?.direccion?.provincia || "",
+    ciudad: perfil?.direccion?.ciudad || "",
+    barrio: perfil?.direccion?.barrio || "",
+    lat: perfil?.ubicacion?.lat,
+    lng: perfil?.ubicacion?.lng
 },
 
   images: req.files?.map(file => file.path) || []

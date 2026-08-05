@@ -2,6 +2,8 @@ import "../styles/products.css";
 import SellerBadge from "./SellerBadge";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { useLocation } from "../context/LocationContext";
+import calcularDistancia from "../utils/calcularDistancia";
 
 function ProductCard({
   product,
@@ -28,6 +30,21 @@ deleteProduct &&
 startEdit &&
 updateProduct;
 
+
+const location = useLocation();
+
+const distancia = calcularDistancia(
+
+    location?.lat,
+
+    location?.lng,
+
+    product?.ubicacion?.lat,
+
+    product?.ubicacion?.lng
+
+);
+
   return (
 
     <div className="product-card">
@@ -39,13 +56,69 @@ updateProduct;
 
         <div className="card-top-badges">
 
-          <span className="badge-new">
 
-            NUEVO
+{
+product.nivelPromocion === 3 && (
 
-          </span>
+<span className="badge-premium">
 
-        </div>
+👑 Premium
+
+</span>
+
+)
+}
+
+
+{
+product.nivelPromocion === 2 && (
+
+<span className="badge-featured">
+
+🚀 Destacado
+
+</span>
+
+)
+
+}
+
+
+{
+product.nivelPromocion === 1 && (
+
+<span className="badge-promo">
+
+⭐ Promoción
+
+</span>
+
+)
+
+}
+
+
+{
+product.createdAt &&
+(new Date() - new Date(product.createdAt))
+<
+1000 * 60 * 60 * 24 * 7
+&&
+
+(
+
+<span className="badge-new">
+
+Nuevo
+
+</span>
+
+)
+
+}
+
+
+</div>
 
         <button
           type="button"
@@ -124,6 +197,33 @@ updateProduct;
           ${product.precio}
         </p>
 
+        {distancia && (
+
+<div className="product-distance">
+
+📍 A {distancia} km de vos
+
+</div>
+
+)}
+
+
+{
+distancia &&
+distancia <= 5 &&
+
+(
+
+<div className="delivery-today">
+
+⚡ Puede llegar hoy
+
+</div>
+
+)
+
+}
+
         <div className="product-status">
 
           <span className="status-dot"></span>
@@ -137,6 +237,19 @@ updateProduct;
         </p>
 
         <SellerBadge sellerId={product.vendedor?._id || "1"} />
+
+        {
+product.vendedor?.ciudad && (
+
+<p className="seller-location">
+
+📍 Vendedor en {product.vendedor.ciudad}
+
+</p>
+
+)
+
+}
 
         <div className="product-buttons">
 

@@ -709,3 +709,47 @@ export const verificarPagoPromocion = async (req, res) => {
 
 };
 
+
+export const obtenerPromocionPorId = async (req, res) => {
+
+    try {
+
+        const promocion = await Promotion
+            .findById(req.params.id)
+            .populate("productId");
+
+        if (!promocion) {
+
+            return res.status(404).json({
+
+                message: "Promoción no encontrada."
+
+            });
+
+        }
+
+        if (promocion.sellerUid !== req.user.uid) {
+
+            return res.status(403).json({
+
+                message: "No autorizado."
+
+            });
+
+        }
+
+        res.json(promocion);
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+    }
+
+};

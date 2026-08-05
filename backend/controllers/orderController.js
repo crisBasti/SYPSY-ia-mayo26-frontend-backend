@@ -362,7 +362,8 @@ export const obtenerMisVentas = async (req, res) => {
         req.user.uid
 
       })
-      .populate("producto");
+      .populate("producto")
+      .sort({ createdAt: -1 });
 
 
     res.json(pedidos);
