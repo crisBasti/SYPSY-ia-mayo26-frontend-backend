@@ -1806,3 +1806,278 @@ transform:scale(1.1);
     box-shadow:0 5px 15px rgba(0,0,0,.25);
 
 }
+
+
+/* ===========================
+   TRUST BADGES
+=========================== */
+
+.trust-badges{
+
+    display:flex;
+
+    flex-wrap:wrap;
+
+    gap:8px;
+
+    margin:14px 0;
+
+}
+
+.trust-badge{
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 12px;
+
+    border-radius:999px;
+
+    font-size:.78rem;
+
+    font-weight:700;
+
+    transition:.25s;
+
+    user-select:none;
+
+}
+
+.trust-badge.green{
+
+    background:#dcfce7;
+
+    color:#166534;
+
+}
+
+.trust-badge.orange{
+
+    background:#fff7d6;
+
+    color:#b45309;
+
+}
+
+.trust-badge.blue{
+
+    background:#dbeafe;
+
+    color:#1d4ed8;
+
+}
+
+.trust-badge.gray{
+
+    background:#f1f5f9;
+
+    color:#475569;
+
+}
+
+.trust-badge.distance{
+
+    background:#eef2ff;
+
+    color:#4338ca;
+
+}
+
+.trust-badge.verified{
+
+    background:#ede9fe;
+
+    color:#6d28d9;
+
+}
+
+.trust-badge:hover{
+
+    transform:translateY(-2px);
+
+}
+
+
+.smart-badges{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:8px;
+
+margin:12px 0;
+
+}
+
+.smart-badge{
+
+padding:7px 12px;
+
+border-radius:30px;
+
+font-size:.78rem;
+
+font-weight:700;
+
+animation:fadeIn .35s;
+
+}
+
+.smart-badge.green{
+
+background:#e8fff1;
+
+color:#0f8b4c;
+
+}
+
+.smart-badge.blue{
+
+background:#e9f5ff;
+
+color:#1877f2;
+
+}
+
+.smart-badge.cyan{
+
+background:#ecfeff;
+
+color:#0e7490;
+
+}
+
+.smart-badge.orange{
+
+background:#fff3e0;
+
+color:#ff6b00;
+
+}
+
+.smart-badge.purple{
+
+background:#f3e8ff;
+
+color:#7c3aed;
+
+}
+
+@keyframes fadeIn{
+
+from{
+
+opacity:0;
+
+transform:translateY(8px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}
+
+
+.selling-messages{
+
+display:flex;
+
+flex-wrap:wrap;
+
+gap:8px;
+
+margin:10px 0;
+
+}
+
+.selling-pill{
+
+padding:7px 12px;
+
+border-radius:30px;
+
+font-size:.78rem;
+
+font-weight:700;
+
+animation:fadeBadge .4s ease;
+
+}
+
+.selling-pill.success{
+
+background:#dcfce7;
+
+color:#166534;
+
+}
+
+.selling-pill.primary{
+
+background:#dbeafe;
+
+color:#1d4ed8;
+
+}
+
+.selling-pill.info{
+
+background:#ecfeff;
+
+color:#155e75;
+
+}
+
+.selling-pill.warning{
+
+background:#fff7cc;
+
+color:#92400e;
+
+}
+
+.selling-pill.danger{
+
+background:#fee2e2;
+
+color:#991b1b;
+
+}
+
+.selling-pill.premium{
+
+background:linear-gradient(90deg,#2563eb,#7c3aed);
+
+color:white;
+
+}
+
+@keyframes fadeBadge{
+
+from{
+
+opacity:0;
+
+transform:translateY(8px);
+
+}
+
+to{
+
+opacity:1;
+
+transform:none;
+
+}
+
+}

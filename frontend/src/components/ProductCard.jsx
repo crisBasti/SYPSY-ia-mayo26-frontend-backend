@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { useLocation } from "../context/LocationContext";
 import calcularDistancia from "../utils/calcularDistancia";
+import generarMensajeVenta from "../utils/generarMensajeVenta";
 
 function ProductCard({
   product,
@@ -42,6 +43,15 @@ const distancia = calcularDistancia(
     product?.ubicacion?.lat,
 
     product?.ubicacion?.lng
+
+);
+
+
+const mensajes = generarMensajeVenta(
+
+    product,
+
+    distancia
 
 );
 
@@ -196,6 +206,26 @@ Nuevo
         <p className="price">
           ${product.precio}
         </p>
+
+        <div className="selling-messages">
+
+    {mensajes.map((m,index)=>(
+
+        <div
+
+            key={index}
+
+            className={`selling-pill ${m.tipo}`}
+
+        >
+
+            {m.icono} {m.texto}
+
+        </div>
+
+    ))}
+
+</div>
 
         {distancia && (
 

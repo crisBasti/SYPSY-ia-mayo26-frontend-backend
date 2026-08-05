@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { useLocation } from "./LocationContext";
+import calcularDistancia from "../utils/calcularDistancia";
 
 
 export const ProductsContext = createContext();
@@ -8,8 +9,8 @@ export function ProductsProvider({
   children
 }) {
 
-  const location = useLocation();
   const [productos, setProductos] = useState([]);
+  const location = useLocation();
 
   // =========================
   // OBTENER PRODUCTOS
@@ -37,7 +38,43 @@ export function ProductsProvider({
 
         const data = await res.json();
 
-        setProductos(data);
+const productosOrdenados = [...data];
+
+if(location?.lat && location?.lng){
+
+    productosOrdenados.sort((a,b)=>{
+
+        const da = calcularDistancia(
+
+            location.lat,
+
+            location.lng,
+
+            a?.ubicacion?.lat,
+
+            a?.ubicacion?.lng
+
+        ) ?? 999999;
+
+        const db = calcularDistancia(
+
+            location.lat,
+
+            location.lng,
+
+            b?.ubicacion?.lat,
+
+            b?.ubicacion?.lng
+
+        ) ?? 999999;
+
+        return da-db;
+
+    });
+
+}
+
+setProductos(productosOrdenados);
 
     }
 

@@ -83,10 +83,14 @@ const newProduct = new Product({
   estado: "activo",   // 🔥 AGREGAR ESTO
 
 vendedor: {
-  uid: usuario.uid,
-  email: usuario.email,
-  name: `${usuario.nombre} ${usuario.apellido}`,
-  telefono: usuario.telefono
+    uid: usuario.uid,
+    email: usuario.email,
+    name: `${usuario.nombre} ${usuario.apellido}`,
+    telefono: usuario.telefono,
+    ciudad: perfil?.direccion?.ciudad || "",
+    provincia: perfil?.direccion?.provincia || "",
+    barrio: perfil?.direccion?.barrio || "",
+    verificado: perfil?.verificado || false
 },
 
 ubicacion: {
@@ -183,12 +187,57 @@ export const updateProduct = async (
       });
     }
 
-    const updatedProduct =
-      await Product.findByIdAndUpdate(
-        req.params.id,
-        req.body,
-        { new: true }
-      );
+    const perfil = await UserProfile.findOne({
+    uid: req.user.uid
+});
+
+const datosActualizar = {
+
+    ...req.body,
+
+    vendedor: {
+
+        ...product.vendedor,
+
+        ciudad: perfil?.direccion?.ciudad || "",
+
+        provincia: perfil?.direccion?.provincia || "",
+
+        barrio: perfil?.direccion?.barrio || "",
+
+        verificado: perfil?.verificado || false
+
+    },
+
+    ubicacion: {
+
+        provincia: perfil?.direccion?.provincia || "",
+
+        ciudad: perfil?.direccion?.ciudad || "",
+
+        barrio: perfil?.direccion?.barrio || "",
+
+        lat: perfil?.ubicacion?.lat,
+
+        lng: perfil?.ubicacion?.lng
+
+    }
+
+};
+
+const updatedProduct = await Product.findByIdAndUpdate(
+
+    req.params.id,
+
+    datosActualizar,
+
+    {
+
+        new: true
+
+    }
+
+);
 
     res.json(
       updatedProduct

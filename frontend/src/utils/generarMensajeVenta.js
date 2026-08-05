@@ -1,0 +1,141 @@
+export default function generarMensajeVenta(producto, distancia) {
+
+    const mensajes = [];
+
+    // =====================
+    // PROXIMIDAD
+    // =====================
+
+    if (distancia != null) {
+
+        if (distancia < 1) {
+
+            mensajes.push({
+                tipo: "success",
+                icono: "📍",
+                texto: "En tu zona"
+            });
+
+        } else if (distancia <= 3) {
+
+            mensajes.push({
+                tipo: "success",
+                icono: "🚚",
+                texto: "Te llega hoy"
+            });
+
+        } else if (distancia <= 8) {
+
+            mensajes.push({
+                tipo: "primary",
+                icono: "⚡",
+                texto: "Entrega rápida"
+            });
+
+        } else if (distancia <= 20) {
+
+            mensajes.push({
+                tipo: "info",
+                icono: "📦",
+                texto: "Llega en el día"
+            });
+
+        }
+
+    }
+
+    // =====================
+    // STOCK
+    // =====================
+
+    if (producto.stock <= 2) {
+
+        mensajes.push({
+
+            tipo:"danger",
+
+            icono:"🔥",
+
+            texto:"Quedan pocas unidades"
+
+        });
+
+    }
+
+    // =====================
+    // NUEVO
+    // =====================
+
+    const dias =
+
+        (Date.now() -
+
+        new Date(producto.createdAt))
+
+        /
+
+        86400000;
+
+    if(dias<7){
+
+        mensajes.push({
+
+            tipo:"warning",
+
+            icono:"🆕",
+
+            texto:"Publicado recientemente"
+
+        });
+
+    }
+
+    // =====================
+    // PROMOCIÓN
+    // =====================
+
+    if(producto.nivelPromocion===3){
+
+        mensajes.push({
+
+            tipo:"premium",
+
+            icono:"👑",
+
+            texto:"Producto Premium"
+
+        });
+
+    }
+
+    if(producto.nivelPromocion===2){
+
+        mensajes.push({
+
+            tipo:"premium",
+
+            icono:"🚀",
+
+            texto:"Más vendido"
+
+        });
+
+    }
+
+    if(producto.nivelPromocion===1){
+
+        mensajes.push({
+
+            tipo:"premium",
+
+            icono:"⭐",
+
+            texto:"Promocionado"
+
+        });
+
+    }
+
+    return mensajes.slice(0,2);
+
+}

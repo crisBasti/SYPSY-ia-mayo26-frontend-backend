@@ -7,21 +7,21 @@ import { slugify } from "../utils/slugify";
 import AdvertisementCarousel from "../components/AdvertisementCarousel";
 import { getAdvertisementsService } from "../services/advertisementService";
 import { useAuth } from "../context/AuthContext";
-
-import {
-    registrarImpresion,
-    registrarClick
-} from "../services/promotionService";
-
-
-
+import { registrarImpresion, registrarClick } from "../services/promotionService";
 import { crearPedidoService } from "../services/orderService";
 import { auth } from "../firebase";
+import { useLocation } from "../context/LocationContext";
+import calcularDistancia from "../utils/calcularDistancia";
+import TrustBadges from "../components/TrustBadges";
+import getOpportunityBadge from "../utils/getOpportunityBadge";
+import getSmartBadges from "../utils/getSmartBadges";
 
 function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
 
   const { user } = useAuth();
+
+  const location = useLocation();
   
 useEffect(() => {
 
@@ -148,9 +148,7 @@ const prevImage = (productId, total) => {
   // =========================
   // FILTRO
   // =========================
-  const filteredProducts = productos
-
-.filter((product) => {
+  const filteredProducts = productos.filter((product) => {
 
     const textoBusqueda = search.toLowerCase();
 
@@ -174,14 +172,39 @@ const prevImage = (productId, total) => {
 
 .sort((a, b) => {
 
-    // Prioridad por nivel de promoción
+    // 1) Promociones primero
     if ((a.nivelPromocion || 0) !== (b.nivelPromocion || 0)) {
 
         return (b.nivelPromocion || 0) - (a.nivelPromocion || 0);
 
     }
 
-    // Si tienen el mismo nivel, mostrar primero los más nuevos
+    // 2) Luego ordenar por cercanía
+    const distanciaA = calcularDistancia(
+
+        location?.lat,
+        location?.lng,
+        a?.ubicacion?.lat,
+        a?.ubicacion?.lng
+
+    );
+
+    const distanciaB = calcularDistancia(
+
+        location?.lat,
+        location?.lng,
+        b?.ubicacion?.lat,
+        b?.ubicacion?.lng
+
+    );
+
+    if (distanciaA && distanciaB) {
+
+        return distanciaA - distanciaB;
+
+    }
+
+    // 3) Si ninguno tiene ubicación, mostrar primero los más nuevos
     return new Date(b.createdAt) - new Date(a.createdAt);
 
 });
@@ -248,7 +271,34 @@ const prevImage = (productId, total) => {
       {/* GRID */}
       <div className="products-grid">
 
-        {filteredProducts.map((product) => (
+        {filteredProducts.map((product) => {
+
+          const distancia = calcularDistancia(
+
+            location?.lat,
+            location?.lng,
+            product?.ubicacion?.lat,
+            product?.ubicacion?.lng
+
+          );
+
+          const oportunidad = getOpportunityBadge({
+
+            ...product,
+
+              distancia
+
+          });
+
+          const smartBadges = getSmartBadges({
+
+            product,
+
+            distancia
+
+          });
+
+return (
           <div
             key={product._id}
             className="product-card"
@@ -344,13 +394,39 @@ const prevImage = (productId, total) => {
                 ${product.precio}
               </span>
 
-              <div className="product-status">
+              <TrustBadges product={product} />
 
-          <span className="status-dot"></span>
+              {smartBadges.length > 0 && (
 
-             Disponible
+<div className="smart-badges">
 
-        </div>
+{
+
+smartBadges.map((badge,index)=>(
+
+<span
+
+key={index}
+
+className={`smart-badge ${badge.color}`}
+
+>
+
+{badge.icono}
+
+{" "}
+
+{badge.texto}
+
+</span>
+
+))
+
+}
+
+</div>
+
+)}
 
 
               {/* VER PRODUCTO */}
@@ -391,7 +467,8 @@ const prevImage = (productId, total) => {
 
             </div>
           </div>
-        ))}
+        );
+        })}
       </div>
 
       <AdvertisementCarousel
