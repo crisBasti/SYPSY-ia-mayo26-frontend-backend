@@ -15,6 +15,7 @@ import calcularDistancia from "../utils/calcularDistancia";
 import TrustBadges from "../components/TrustBadges";
 import getOpportunityBadge from "../utils/getOpportunityBadge";
 import getSmartBadges from "../utils/getSmartBadges";
+import getPersuasionBadges from "../utils/persuasionEngine";
 
 function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
@@ -274,29 +275,26 @@ const prevImage = (productId, total) => {
         {filteredProducts.map((product) => {
 
           const distancia = calcularDistancia(
-
             location?.lat,
             location?.lng,
             product?.ubicacion?.lat,
             product?.ubicacion?.lng
-
           );
 
           const oportunidad = getOpportunityBadge({
-
             ...product,
-
               distancia
-
           });
 
           const smartBadges = getSmartBadges({
-
             product,
-
             distancia
-
           });
+
+          const persuasionBadges = getPersuasionBadges(
+            product,
+            location
+          );
 
 return (
           <div
@@ -398,35 +396,24 @@ return (
 
               {smartBadges.length > 0 && (
 
-<div className="smart-badges">
+                <div className="smart-badges">
 
-{
+                  {persuasionBadges.map((badge, index) => (
 
-smartBadges.map((badge,index)=>(
+                    <span
+                      key={index}
+                      className={`smart-badge ${badge.color}`}
+                    >
 
-<span
+                    {badge.text}
 
-key={index}
+                    </span>
 
-className={`smart-badge ${badge.color}`}
+                  ))}
 
->
+                </div>
 
-{badge.icono}
-
-{" "}
-
-{badge.texto}
-
-</span>
-
-))
-
-}
-
-</div>
-
-)}
+              )}
 
 
               {/* VER PRODUCTO */}

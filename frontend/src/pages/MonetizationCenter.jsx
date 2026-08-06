@@ -60,11 +60,11 @@ function MonetizationCenter() {
 
         <div className="monetization-container">
 
-            <h2>
+            <h2>🚀 Impulsar mis ventas</h2>
 
-              🚀 Centro de Monetización
-              
-            </h2>
+              <p className="page-subtitle">
+                Conseguí más visitas, más contactos y más ventas destacando tus publicaciones.
+              </p>
 
             {loading ? (
 

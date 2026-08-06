@@ -109,7 +109,7 @@ function MyAccountSidebar({
 
             >
 
-              🚀 Monetización
+              🚀 Impulsar ventas
 
             </button>
 

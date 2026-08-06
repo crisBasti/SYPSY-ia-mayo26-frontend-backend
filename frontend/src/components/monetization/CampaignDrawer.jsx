@@ -122,94 +122,137 @@ const costoPorClick =
 
                 </div>
 
-                {campaign.estado === "pendiente_pago" &&
-                  config && (
+                {campaign.estado === "pendiente_pago" && config && (
 
-        <>
+<div className="payment-card">
 
-            <hr />
+    <h3>
+        🚀 Activá tu campaña
+    </h3>
 
-            <h3>💳 Pago de la campaña</h3>
+    <p className="payment-text">
 
-            <p>
-                <strong>Alias:</strong>{" "}
-                {config.mercadoPago?.alias || "-"}
-            </p>
+        Tu publicación comenzará a mostrarse a más compradores apenas se confirme el pago.
 
-            <p>
-                <strong>CVU:</strong>{" "}
-                {config.mercadoPago?.cvu || "-"}
-            </p>
+    </p>
 
-            <p>
-                <strong>Titular:</strong>{" "}
-                {config.mercadoPago?.titular || "-"}
-            </p>
+    <div className="payment-price">
 
-            <input
-    type="file"
-    accept="image/*,.pdf"
-    onChange={(e)=>setArchivo(e.target.files[0])}
-/>
+        ${campaign.plan?.precio}
 
-<button
+    </div>
 
-    className="buy-btn"
+    <a
 
-    disabled={!archivo || subiendo}
+        className="mercadopago-btn"
 
-    onClick={async()=>{
+        href={`https://link.mercadopago.com.ar/${config.mercadoPago.linkPago}`}
 
-        try{
+        target="_blank"
 
-            setSubiendo(true);
+        rel="noreferrer"
 
-            const token =
+    >
 
-                await auth.currentUser.getIdToken();
+        💳 Abonar ahora con Mercado Pago
 
-            await subirComprobantePromocion(
+    </a>
 
-                campaign._id,
+    <div className="payment-data">
 
-                archivo,
+        <p>
 
-                token
+            Alias:
+            <strong>
 
-            );
+                {config.mercadoPago.alias}
 
-            alert("✅ Comprobante enviado.");
+            </strong>
 
-            window.location.reload();
+        </p>
 
-        }
+        <p>
 
-        catch(error){
+            Titular:
+            <strong>
 
-            console.error(error);
+                {config.mercadoPago.titular}
 
-            alert("Error enviando comprobante.");
+            </strong>
 
-        }
+        </p>
 
-        finally{
+    </div>
 
-            setSubiendo(false);
+    <hr />
 
-        }
+    <h4>
 
-    }}
+        📤 Ya realizaste el pago
 
->
+    </h4>
 
-    {subiendo ? "Enviando..." : "📤 Enviar comprobante"}
+    <input
 
-</button>
+        type="file"
 
-        </>
+        accept="image/*,.pdf"
 
-    )
-}
+        onChange={(e)=>setArchivo(e.target.files[0])}
+
+    />
+
+    <button
+
+        className="upload-btn"
+
+        disabled={!archivo || subiendo}
+
+        onClick={async()=>{
+
+            try{
+
+                setSubiendo(true);
+
+                const token=await auth.currentUser.getIdToken();
+
+                await subirComprobantePromocion(
+
+                    campaign._id,
+
+                    archivo,
+
+                    token
+
+                );
+
+                alert("Comprobante enviado.");
+
+                window.location.reload();
+
+            }
+
+            finally{
+
+                setSubiendo(false);
+
+            }
+
+        }}
+
+    >
+
+        {subiendo
+
+            ? "Enviando..."
+
+            : "📤 Enviar comprobante"}
+
+    </button>
+
+</div>
+
+)}
 
 
 
