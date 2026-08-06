@@ -146,7 +146,7 @@ const costoPorClick =
 
         className="mercadopago-btn"
 
-        href={`https://link.mercadopago.com.ar/${config.mercadoPago.linkPago}`}
+        href={`https://mpago.la/2viz34m/${config.mercadoPago.linkPago}`}
 
         target="_blank"
 
