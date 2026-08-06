@@ -49,6 +49,8 @@ function MyAccount() {
  
     });
 
+    const [guardando, setGuardando] = useState(false);
+
     useEffect(()=>{
 
         cargarPerfil();
@@ -151,46 +153,107 @@ function MyAccount() {
 
     };
 
-    const guardarPerfil=async()=>{
+    const guardarPerfil = async () => {
 
-        try{
+    try {
 
-            const token=await auth.currentUser.getIdToken();
+        setGuardando(true);
 
-            console.log("DATOS QUE ENVIO:", profile);
+        let ubicacion = profile.ubicacion || {};
 
+        if (navigator.geolocation) {
 
-            await axios.put(
+            try {
 
-                `${import.meta.env.VITE_API_URL}/api/profile`,
+                const posicion = await new Promise((resolve, reject) => {
 
-                profile,
+                    navigator.geolocation.getCurrentPosition(
 
-                {
+                        resolve,
 
-                    headers:{
+                        reject,
 
-                        Authorization:`Bearer ${token}`
+                        {
 
-                    }
+                            enableHighAccuracy: true,
+
+                            timeout: 10000
+
+                        }
+
+                    );
+
+                });
+
+                ubicacion = {
+
+                    lat: posicion.coords.latitude,
+
+                    lng: posicion.coords.longitude
+
+                };
+
+            } catch (error) {
+
+                console.log("No se pudo obtener GPS", error);
+
+            }
+
+        }
+
+        const token = await auth.currentUser.getIdToken();
+
+        await axios.put(
+
+            `${import.meta.env.VITE_API_URL}/api/profile`,
+
+            {
+
+                ...profile,
+
+                ubicacion
+
+            },
+
+            {
+
+                headers: {
+
+                    Authorization: `Bearer ${token}`
 
                 }
 
-            );
+            }
 
-            alert("Perfil actualizado.");
+        );
 
-        }
+        setProfile(prev => ({
 
-        catch(error){
+            ...prev,
 
-            console.error(error);
+            ubicacion
 
-            alert("No se pudo guardar.");
+        }));
 
-        }
+        alert("Perfil actualizado.");
 
-    };
+    }
+
+    catch(error){
+
+        console.error(error);
+
+        alert("No se pudo guardar.");
+
+    }
+
+    finally{
+
+        setGuardando(false);
+
+    }
+
+};
 
     return(
 
