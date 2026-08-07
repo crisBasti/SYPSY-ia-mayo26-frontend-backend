@@ -1749,28 +1749,7 @@ text-align:center;
    COLOR GLOBAL DEL PANEL
 ==========================*/
 
-.admin-content h1,
-.admin-content h2,
-.admin-content h3,
-.admin-content h4,
-.admin-content p,
-.admin-content span,
-.admin-content label,
-.admin-content strong,
-.admin-content small,
-.admin-content li{
 
-    color:#1f2937;
-
-}
-
-.admin-content input,
-.admin-content textarea,
-.admin-content select{
-
-    color:#1f2937;
-
-}
 
 .admin-content button{
 
@@ -2734,5 +2713,213 @@ background:#d1d5db;
     font-weight:600;
 
     cursor:pointer;
+
+}
+
+
+.payment-summary{
+
+    display:flex;
+
+    flex-direction:column;
+
+    align-items:center;
+
+    margin:25px 0;
+
+}
+
+.summary-label{
+
+    font-size:.9rem;
+
+    color:#64748b;
+
+}
+
+.summary-price{
+
+    font-size:2.4rem;
+
+    font-weight:800;
+
+    color:#0066ff;
+
+    margin:6px 0;
+
+}
+
+.summary-description{
+
+    text-align:center;
+
+    color:#555;
+
+}
+
+.payment-benefits{
+
+    margin-top:18px;
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:10px;
+
+}
+
+.payment-benefits div{
+
+    background:#ecfdf5;
+
+    color:#065f46;
+
+    padding:10px 15px;
+
+    border-radius:12px;
+
+    font-weight:600;
+
+}
+
+.promotion-hero{
+
+    text-align:center;
+
+    padding:30px 20px;
+
+}
+
+.hero-icon{
+
+    font-size:55px;
+
+    margin-bottom:12px;
+
+}
+
+.promotion-hero h3{
+
+    font-size:1.6rem;
+
+    margin-bottom:10px;
+
+}
+
+.promotion-hero p{
+
+    color:#64748b;
+
+    line-height:1.5;
+
+}
+
+.promotion-benefits{
+
+    display:grid;
+
+    gap:18px;
+
+    margin:30px 0;
+
+}
+
+.benefit-card{
+
+    background:white;
+
+    border-radius:16px;
+
+    padding:18px;
+
+    box-shadow:0 8px 24px rgba(0,0,0,.08);
+
+    display:flex;
+
+    flex-direction:column;
+
+    gap:8px;
+
+    transition:.25s;
+
+}
+
+.benefit-card:hover{
+
+    transform:translateY(-4px);
+
+}
+
+.benefit-card strong{
+
+    font-size:1rem;
+
+}
+
+.benefit-card span{
+
+    color:#64748b;
+
+    font-size:.9rem;
+
+}
+
+.mercadopago-main-btn{
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    width:100%;
+
+    margin:25px 0;
+
+    padding:18px;
+
+    border-radius:18px;
+
+    background:#009ee3;
+
+    color:white;
+
+    font-size:1.15rem;
+
+    font-weight:700;
+
+    text-decoration:none;
+
+    transition:.25s;
+
+    box-shadow:0 15px 35px rgba(0,158,227,.35);
+
+}
+
+.mercadopago-main-btn:hover{
+
+    transform:scale(1.02);
+
+}
+
+
+.payment-help{
+
+    margin:18px 0;
+
+    padding:14px;
+
+    border-left:4px solid #009ee3;
+
+    background:#f8fbff;
+
+    color:#475569;
+
+    font-size:.92rem;
+
+    line-height:1.6;
+
+    border-radius:10px;
 
 }

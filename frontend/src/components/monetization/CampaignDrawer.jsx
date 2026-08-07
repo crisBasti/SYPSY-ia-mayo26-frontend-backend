@@ -75,6 +75,28 @@ const costoPorClick =
                     📈 {campaign.productId?.nombre}
                 </h2>
 
+                <div className="promotion-hero">
+
+    <div className="hero-icon">
+
+        🚀
+
+    </div>
+
+    <h3>
+
+        Impulsá esta publicación
+
+    </h3>
+
+    <p>
+
+        Llegá a muchos más compradores y aumentá las posibilidades de vender más rápido.
+
+    </p>
+
+</div>
+
                 <hr />
 
                 <div className="campaign-metrics">
@@ -136,17 +158,97 @@ const costoPorClick =
 
     </p>
 
-    <div className="payment-price">
+    <div className="promotion-benefits">
 
-        ${campaign.plan?.precio}
+    <div className="benefit-card">
+
+        👀
+
+        <strong>
+
+            Más visualizaciones
+
+        </strong>
+
+        <span>
+
+            Tu publicación aparece antes que las demás.
+
+        </span>
 
     </div>
 
+    <div className="benefit-card">
+
+        📍
+
+        <strong>
+
+            Más compradores cercanos
+
+        </strong>
+
+        <span>
+
+            Priorizamos usuarios de tu zona.
+
+        </span>
+
+    </div>
+
+    <div className="benefit-card">
+
+        ⚡
+
+        <strong>
+
+            Más ventas
+
+        </strong>
+
+        <span>
+
+            Aumentás las probabilidades de recibir consultas.
+
+        </span>
+
+    </div>
+
+</div>
+
+    <div className="payment-summary">
+
+    <span className="summary-label">
+
+        Inversión
+
+    </span>
+
+    <span className="summary-price">
+
+        ${campaign.plan?.precio}
+
+    </span>
+
+    <span className="summary-description">
+
+        Esta inversión destacará tu producto durante
+        <strong>
+          {campaign.plan?.duracionHoras >= 24
+          ? `${campaign.plan.duracionHoras / 24} día${campaign.plan.duracionHoras > 24 ? "s" : ""}`
+          : `${campaign.plan?.duracionHoras} horas`}
+
+        </strong>
+
+    </span>
+
+</div>
+
     <a
 
-        className="mercadopago-btn"
+        className="mercadopago-main-btn"
 
-        href={`https://mpago.la/2viz34m/${config.mercadoPago.linkPago}`}
+        href={`https://link.mercadopago.com.ar/${config.mercadoPago.linkPago}`}
 
         target="_blank"
 
@@ -157,6 +259,34 @@ const costoPorClick =
         💳 Abonar ahora con Mercado Pago
 
     </a>
+
+    <p className="payment-help">
+
+      Si el botón de Mercado Pago no abre correctamente o preferís realizar una transferencia manual, podés utilizar los datos de la cuenta que aparecen debajo. Luego simplemente subí el comprobante y nuestro equipo activará tu campaña apenas verifique el pago.
+
+    </p>
+
+    <div className="payment-benefits">
+
+    <div>
+
+        👀 Más visualizaciones
+
+    </div>
+
+    <div>
+
+        💬 Más contactos
+
+    </div>
+
+    <div>
+
+        🛒 Más posibilidades de venta
+
+    </div>
+
+</div>
 
     <div className="payment-data">
 
