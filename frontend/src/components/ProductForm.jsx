@@ -197,39 +197,6 @@ const handleSubmit = async (e) => {
 
 
 
-const styles = {
-  form: {
-    background: "var(--bg)",
-    border: "1px solid var(--border)",
-    borderRadius: "16px",
-    padding: "25px",
-    marginBottom: "30px",
-    display: "flex",
-    flexDirection: "column",
-    gap: "15px",
-    boxShadow: "var(--shadow)"
-  },
 
-  title: {
-    textAlign: "left"
-  },
-
-  input: {
-    padding: "14px",
-    borderRadius: "10px",
-    border: "1px solid var(--border)",
-    fontSize: "16px",
-    outline: "none"
-  },
-
-  button: {
-    background: "var(--accent)",
-    color: "white",
-    padding: "14px",
-    borderRadius: "10px",
-    fontSize: "16px",
-    fontWeight: "bold"
-  }
-};
 
 export default ProductForm;

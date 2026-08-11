@@ -886,16 +886,10 @@ function ProductFormSeller({ addProduct }) {
                         onClick={() =>
                             toggleModalidad("envio")
                         }
-                        style={{
-                            ...styles.deliveryOption,
-
-                            ...(envioSeleccionado
-                                ? styles.deliverySelected
-                                : {})
-                        }}
+                        
                     >
 
-                        <span style={styles.deliveryIcon}>
+                        <span>
                             🚚
                         </span>
 
@@ -918,16 +912,10 @@ function ProductFormSeller({ addProduct }) {
                         onClick={() =>
                             toggleModalidad("retiro")
                         }
-                        style={{
-                            ...styles.deliveryOption,
-
-                            ...(retiroSeleccionado
-                                ? styles.deliverySelected
-                                : {})
-                        }}
+                        
                     >
 
-                        <span style={styles.deliveryIcon}>
+                        <span>
                             📦
                         </span>
 
