@@ -1081,7 +1081,7 @@ text-decoration:underline;
 
 .monetization-container {
     padding: 20px;
-    color:#212529;
+    
 
 }
 
@@ -1121,7 +1121,7 @@ text-decoration:underline;
 .admin-content h2{
 
     margin-bottom:18px;
-
+    
     color:var(--text);
 
     font-weight:700;
