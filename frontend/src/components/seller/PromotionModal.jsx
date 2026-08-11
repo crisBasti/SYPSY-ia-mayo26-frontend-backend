@@ -75,9 +75,12 @@ function PromotionModal({ producto, onClose }) {
             onClose();
 
             navigate(
-
-                `/promotion-payment/${promocion._id}`
-
+              "/micuenta/monetizacion",
+              {
+                state: {
+                  campaignId: promocion._id
+                }
+              }
             );
 
         } catch (error) {

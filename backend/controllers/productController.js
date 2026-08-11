@@ -46,10 +46,12 @@ export const createProduct = async (req, res) => {
     const {
       nombre,
       precio,
-      descripcion,    
+      descripcion,
       categoria,
       stock,
-} = req.body;
+      condicion,
+      logistica
+    } = req.body;
 
 const usuario = await User.findOne({
   uid: req.user.uid,
@@ -75,12 +77,16 @@ if (usuario.blocked) {
 }
 
 const newProduct = new Product({
-  nombre,
-  precio,
-  descripcion,
-  categoria,
-  stock: stock || 0,
-  estado: "activo",   // 🔥 AGREGAR ESTO
+      nombre,
+      precio,
+      descripcion,
+      categoria,
+      stock: stock || 0,
+      condicion,
+      logistica: logistica
+       ? JSON.parse(logistica)
+       : undefined,
+      estado: "activo",
 
 vendedor: {
     uid: usuario.uid,
@@ -191,9 +197,31 @@ export const updateProduct = async (
     uid: req.user.uid
 });
 
+let logisticaActualizada;
+
+try {
+
+    logisticaActualizada = req.body.logistica
+        ? JSON.parse(req.body.logistica)
+        : undefined;
+
+} catch (error) {
+
+    return res.status(400).json({
+
+        message: "La información de logística no es válida."
+
+    });
+
+}
+
 const datosActualizar = {
 
     ...req.body,
+
+    ...(logisticaActualizada && {
+        logistica: logisticaActualizada
+    }),
 
     vendedor: {
 

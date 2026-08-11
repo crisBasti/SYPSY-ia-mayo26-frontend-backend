@@ -21,7 +21,6 @@ import RoleRoute from "./components/RoleRoute";
 import ProductFormSeller from "./components/seller/ProductFormSeller";
 import Payments from "./pages/admin/Payments";
 import MonetizationCenter from "./pages/MonetizationCenter";
-import PromotionPayment from "./pages/PromotionPayment";
 
 
 function App() {
@@ -125,8 +124,6 @@ function App() {
           />
 
           <Route path="/micuenta/monetizacion" element={<MonetizationCenter />} />
-
-          <Route path="/promotion-payment/:id"element={<ProtectedRoute><PromotionPayment /> </ProtectedRoute>} />
 
           <Route path="*" element={<NotFound />} />
 

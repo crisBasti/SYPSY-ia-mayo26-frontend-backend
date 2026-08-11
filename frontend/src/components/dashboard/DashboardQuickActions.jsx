@@ -26,7 +26,7 @@ function DashboardQuickActions() {
 },
 {
     icon:"🚀",
-    title:"Monetización",
+    title:"Impulsar ventas",
     description:"Promocioná tus productos.",
     path:"/micuenta?section=monetization"
 }

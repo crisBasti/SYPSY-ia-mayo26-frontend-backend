@@ -2,50 +2,105 @@ import mongoose from "mongoose";
 
 const productSchema = new mongoose.Schema(
 {
-  nombre: { type: String, required: true },
-  descripcion: { type: String, required: true },
-  precio: { type: Number, required: true },
-  stock: { type: Number, default: 0 },
-  categoria: { type: String, required: true },
+    nombre: { type: String, required: true },
+    descripcion: { type: String, required: true },
+    precio: { type: Number, required: true },
+    stock: { type: Number, default: 0 },
+    condicion: { type: String, enum: ["nuevo", "usado"], default: "nuevo"},
+    categoria: { type: String, required: true },
+    images: { type: [String], default: [] },
+    vendedor: { uid: { type: String, required: true },
+      email: { type: String },
+      name: { type: String },
+      telefono: { type: String }
+    },
 
-  images: { type: [String], default: [] },
-
-  vendedor: {
-    uid: { type: String, required: true },
-    email: { type: String },
-    name: { type: String },
-    telefono: { type: String }
-  },
-
-  ubicacion: {
-
-    provincia: {
-
+    ubicacion: {
+      provincia: {
         type: String,
-
         default: ""
-
     },
 
     ciudad: {
-
         type: String,
-
         default: ""
-
     },
 
     barrio: {
-
         type: String,
-
         default: ""
-
     },
 
     lat: Number,
-
     lng: Number
+
+},
+
+logistica: {
+
+    modalidades: {
+        type: [String],
+        enum: ["envio", "retiro"],
+        default: []
+    },
+
+    envio: {
+
+        disponible: {
+            type: Boolean,
+            default: false
+        },
+
+        gratis: {
+            type: Boolean,
+            default: false
+        },
+
+        costoFijo: {
+            type: Number,
+            default: 0
+        },
+
+        costoCalculado: {
+            type: Boolean,
+            default: false
+        }
+
+    },
+
+    retiro: {
+
+        disponible: {
+            type: Boolean,
+            default: false
+        }
+
+    },
+
+    tiempoEntrega: {
+
+        tipo: {
+            type: String,
+            enum: [
+                "hoy",
+                "manana",
+                "dias",
+                "personalizado"
+            ],
+            default: "dias"
+        },
+
+        minimo: {
+            type: Number,
+            default: 1
+        },
+
+        maximo: {
+            type: Number,
+            default: 3
+        }
+
+    }
 
 },
 
@@ -125,20 +180,6 @@ fechaPausado: {
     type:Number,
 
     default:0
-
-},
-
-ubicacion: {
-
-    provincia: String,
-
-    ciudad: String,
-
-    barrio: String,
-
-    lat: Number,
-
-    lng: Number
 
 }
 

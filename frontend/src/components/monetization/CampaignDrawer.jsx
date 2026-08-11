@@ -9,10 +9,10 @@ import { subirComprobantePromocion } from "../../services/promotionService";
 
 function CampaignDrawer({ campaign, config, onClose }) {
 
-    if (!campaign) return null;
-
     const [archivo, setArchivo] = useState(null);
     const [subiendo, setSubiendo] = useState(false);
+    
+    if (!campaign) return null;
 
 
     const calcularDiasRestantes = () => {
@@ -266,27 +266,6 @@ const costoPorClick =
 
     </p>
 
-    <div className="payment-benefits">
-
-    <div>
-
-        👀 Más visualizaciones
-
-    </div>
-
-    <div>
-
-        💬 Más contactos
-
-    </div>
-
-    <div>
-
-        🛒 Más posibilidades de venta
-
-    </div>
-
-</div>
 
     <div className="payment-data">
 
@@ -383,24 +362,6 @@ const costoPorClick =
 </div>
 
 )}
-
-
-
-                <hr />
-
-                <h3>📊 Rendimiento</h3>
-
-                <p>
-                    CTR:{" "}
-                    {campaign.impresiones
-                        ? (
-                            campaign.clicks /
-                            campaign.impresiones *
-                            100
-                        ).toFixed(2)
-                        : 0}
-                    %
-                </p>
 
             </div>
 

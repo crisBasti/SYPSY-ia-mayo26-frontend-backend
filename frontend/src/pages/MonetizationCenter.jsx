@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { auth } from "../firebase";
 import CampaignDrawer from "../components/monetization/CampaignDrawer";
 import { obtenerConfiguracion } from "../services/configurationService";
 
-
 function MonetizationCenter() {
+
+    const location = useLocation();
+    const navigate = useNavigate();
 
     const [promociones, setPromociones] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -39,8 +42,8 @@ function MonetizationCenter() {
 
             setPromociones(res.data);
 
-        const configuration =
-          await obtenerConfiguracion(token);
+            const configuration =
+                await obtenerConfiguracion(token);
 
             setConfig(configuration);
 
@@ -56,15 +59,52 @@ function MonetizationCenter() {
 
     };
 
+    useEffect(() => {
+
+        if (
+            !loading &&
+            promociones.length > 0 &&
+            location.state?.campaignId
+        ) {
+
+            const campaign = promociones.find(
+                promo =>
+                    promo._id === location.state.campaignId
+            );
+
+            if (campaign) {
+
+                setSelectedCampaign(campaign);
+
+                navigate(
+                    location.pathname,
+                    {
+                        replace: true,
+                        state: {}
+                    }
+                );
+
+            }
+
+        }
+
+    }, [
+        loading,
+        promociones,
+        location.state,
+        navigate,
+        location.pathname
+    ]);
+
     return (
 
         <div className="monetization-container">
 
             <h2>🚀 Impulsar mis ventas</h2>
 
-              <p className="page-subtitle">
+            <p className="page-subtitle">
                 Conseguí más visitas, más contactos y más ventas destacando tus publicaciones.
-              </p>
+            </p>
 
             {loading ? (
 
@@ -78,119 +118,115 @@ function MonetizationCenter() {
 
                 <table className="campaigns-table">
 
-    <thead>
+                    <thead>
 
-        <tr>
+                        <tr>
 
-            <th>Producto</th>
+                            <th>Producto</th>
 
-            <th>Plan</th>
+                            <th>Plan</th>
 
-            <th>Estado</th>
+                            <th>Estado</th>
 
-            <th>Inversión</th>
+                            <th>Inversión</th>
 
-            <th>👁 Imp.</th>
+                            <th>👁 Imp.</th>
 
-            <th>🖱 Clicks</th>
+                            <th>🖱 Clicks</th>
 
-            <th>💬 Contactos</th>
+                            <th>💬 Contactos</th>
 
-            <th>🛒 Compras</th>
+                            <th>🛒 Compras</th>
 
-            <th>Acciones</th>
+                            <th>Acciones</th>
 
-        </tr>
+                        </tr>
 
-    </thead>
+                    </thead>
 
-    <tbody>
+                    <tbody>
 
-        {promociones.map((promo) => (
+                        {promociones.map((promo) => (
 
-            <tr key={promo._id}>
+                            <tr key={promo._id}>
 
-                <td>
+                                <td>
+                                    {promo.productId?.nombre || "-"}
+                                </td>
 
-                    {promo.productId?.nombre || "-"}
+                                <td>
+                                    {promo.plan?.nombre}
+                                </td>
 
-                </td>
+                                <td>
+                                    {promo.estado}
+                                </td>
 
-                <td>
+                                <td>
+                                    ${promo.plan?.precio}
+                                </td>
 
-                    {promo.plan?.nombre}
+                                <td>
+                                    {
+                                        promo.impresiones ??
+                                        promo.estadisticas?.impresiones ??
+                                        0
+                                    }
+                                </td>
 
-                </td>
+                                <td>
+                                    {
+                                        promo.clicks ??
+                                        promo.estadisticas?.clicks ??
+                                        0
+                                    }
+                                </td>
 
-                <td>
+                                <td>
+                                    {
+                                        promo.contactosWhatsapp ??
+                                        promo.estadisticas?.contactosWhatsapp ??
+                                        0
+                                    }
+                                </td>
 
-                    {promo.estado}
+                                <td>
+                                    {
+                                        promo.orders ??
+                                        promo.estadisticas?.compras ??
+                                        0
+                                    }
+                                </td>
 
-                </td>
+                                <td>
 
-                
+                                    <button
+                                        onClick={() =>
+                                            setSelectedCampaign(promo)
+                                        }
+                                    >
+                                        📈 Ver
+                                    </button>
 
-                <td>
+                                </td>
 
-                    ${promo.plan?.precio}
+                            </tr>
 
-                </td>
+                        ))}
 
-                <td>
+                    </tbody>
 
-                    {promo.impresiones ?? promo.estadisticas?.impresiones ?? 0}
-
-                </td>
-
-                <td>
-
-                    {promo.clicks ?? promo.estadisticas?.clicks ?? 0}
-
-                </td>
-
-                <td>
-
-                    {promo.contactosWhatsapp ??
-                        promo.estadisticas?.contactosWhatsapp ??
-                        0}
-
-                </td>
-
-                <td>
-
-                    {promo.orders ??
-                        promo.estadisticas?.compras ??
-                        0}
-
-                </td>
-
-                <td>
-
-                    <button
-                      onClick={() => setSelectedCampaign(promo)}
-                    >
-
-                      📈 Ver
-
-                    </button>
-
-                </td>
-
-            </tr>
-
-        ))}
-
-    </tbody>
-
-</table>
+                </table>
 
             )}
 
             <CampaignDrawer
-    campaign={selectedCampaign}
-    config={config}
-    onClose={() => setSelectedCampaign(null)}
-/>
+                campaign={selectedCampaign}
+                config={config}
+                onClose={() =>
+                    setSelectedCampaign(null)
+                }
+            />
 
         </div>
 
