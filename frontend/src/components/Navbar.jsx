@@ -1,13 +1,89 @@
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import logo from "../assets/logo.png";
 import "../styles/navbar.css";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 function Navbar({ search, setSearch }) {
+
   const [menuOpen, setMenuOpen] = useState(false);
 
+  const [ubicacion, setUbicacion] = useState(null);
+
   const { user, logout } = useContext(AuthContext);
+
+  useEffect(() => {
+
+  const cargarUbicacion = async () => {
+
+    if (!user) {
+
+      setUbicacion(null);
+
+      return;
+
+    }
+
+    try {
+
+      const token =
+        await user.getIdToken();
+
+      const response =
+        await fetch(
+          `${import.meta.env.VITE_API_URL}/api/profile`,
+          {
+            headers: {
+              Authorization:
+                `Bearer ${token}`
+            }
+          }
+        );
+
+      if (!response.ok) {
+
+        throw new Error(
+          "No se pudo obtener el perfil"
+        );
+
+      }
+
+      const data =
+        await response.json();
+
+      setUbicacion({
+
+        provincia:
+          data.direccion?.provincia || "",
+
+        ciudad:
+          data.direccion?.ciudad || "",
+
+        barrio:
+          data.direccion?.barrio || "",
+
+        lat:
+          data.ubicacion?.lat || null,
+
+        lng:
+          data.ubicacion?.lng || null
+
+      });
+
+    } catch (error) {
+
+      console.error(
+        "Error cargando ubicación:",
+        error
+      );
+
+    }
+
+  };
+
+  cargarUbicacion();
+
+}, [user]);
 
   return (
     <>
@@ -83,7 +159,11 @@ function Navbar({ search, setSearch }) {
 
         <div className="location-bar">
 
-            📍 Salta Capital
+         📍{" "}
+
+          {ubicacion?.ciudad
+            ? ubicacion.ciudad
+            : "Seleccioná tu ubicación"}
 
         </div>
 

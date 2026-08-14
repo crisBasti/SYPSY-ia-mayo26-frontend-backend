@@ -112,17 +112,17 @@ function MyAccount() {
             },
 
             datosBancarios:{
-
               titular: data.datosBancarios?.titular || "",
-
               alias: data.datosBancarios?.alias || "",
-
               cvu: data.datosBancarios?.cvu || "",
-
               banco: data.datosBancarios?.banco || ""
+            },
 
+            ubicacion: {
+              lat: data.ubicacion?.lat || null,
+              lng: data.ubicacion?.lng || null
             }
-
+            
           });
 
         }

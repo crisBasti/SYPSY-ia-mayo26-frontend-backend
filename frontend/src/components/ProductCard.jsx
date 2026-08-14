@@ -266,7 +266,7 @@ distancia <= 5 &&
           {product.categoria}
         </p>
 
-        <SellerBadge sellerId={product.vendedor?._id || "1"} />
+        <SellerBadge vendedor={product.vendedor} />
 
         {
 product.vendedor?.ciudad && (

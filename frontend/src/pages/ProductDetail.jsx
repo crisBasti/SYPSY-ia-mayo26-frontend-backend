@@ -1,5 +1,5 @@
 import { useContext, useEffect, useRef, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { ProductsContext } from "../context/ProductsContext";
 import { Helmet } from "react-helmet-async";
 import { slugify } from "../utils/slugify";
@@ -16,6 +16,8 @@ function ProductDetail() {
 
   
   const { id } = useParams();
+
+  const navigate = useNavigate();
   
   const realId = id.includes("-")
   ? id.split("-").pop()
@@ -35,6 +37,7 @@ const [reportReason, setReportReason] = useState("");
 const [reportDescription, setReportDescription] = useState("");
 const [reportLoading, setReportLoading] = useState(false);
 const [imagenActual,setImagenActual]=useState(0);
+const [showConfirmBuy, setShowConfirmBuy] = useState(false);
 
 const producto = productos.find(
   (p) => p._id === realId
@@ -162,7 +165,9 @@ const handleComprar = async () => {
 
     if (user?.uid === producto.vendedor?.uid) {
 
-        alert("No puedes comprar tus propios productos.");
+        alert(
+            "No puedes comprar tus propios productos."
+        );
 
         return;
 
@@ -187,22 +192,34 @@ const handleComprar = async () => {
 
         };
 
-        await crearPedidoService(
-            pedido,
-            token
-        );
+        const resultado =
+            await crearPedidoService(
+                pedido,
+                token
+            );
 
-        alert("Pedido creado correctamente");
+        setShowConfirmBuy(false);
+
+        navigate(
+            `/pagar-pedido/${resultado._id}`
+        );
 
     } catch (error) {
 
-        console.error(error);
+        console.error(
+            "Error creando pedido:",
+            error
+        );
 
-        alert("Error creando pedido");
+        alert(
+            error.response?.data?.message ||
+            "Error creando pedido"
+        );
 
     }
 
 };
+
 
   return (
     <>
@@ -283,6 +300,94 @@ const handleComprar = async () => {
   </script>
 
 </Helmet>
+
+
+{showConfirmBuy && (
+
+    <div className="confirm-buy-overlay">
+
+        <div
+            className="confirm-buy-box"
+            onClick={(e) =>
+                e.stopPropagation()
+            }
+        >
+
+            <h2>
+                🛒 Confirmar compra
+            </h2>
+
+            <p>
+                Estás por comprar:
+            </p>
+
+            <h3>
+                {producto.nombre}
+            </h3>
+
+            <p>
+                Precio:
+                {" "}
+                <strong>
+                    ${producto.precio}
+                </strong>
+            </p>
+
+            <p>
+
+                Si confirmás,
+                se creará el pedido y
+                serás redirigido al pago.
+
+            </p>
+
+            <small>
+
+                🔒 Tus datos personales permanecerán
+                protegidos y el pedido quedará pendiente
+                hasta verificar el pago.
+
+            </small>
+
+
+            <div className="confirm-actions">
+
+                <button
+
+                    className="cancel-btn"
+
+                    onClick={() =>
+                        setShowConfirmBuy(false)
+                    }
+
+                >
+
+                    Cancelar
+
+                </button>
+
+
+                <button
+
+                    className="buy-btn"
+
+                    onClick={handleComprar}
+
+                >
+
+                    💳 Confirmar y pagar
+
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+
+)}
+
+
 
       <div className="product-detail">
 
@@ -369,11 +474,13 @@ className="seller-profile-btn"
         {user?.uid !== producto.vendedor?.uid ? (
 
 <button
-className="buy-sypsy-btn"
-onClick={handleComprar}
+    className="buy-sypsy-btn"
+    onClick={() =>
+        setShowConfirmBuy(true)
+    }
 >
 
-🛒 Comprar ahora
+    🛒 Comprar ahora
 
 </button>
 

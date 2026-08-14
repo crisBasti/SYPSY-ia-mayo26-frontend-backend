@@ -309,11 +309,50 @@ export const obtenerPedidos = async (req, res) => {
 
 // Obtener un pedido por ID
 export const obtenerPedidoPorId = async (req, res) => {
+
   try {
 
+    const pedido = await Order.findById(
+      req.params.id
+    ).populate("producto");
+
+    if (!pedido) {
+
+      return res.status(404).json({
+
+        message: "Pedido no encontrado"
+
+      });
+
+    }
+
+    if (
+      pedido.comprador.uid !==
+      req.user.uid
+    ) {
+
+      return res.status(403).json({
+
+        message: "No autorizado"
+
+      });
+
+    }
+
+    res.json(pedido);
+
   } catch (error) {
-    res.status(500).json({ message: error.message });
+
+    console.error(error);
+
+    res.status(500).json({
+
+      message: error.message
+
+    });
+
   }
+
 };
 
 // Obtener mis compras

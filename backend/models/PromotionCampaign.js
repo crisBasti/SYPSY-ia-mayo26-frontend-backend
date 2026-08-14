@@ -93,5 +93,5 @@ const promotionCampaignSchema = new mongoose.Schema(
 
 export default mongoose.model(
     "PromotionCampaign",
-    promotionCampaignSchema
+    promotionCampaignSchema 
 );

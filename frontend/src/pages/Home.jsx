@@ -1,7 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { ProductsContext } from "../context/ProductsContext";
 import SellerBadge from "../components/SellerBadge";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
 import { slugify } from "../utils/slugify";
 import AdvertisementCarousel from "../components/AdvertisementCarousel";
@@ -21,6 +21,8 @@ function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
 
   const { user } = useAuth();
+
+  const navigate = useNavigate();
 
   const location = useLocation();
   
@@ -57,68 +59,64 @@ useEffect(() => {
   const [imgIndex, setImgIndex] = useState({});
   const [advertisements, setAdvertisements] = useState([]);
 
+
 const handleComprar = async (product) => {
 
-  if(user?.uid === product.vendedor?.uid){
+    if (user?.uid === product.vendedor?.uid) {
 
-    alert("No puedes comprar tus propios productos.");
+        alert(
+            "No puedes comprar tus propios productos."
+        );
 
-    return;
+        return;
 
-}
+    }
 
-  try {
+    try {
 
-    const token =
-      await auth.currentUser.getIdToken();
+        const token =
+            await auth.currentUser.getIdToken();
 
+        const pedido = {
 
-    const pedido = {
+            vendedor: product.vendedor,
 
-      vendedor: product.vendedor,
+            producto: product._id,
 
-      producto: product._id,
+            precio: product.precio,
 
-      precio: product.precio,
+            cantidad: 1,
 
-      cantidad: 1,
+            costoEnvio: 0
 
-      costoEnvio: 0
+        };
 
-    };
+        const resultado =
+            await crearPedidoService(
+                pedido,
+                token
+            );
 
+        setShowConfirmBuy(false);
+        setProductToBuy(null);
 
-    const resultado =
-      await crearPedidoService(
-        pedido,
-        token
-      );
+        navigate(
+            `/pagar-pedido/${resultado._id}`
+        );
 
+    } catch (error) {
 
-    console.log(
-      "PEDIDO CREADO:",
-      resultado
-    );
+        console.error(
+            "Error creando pedido:",
+            error
+        );
 
+        alert(
+            error.response?.data?.message ||
+            "Error creando pedido"
+        );
 
-    alert(
-      "Pedido creado correctamente"
-    );
-
-
-  } catch (error) {
-
-    console.error(
-      "Error creando pedido:",
-      error
-    );
-
-
-    alert(
-      "Error creando pedido"
-    );
-
-  }
+    }
 
 };
 
@@ -416,41 +414,41 @@ return (
               )}
 
 
-              {/* VER PRODUCTO */}
-              <Link
-                to={`/producto/${slugify(product.nombre)}-${product._id}`}
-                className="view-btn"
-                onClick={() => registrarClick(product._id)}
-              >
-              Ver producto
-              </Link>
+              {/* ACCIONES DEL PRODUCTO */}
+<div className="product-actions">
 
-              {user?.uid !== product.vendedor?.uid ? (
+  <Link
+    to={`/producto/${slugify(product.nombre)}-${product._id}`}
+    className="view-btn"
+    onClick={() => registrarClick(product._id)}
+  >
+    Ver producto
+  </Link>
 
-                <button
-                  className="buy-btn"
-                  onClick={() => {
-                    setProductToBuy(product);
-                    setShowConfirmBuy(true);
-                  }}
-                >
-                  🛒 Comprar ahora
-                </button>
+  {user?.uid !== product.vendedor?.uid ? (
 
-              ) : (
+    <button
+      className="buy-btn"
+      onClick={() => {
+        setProductToBuy(product);
+        setShowConfirmBuy(true);
+      }}
+    >
+      🛒 Comprar ahora
+    </button>
 
-                <button
-                  className="buy-btn"
-                  disabled
-                   style={{
-                    background:"#9ca3af",
-                      cursor:"not-allowed"
-                  }}
-                >
-                  📦 Es tu publicación
-                </button>
+  ) : (
 
-              )}
+    <button
+      className="buy-btn"
+      disabled
+    >
+      📦 Es tu publicación
+    </button>
+
+  )}
+
+</div>
 
             </div>
           </div>
@@ -525,8 +523,7 @@ return (
       )}
 
 
-      {
-showConfirmBuy && productToBuy && (
+      {showConfirmBuy && productToBuy && (
 
 <div className="confirm-buy-overlay">
 
@@ -595,22 +592,14 @@ showConfirmBuy && productToBuy && (
             </button>
 
             <button
-
-                className="buy-btn"
-
-                onClick={async()=>{
-
-                    await handleComprar(productToBuy);
-
-                    setShowConfirmBuy(false);
-
-                    setProductToBuy(null);
-
-                }}
+              className="buy-btn"
+              onClick={() =>
+                handleComprar(productToBuy)
+              }
 
             >
 
-                Confirmar compra
+              💳 Confirmar y pagar
 
             </button>
 

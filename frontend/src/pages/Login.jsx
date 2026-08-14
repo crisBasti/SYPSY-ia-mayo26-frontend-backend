@@ -1,9 +1,13 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../firebase";
 import "../styles/auth.css";
 
 function Login() {
+  
+  const navigate = useNavigate();
+
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -36,7 +40,7 @@ const handleLogin = async (e) => {
       return;
     }
 
-    alert("Sesión iniciada");
+    navigate("/");
 
   } catch (error) {
 

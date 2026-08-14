@@ -21,6 +21,7 @@ import RoleRoute from "./components/RoleRoute";
 import ProductFormSeller from "./components/seller/ProductFormSeller";
 import Payments from "./pages/admin/Payments";
 import MonetizationCenter from "./pages/MonetizationCenter";
+import OrderPayment from "./pages/OrderPayment";
 
 
 function App() {
@@ -65,6 +66,15 @@ function App() {
           <Route
             path="/producto/:id"
             element={<ProductDetail />}
+          />
+
+          <Route
+            path="/pagar-pedido/:id"
+            element={
+              <ProtectedRoute>
+                <OrderPayment />
+              </ProtectedRoute>
+            }
           />
 
           <Route

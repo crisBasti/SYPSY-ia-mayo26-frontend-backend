@@ -467,6 +467,11 @@ VIEW BUTTON
 
 .view-btn {
 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+
   width: 100%;
 
   border: none;
@@ -502,6 +507,25 @@ VIEW BUTTON
   box-shadow:
     0 10px 25px
     rgba(37,99,235,0.35);
+}
+
+/* =========================
+   ACCIONES DEL PRODUCTO
+========================= */
+
+.product-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.product-actions .view-btn,
+.product-actions .buy-btn {
+  width: 100%;
+  min-height: 46px;
+  box-sizing: border-box;
+  margin: 0;
 }
 
 .modal-overlay {
