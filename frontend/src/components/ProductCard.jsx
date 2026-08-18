@@ -5,6 +5,8 @@ import { Link } from "react-router-dom";
 import { useLocation } from "../context/LocationContext";
 import calcularDistancia from "../utils/calcularDistancia";
 import generarMensajeVenta from "../utils/generarMensajeVenta";
+import FavoriteButton from "./FavoriteButton";
+import { slugify } from "../utils/slugify";
 
 function ProductCard({
   product,
@@ -13,318 +15,331 @@ function ProductCard({
   editingId,
   editForm,
   setEditForm,
-  updateProduct
+  updateProduct,
+  onImpression,
+  onClick
 }) {
 
-const [currentImage, setCurrentImage] =
-  useState(0);
+  const [currentImage, setCurrentImage] = useState(0);
 
-const images =
-  product.images?.length > 0
-    ? product.images
-    : [product.image];
+  const location = useLocation();
 
+  const images =
+    product.images?.length > 0
+      ? product.images
+      : product.image
+        ? [product.image]
+        : [];
 
-const modoVendedor =
+  const modoVendedor =
+    deleteProduct &&
+    startEdit &&
+    updateProduct;
 
-deleteProduct &&
-startEdit &&
-updateProduct;
-
-
-const location = useLocation();
-
-const distancia = calcularDistancia(
-
+  const distancia = calcularDistancia(
     location?.lat,
-
     location?.lng,
-
     product?.ubicacion?.lat,
-
     product?.ubicacion?.lng
+  );
 
-);
-
-
-const mensajes = generarMensajeVenta(
-
+  const mensajes = generarMensajeVenta(
     product,
-
     distancia
+  );
 
-);
+  const productUrl =
+    `/producto/${slugify(product.nombre)}-${product._id}`;
+
+  const handleCardClick = () => {
+
+    if (onClick) {
+      onClick(product);
+    }
+
+  };
 
   return (
 
-    <div className="product-card">
+    <div
+      className="product-card"
+      onClick={handleCardClick}
+    >
 
       <Link
-        to={`/producto/${product._id}`}
+        to={productUrl}
         className="product-carousel"
+        onClick={() => {
+
+          if (onImpression) {
+            onImpression(product._id);
+          }
+
+        }}
       >
+
+        {/* =========================
+            BADGES
+        ========================= */}
 
         <div className="card-top-badges">
 
+          {product.nivelPromocion === 3 && (
+            <span className="badge-premium">
+              👑 Premium
+            </span>
+          )}
 
-{
-product.nivelPromocion === 3 && (
+          {product.nivelPromocion === 2 && (
+            <span className="badge-featured">
+              🚀 Destacado
+            </span>
+          )}
 
-<span className="badge-premium">
+          {product.nivelPromocion === 1 && (
+            <span className="badge-promo">
+              ⭐ Promoción
+            </span>
+          )}
 
-👑 Premium
+          {product.createdAt &&
+            (new Date() - new Date(product.createdAt)) <
+            1000 * 60 * 60 * 24 * 7 && (
 
-</span>
+              <span className="badge-new">
+                Nuevo
+              </span>
 
-)
-}
+            )}
+
+        </div>
+
+        {/* =========================
+            FAVORITO
+        ========================= */}
+
+        <FavoriteButton
+          productId={product._id}
+        />
+
+        {/* =========================
+            IMAGEN
+        ========================= */}
+
+        <div className="product-card-image">
+
+          {images.length > 0 ? (
+
+            <img
+              src={images[currentImage]}
+              alt={product.nombre}
+              className="product-image"
+            />
+
+          ) : (
+
+            <div className="product-image-placeholder">
+              Sin imagen
+            </div>
+
+          )}
+
+          {images.length > 1 && (
+
+            <>
+
+              <button
+                type="button"
+                className="carousel-btn left"
+                onClick={(e) => {
+
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  setCurrentImage(
+                    currentImage === 0
+                      ? images.length - 1
+                      : currentImage - 1
+                  );
+
+                }}
+              >
+                ‹
+              </button>
+
+              <button
+                type="button"
+                className="carousel-btn right"
+                onClick={(e) => {
+
+                  e.preventDefault();
+                  e.stopPropagation();
+
+                  setCurrentImage(
+                    currentImage === images.length - 1
+                      ? 0
+                      : currentImage + 1
+                  );
+
+                }}
+              >
+                ›
+              </button>
+
+            </>
+
+          )}
+
+        </div>
+
+        {/* =========================
+            PRECIO
+        ========================= */}
+
+        <div className="product-card-price">
+
+          <span className="price">
+            ${product.precio}
+          </span>
+
+        </div>
+
+      </Link>
 
 
-{
-product.nivelPromocion === 2 && (
+      {/* ==================================================
+          INFORMACIÓN COMPLETA
+          SOLO PARA MODO VENDEDOR
+          ================================================== */}
 
-<span className="badge-featured">
+      {modoVendedor && (
 
-🚀 Destacado
+        <div className="product-info">
 
-</span>
-
-)
-
-}
-
-
-{
-product.nivelPromocion === 1 && (
-
-<span className="badge-promo">
-
-⭐ Promoción
-
-</span>
-
-)
-
-}
-
-
-{
-product.createdAt &&
-(new Date() - new Date(product.createdAt))
-<
-1000 * 60 * 60 * 24 * 7
-&&
-
-(
-
-<span className="badge-new">
-
-Nuevo
-
-</span>
-
-)
-
-}
-
-
-</div>
-
-        <button
-          type="button"
-          className="favorite-btn"
-        >
-
-          🤍
-
-        </button>
-
-      <img
-        src={images[currentImage]}
-        alt={product.nombre}
-        className="product-image"
-      />
-
-  {images.length > 1 && (
-    <>
-      <button
-        type="button"
-        className="carousel-btn left"
-        onClick={(e)=>{
-          e.preventDefault();
-          e.stopPropagation();
-
-          setCurrentImage(
-            currentImage===0
-            ? images.length-1
-            : currentImage-1
-          );
-        }}
-      >
-        ‹
-      </button>
-
-      <button
-        type="button"
-        className="carousel-btn right"
-        onClick={(e)=>{
-          e.preventDefault();
-          e.stopPropagation();
-
-          setCurrentImage(
-            currentImage===images.length-1
-            ? 0
-            : currentImage+1
-          );
-        }}
-      >
-        ›
-      </button>
-
-    </>
-  )}
-
-</Link>
-
-      <div className="product-info">
-
-        <Link
-          to={`/producto/${product._id}`}
-          className="product-title-link"
-        >
+          <Link
+            to={productUrl}
+            className="product-title-link"
+          >
 
             <h2 className="product-title">
               {product.nombre}
             </h2>
 
-        </Link>
+          </Link>
 
-        <p className="product-description">
-          {product.descripcion}
-        </p>
+          <p className="product-description">
+            {product.descripcion}
+          </p>
 
-        <p className="price">
-          ${product.precio}
-        </p>
+          <div className="selling-messages">
 
-        <div className="selling-messages">
+            {mensajes.map((m, index) => (
 
-    {mensajes.map((m,index)=>(
+              <div
+                key={index}
+                className={`selling-pill ${m.tipo}`}
+              >
 
-        <div
+                {m.icono} {m.texto}
 
-            key={index}
+              </div>
 
-            className={`selling-pill ${m.tipo}`}
+            ))}
 
-        >
+          </div>
 
-            {m.icono} {m.texto}
+          {distancia && (
 
-        </div>
+            <div className="product-distance">
+              📍 A {distancia} km de vos
+            </div>
 
-    ))}
+          )}
 
-</div>
+          {distancia && distancia <= 5 && (
 
-        {distancia && (
+            <div className="delivery-today">
+              ⚡ Puede llegar hoy
+            </div>
 
-<div className="product-distance">
+          )}
 
-📍 A {distancia} km de vos
+          <div className="product-status">
 
-</div>
+            <span className="status-dot"></span>
 
-)}
+            Disponible
 
+          </div>
 
-{
-distancia &&
-distancia <= 5 &&
+          <p className="product-category">
+            {product.categoria}
+          </p>
 
-(
+          <SellerBadge
+            vendedor={product.vendedor}
+          />
 
-<div className="delivery-today">
+          {product.vendedor?.ciudad && (
 
-⚡ Puede llegar hoy
+            <p className="seller-location">
+              📍 Vendedor en {product.vendedor.ciudad}
+            </p>
 
-</div>
+          )}
 
-)
+          <div className="product-buttons">
 
-}
+            <button
+              className="delete-btn"
+              onClick={(e) => {
 
-        <div className="product-status">
+                e.preventDefault();
+                e.stopPropagation();
 
-          <span className="status-dot"></span>
+                deleteProduct(product._id);
 
-             Disponible
+              }}
+            >
+              Eliminar
+            </button>
 
-        </div>
+            <button
+              className="edit-btn"
+              onClick={(e) => {
 
-        <p className="product-category">
-          {product.categoria}
-        </p>
+                e.preventDefault();
+                e.stopPropagation();
 
-        <SellerBadge vendedor={product.vendedor} />
+                startEdit(product);
 
-        {
-product.vendedor?.ciudad && (
+              }}
+            >
+              Editar
+            </button>
 
-<p className="seller-location">
+            <Link
+              to={productUrl}
+              className="details-btn"
+              onClick={() => {
 
-📍 Vendedor en {product.vendedor.ciudad}
+                if (onImpression) {
+                  onImpression(product._id);
+                }
 
-</p>
+              }}
+            >
+              Ver producto
+            </Link>
 
-)
+          </div>
 
-}
+          {editingId === product._id && (
 
-        <div className="product-buttons">
-
-{modoVendedor && (
-
-<>
-
-<button
-className="delete-btn"
-onClick={()=>deleteProduct(product._id)}
->
-
-Eliminar
-
-</button>
-
-<button
-className="edit-btn"
-onClick={()=>startEdit(product)}
->
-
-Editar
-
-</button>
-
-</>
-
-)}
-
-<Link
-to={`/producto/${product._id}`}
-className="details-btn"
->
-
-Ver producto
-
-</Link>
-
-</div>
-
-        {
-          modoVendedor &&
-          editingId === product._id && (
-
-            <div className="edit-box">
+            <div
+              className="edit-box"
+              onClick={(e) => e.stopPropagation()}
+            >
 
               <input
                 className="edit-input"
@@ -345,8 +360,7 @@ Ver producto
                 onChange={(e) =>
                   setEditForm({
                     ...editForm,
-                    descripcion:
-                      e.target.value
+                    descripcion: e.target.value
                   })
                 }
               />
@@ -370,8 +384,7 @@ Ver producto
                 onChange={(e) =>
                   setEditForm({
                     ...editForm,
-                    categoria:
-                      e.target.value
+                    categoria: e.target.value
                   })
                 }
               />
@@ -384,13 +397,17 @@ Ver producto
               </button>
 
             </div>
-          )
-        }
 
-      </div>
+          )}
+
+        </div>
+
+      )}
 
     </div>
+
   );
+
 }
 
 export default ProductCard;

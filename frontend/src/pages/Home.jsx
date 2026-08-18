@@ -1,9 +1,7 @@
 import { useContext, useState, useEffect } from "react";
 import { ProductsContext } from "../context/ProductsContext";
-import SellerBadge from "../components/SellerBadge";
 import { Link, useNavigate } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import { slugify } from "../utils/slugify";
 import AdvertisementCarousel from "../components/AdvertisementCarousel";
 import { getAdvertisementsService } from "../services/advertisementService";
 import { useAuth } from "../context/AuthContext";
@@ -12,10 +10,17 @@ import { crearPedidoService } from "../services/orderService";
 import { auth } from "../firebase";
 import { useLocation } from "../context/LocationContext";
 import calcularDistancia from "../utils/calcularDistancia";
+import ProductCard from "../components/ProductCard";
+
+/*
+import SellerBadge from "../components/SellerBadge";
 import TrustBadges from "../components/TrustBadges";
+import { slugify } from "../utils/slugify";
 import getOpportunityBadge from "../utils/getOpportunityBadge";
 import getSmartBadges from "../utils/getSmartBadges";
-import getPersuasionBadges from "../utils/persuasionEngine";
+import getPersuasionBadges from "../utils/persuasionEngine"; 
+*/
+
 
 function Home({ search }) {
   const { productos, fetchProducts } = useContext(ProductsContext);
@@ -50,13 +55,13 @@ useEffect(() => {
 
 }, []);
 
-  
+
+/* const [selectedProduct, setSelectedProduct] = useState(null);
+const [imgIndex, setImgIndex] = useState({}); */
 
   const [categoriaActiva, setCategoriaActiva] = useState("Todos");
-  const [selectedProduct, setSelectedProduct] = useState(null);
   const [showConfirmBuy, setShowConfirmBuy] = useState(false);
   const [productToBuy, setProductToBuy] = useState(null);
-  const [imgIndex, setImgIndex] = useState({});
   const [advertisements, setAdvertisements] = useState([]);
 
 
@@ -120,6 +125,7 @@ const handleComprar = async (product) => {
 
 };
 
+/*
   const nextImage = (productId, total) => {
   setImgIndex((prev) => ({
     ...prev,
@@ -135,6 +141,8 @@ const prevImage = (productId, total) => {
       ((prev[productId] || 0) - 1 + total) % total
   }));
 };
+
+*/
 
   // =========================
   // CATEGORÍAS
@@ -267,194 +275,24 @@ const prevImage = (productId, total) => {
 
       />
 
-      {/* GRID */}
-      <div className="products-grid">
+      {/* =========================
+    GRID DE PRODUCTOS
+========================= */}
 
-        {filteredProducts.map((product) => {
+<div className="products-grid">
 
-          const distancia = calcularDistancia(
-            location?.lat,
-            location?.lng,
-            product?.ubicacion?.lat,
-            product?.ubicacion?.lng
-          );
+  {filteredProducts.map((product) => (
 
-          const oportunidad = getOpportunityBadge({
-            ...product,
-              distancia
-          });
+    <ProductCard
+      key={product._id}
+      product={product}
+      onImpression={registrarImpresion}
+      onClick={() => registrarClick(product._id)}
+    />
 
-          const smartBadges = getSmartBadges({
-            product,
-            distancia
-          });
-
-          const persuasionBadges = getPersuasionBadges(
-            product,
-            location
-          );
-
-return (
-          <div
-            key={product._id}
-            className="product-card"
-            ref={() => registrarImpresion(product._id)}
-          >
-
-          {product.promocionado && (
-
-            <div className="promotion-badge">
-
-              {product.nivelPromocion === 3
-                ? "👑 PREMIUM"
-                : product.nivelPromocion === 2
-                ? "🚀 DESTACADO"
-                : "⭐ PROMOCIONADO"}
-
-            </div>
-
-           )}
-
-            {/* IMAGEN */}
-            <div className="card-image">
-
-  {/* FLECHA IZQUIERDA */}
-  {product.images?.length > 1 && (
-    <button
-      className="carousel-btn left"
-      onClick={() =>
-        prevImage(
-          product._id,
-          product.images.length
-        )
-      }
-    >
-      ◀
-    </button>
-  )}
-
-  {/* IMAGEN */}
-  <img
-    src={
-      product.images?.[
-        imgIndex[product._id] || 0
-      ]
-    }
-    alt={product.nombre}
-  />
-
-  {/* FLECHA DERECHA */}
-  {product.images?.length > 1 && (
-    <button
-      className="carousel-btn right"
-      onClick={() =>
-        nextImage(
-          product._id,
-          product.images.length
-        )
-      }
-    >
-      ▶
-    </button>
-  )}
+  ))}
 
 </div>
-
-<span className="seller-name">
-  👤 {
-    product.vendedor?.name ||
-    product.vendedor?.email?.split("@")[0] ||
-    "Usuario"
-  }
-</span>
-
-<span className="seller-rating">
-  ⭐ Vendedor activo
-</span>
-
-            {/* INFO */}
-            <div className="product-info">
-
-              {/* 🔥 SELLER LINK CORRECTO */}
-              <SellerBadge vendedor={product.vendedor} />
-
-              <span className="category-badge">
-                {product.categoria}
-              </span>
-
-              <h3>{product.nombre}</h3>
-
-              <p>{product.descripcion}</p>
-
-              <span className="price">
-                ${product.precio}
-              </span>
-
-              <TrustBadges product={product} />
-
-              {smartBadges.length > 0 && (
-
-                <div className="smart-badges">
-
-                  {persuasionBadges.map((badge, index) => (
-
-                    <span
-                      key={index}
-                      className={`smart-badge ${badge.color}`}
-                    >
-
-                    {badge.text}
-
-                    </span>
-
-                  ))}
-
-                </div>
-
-              )}
-
-
-              {/* ACCIONES DEL PRODUCTO */}
-<div className="product-actions">
-
-  <Link
-    to={`/producto/${slugify(product.nombre)}-${product._id}`}
-    className="view-btn"
-    onClick={() => registrarClick(product._id)}
-  >
-    Ver producto
-  </Link>
-
-  {user?.uid !== product.vendedor?.uid ? (
-
-    <button
-      className="buy-btn"
-      onClick={() => {
-        setProductToBuy(product);
-        setShowConfirmBuy(true);
-      }}
-    >
-      🛒 Comprar ahora
-    </button>
-
-  ) : (
-
-    <button
-      className="buy-btn"
-      disabled
-    >
-      📦 Es tu publicación
-    </button>
-
-  )}
-
-</div>
-
-            </div>
-          </div>
-        );
-        })}
-      </div>
 
       <AdvertisementCarousel
 
@@ -463,65 +301,6 @@ return (
         advertisements={advertisements}
 
       />
-
-      {/* MODAL */}
-      {selectedProduct && (
-        <div
-          className="modal-overlay"
-          onClick={() => setSelectedProduct(null)}
-        >
-          <div
-            className="modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="modal-carousel">
-
-  {selectedProduct.images?.length > 1 && (
-    <button
-      className="carousel-btn left"
-      onClick={() =>
-        prevImage(
-          "modal",
-          selectedProduct.images.length
-        )
-      }
-    >
-      ◀
-    </button>
-  )}
-
-  <img
-    src={
-      selectedProduct.images?.[
-        imgIndex["modal"] || 0
-      ]
-    }
-    alt={selectedProduct.nombre}
-  />
-
-  {selectedProduct.images?.length > 1 && (
-    <button
-      className="carousel-btn right"
-      onClick={() =>
-        nextImage(
-          "modal",
-          selectedProduct.images.length
-        )
-      }
-    >
-      ▶
-    </button>
-  )}
-
-</div>
-
-            <h2>{selectedProduct.nombre}</h2>
-            <p>{selectedProduct.descripcion}</p>
-            <span>${selectedProduct.precio}</span>
-          </div>
-        </div>
-      )}
-
 
       {showConfirmBuy && productToBuy && (
 

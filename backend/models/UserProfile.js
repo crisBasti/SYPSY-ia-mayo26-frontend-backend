@@ -186,6 +186,13 @@ trustScore:{
 
     },
 
+    favoritos: [
+    {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Product"
+    }
+],
+
     datosBancarios:{
 
     alias:{

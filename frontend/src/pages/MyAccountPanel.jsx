@@ -2,12 +2,11 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 
 import MyAccountSidebar from "../components/MyAccountSidebar";
-import Admin from "./Admin";
 import MyOrders from "./MyOrders";
 import MySales from "./MySales";
-import MyProducts from "./MyProducts";
 import SellerPanel from "./SellerPanel";
 import MyAccount from "./MyAccount";
+import Favorites from "./Favorites";
 import Dashboard from "./Dashboard";
 
 
@@ -15,98 +14,80 @@ function MyAccountPanel(){
 
     const [searchParams] = useSearchParams();
 
-const [section, setSection] = useState(
+    const [section, setSection] = useState(
+        searchParams.get("section") || "home"
+    );
 
-    searchParams.get("section") || "dashboard"
 
-);
+    useEffect(() => {
 
-useEffect(() => {
+        const currentSection =
+            searchParams.get("section");
 
-    const currentSection =
+        if(currentSection){
 
-        searchParams.get("section");
+            setSection(currentSection);
 
-    if(currentSection){
+        }
 
-        setSection(currentSection);
+    }, [searchParams]);
 
-    }
-
-}, [searchParams]);
 
     return(
 
         <div className="admin-layout">
 
             <MyAccountSidebar
-
                 section={section}
-
                 setSection={setSection}
-
             />
+
 
             <main className="admin-content">
 
-                {
 
-                    section==="dashboard" &&
+                 {
+                    section === "home" &&
 
                     <Dashboard />
 
                 }
 
-                {
-                  ["publish", "products", "monetization"].includes(section) &&
 
-                  <SellerPanel section={section} />
+                {
+                    ["publish", "products", "monetization"].includes(section) &&
+
+                    <SellerPanel section={section} />
                 }
 
+
                 {
-                   section==="orders" &&
+                    section === "orders" &&
 
-                   <MyOrders />
-
+                    <MyOrders />
                 }
 
+
                 {
-                   section==="sales" &&
+                    section === "sales" &&
 
-                   <MySales />
-
+                    <MySales />
                 }
 
+
                 {
+                    section === "favorites" &&
 
-                    section==="stats" &&
-
-                    <h2>
-
-                        📈 Estadísticas
-
-                    </h2>
-
+                    <Favorites />
                 }
 
-                {
-
-                    section==="favorites" &&
-
-                    <h2>
-
-                        ❤️ Favoritos
-
-                    </h2>
-
-                }
 
                 {
-                    section==="settings" &&
+                    section === "settings" &&
 
                     <MyAccount />
-
                 }
+
 
             </main>
 

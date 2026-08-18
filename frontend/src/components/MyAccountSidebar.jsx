@@ -18,9 +18,9 @@ function MyAccountSidebar({
 
             <button
 
-                className={section==="dashboard" ? "active" : ""}
+                className={section==="home" ? "active" : ""}
 
-                onClick={()=>setSection("dashboard")}
+                onClick={()=>setSection("home")}
 
             >
 
@@ -89,17 +89,6 @@ function MyAccountSidebar({
 
             </button>
 
-            <button
-
-                className={section==="stats" ? "active" : ""}
-
-                onClick={()=>setSection("stats")}
-
-            >
-
-                📈 Estadísticas
-
-            </button>
 
             <button
 
