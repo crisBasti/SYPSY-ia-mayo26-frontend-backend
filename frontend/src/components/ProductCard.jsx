@@ -193,16 +193,54 @@ function ProductCard({
         </div>
 
         {/* =========================
-            PRECIO
-        ========================= */}
+              INFORMACIÓN RÁPIDA
+            ========================= */}
 
-        <div className="product-card-price">
+<div className="product-card-meta">
 
-          <span className="price">
-            ${product.precio}
-          </span>
+  {distancia && (
 
-        </div>
+    <span className="product-meta-badge distance">
+      📍 A {distancia} km
+    </span>
+
+  )}
+
+  {distancia && distancia <= 5 && (
+
+    <span className="product-meta-badge delivery">
+      ⚡ Llega hoy
+    </span>
+
+  )}
+
+  {mensajes.slice(0, 2).map((m, index) => (
+
+    <span
+      key={index}
+      className={`product-meta-badge ${m.tipo}`}
+    >
+
+      {m.icono} {m.texto}
+
+    </span>
+
+  ))}
+
+</div>
+
+
+{/* =========================
+    PRECIO
+========================= */}
+
+<div className="product-card-price">
+
+  <span className="price">
+    ${product.precio}
+  </span>
+
+</div>
 
       </Link>
 
