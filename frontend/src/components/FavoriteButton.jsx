@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { auth } from "../firebase";
 import { useAuth } from "../context/AuthContext";
+import { FaHeart } from "react-icons/fa";
 
 import {
     agregarFavorito,
@@ -38,12 +39,10 @@ function FavoriteButton({ productId }) {
                     await obtenerFavoritos(token);
 
                 setFavorito(
-
                     favoritos.some(
                         producto =>
                             producto._id === productId
                     )
-
                 );
 
             } catch (error) {
@@ -57,7 +56,6 @@ function FavoriteButton({ productId }) {
 
         };
 
-
         cargarEstado();
 
     }, [user, productId]);
@@ -67,7 +65,6 @@ function FavoriteButton({ productId }) {
 
         e.preventDefault();
         e.stopPropagation();
-
 
         if (!user) {
 
@@ -79,9 +76,7 @@ function FavoriteButton({ productId }) {
 
         }
 
-
         if (loading) return;
-
 
         try {
 
@@ -89,7 +84,6 @@ function FavoriteButton({ productId }) {
 
             const token =
                 await auth.currentUser.getIdToken();
-
 
             if (favorito) {
 
@@ -134,32 +128,25 @@ function FavoriteButton({ productId }) {
     return (
 
         <button
-
             type="button"
-
             className={`favorite-btn ${
                 favorito ? "active" : ""
             }`}
-
             onClick={toggleFavorito}
-
             disabled={loading}
-
             title={
                 favorito
                     ? "Quitar de favoritos"
                     : "Agregar a favoritos"
             }
-
         >
 
-            {favorito ? "❤️" : "🤍"}
+            <FaHeart />
 
         </button>
 
     );
 
 }
-
 
 export default FavoriteButton;

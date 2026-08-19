@@ -7,6 +7,7 @@ import calcularDistancia from "../utils/calcularDistancia";
 import generarMensajeVenta from "../utils/generarMensajeVenta";
 import FavoriteButton from "./FavoriteButton";
 import { slugify } from "../utils/slugify";
+import generarUbicacionProducto from "../utils/generarUbicacionProducto";
 
 function ProductCard({
   product,
@@ -42,6 +43,11 @@ function ProductCard({
     product?.ubicacion?.lat,
     product?.ubicacion?.lng
   );
+
+  const ubicacionProducto = generarUbicacionProducto(
+    product,
+    distancia
+);
 
   const mensajes = generarMensajeVenta(
     product,
@@ -285,6 +291,17 @@ function ProductCard({
             ))}
 
           </div>
+
+
+          {ubicacionProducto && (
+
+            <div className="product-location">
+
+              📍 {ubicacionProducto}
+
+            </div>
+
+          )}
 
           {distancia && (
 

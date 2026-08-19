@@ -12,14 +12,7 @@ import { useLocation } from "../context/LocationContext";
 import calcularDistancia from "../utils/calcularDistancia";
 import ProductCard from "../components/ProductCard";
 
-/*
-import SellerBadge from "../components/SellerBadge";
-import TrustBadges from "../components/TrustBadges";
-import { slugify } from "../utils/slugify";
-import getOpportunityBadge from "../utils/getOpportunityBadge";
-import getSmartBadges from "../utils/getSmartBadges";
-import getPersuasionBadges from "../utils/persuasionEngine"; 
-*/
+
 
 
 function Home({ search }) {
@@ -205,6 +198,9 @@ const prevImage = (productId, total) => {
 
     );
 
+
+    
+
     if (distanciaA && distanciaB) {
 
         return distanciaA - distanciaB;
@@ -276,10 +272,10 @@ const prevImage = (productId, total) => {
       />
 
       {/* =========================
-    GRID DE PRODUCTOS
-========================= */}
+            GRID DE PRODUCTOS
+      ========================= */}
 
-<div className="products-grid">
+<div className="home-products-grid">
 
   {filteredProducts.map((product) => (
 
