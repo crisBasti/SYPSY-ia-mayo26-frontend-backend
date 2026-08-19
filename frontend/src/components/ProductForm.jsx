@@ -93,13 +93,13 @@ const handleSubmit = async (e) => {
   return (
     <form
       onSubmit={handleSubmit}
-      style={styles.form}
+      className="product-form"
     >
-      <h2 style={styles.title}>
+      <h2 className="product-form-title">
         Crear producto
       </h2>
       <input
-        style={styles.input}
+        className="product-form-input"
         type="text"
         name="nombre"
         placeholder="Nombre"
@@ -108,7 +108,7 @@ const handleSubmit = async (e) => {
       />
 
       <input
-        style={styles.input}
+        className="product-form-input"
         type="text"
         name="descripcion"
         placeholder="Descripción"
@@ -117,7 +117,7 @@ const handleSubmit = async (e) => {
       />
 
       <input
-        style={styles.input}
+        className="product-form-input"
         type="number"
         name="precio"
         placeholder="Precio"
@@ -126,11 +126,11 @@ const handleSubmit = async (e) => {
       />
 
       <select
-  style={styles.input}
-  name="categoria"
-  value={formData.categoria}
-  onChange={handleChange}
->
+        className="product-form-input"
+        name="categoria"
+        value={formData.categoria}
+        onChange={handleChange}
+      >
   <option value="">
     Seleccionar categoría
   </option>
@@ -187,7 +187,7 @@ const handleSubmit = async (e) => {
 </div>
       <button
         type="submit"
-        style={styles.button}
+        className="product-form-button"
       >
         Crear producto
       </button>

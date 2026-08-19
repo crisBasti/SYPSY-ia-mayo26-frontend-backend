@@ -2435,3 +2435,96 @@ transform:none;
     }
 
 }
+
+
+/* =========================
+   PRODUCT FORM
+========================= */
+
+.product-form {
+
+  display: flex;
+
+  flex-direction: column;
+
+  gap: 14px;
+
+  width: 100%;
+}
+
+.product-form-title {
+
+  color: white;
+
+  margin-bottom: 8px;
+}
+
+.product-form-input {
+
+  width: 100%;
+
+  box-sizing: border-box;
+
+  padding: 12px 14px;
+
+  border: 1px solid #334155;
+
+  border-radius: 10px;
+
+  background: #111827;
+
+  color: white;
+
+  font-size: 15px;
+
+  outline: none;
+}
+
+.product-form-input:focus {
+
+  border-color: #00bfff;
+
+  box-shadow:
+    0 0 0 2px
+    rgba(0,191,255,.15);
+}
+
+.product-form-input::placeholder {
+
+  color: #94a3b8;
+}
+
+.product-form-button {
+
+  width: 100%;
+
+  padding: 14px;
+
+  border: none;
+
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      90deg,
+      #00bfff,
+      #2563eb
+    );
+
+  color: white;
+
+  font-weight: 700;
+
+  cursor: pointer;
+
+  transition: .25s;
+}
+
+.product-form-button:hover {
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 25px
+    rgba(37,99,235,.3);
+}
