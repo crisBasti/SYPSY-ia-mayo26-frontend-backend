@@ -16,6 +16,7 @@ import {
   obtenerMisCompras,
   obtenerMisVentas,
   actualizarEstadoPedido,
+  actualizarTracking,
   cancelarPedido,
   confirmarRecepcion,
   validarCodigoEntrega,
@@ -48,6 +49,9 @@ router.post("/:id/confirmar", authFirebase, confirmarRecepcion);
 
 // Actualizar estado
 router.put("/:id", authFirebase, actualizarEstadoPedido);
+
+// Actualizar seguimiento
+router.put("/:id/tracking", authFirebase, actualizarTracking);
 
 // Cancelar pedido
 router.delete("/:id", authFirebase, cancelarPedido);

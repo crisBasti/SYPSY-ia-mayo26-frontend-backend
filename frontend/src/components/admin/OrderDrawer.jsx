@@ -1,5 +1,3 @@
-
-
 import OrderTimeline from "./OrderTimeline";
 import axios from "axios";
 import { auth } from "../../firebase";
@@ -13,39 +11,42 @@ import StarRating from "../StarRating";
 
 
 function OrderDrawer({
-
     pedido,
-
     onClose,
-
     onActualizarPedido
-
-
 }){
 
 const { user, profile } = useAuth();
-
 const [mostrarCodigo, setMostrarCodigo] = useState(false);
-
 const [comprobante, setComprobante] = useState(null);    
-
 const [codigoEntrega, setCodigoEntrega] = useState("");
-
 const [codigoValidado, setCodigoValidado] = useState(false);
-
 const [puntuacion, setPuntuacion] = useState(5);
-
 const [comentario, setComentario] = useState("");
-
 const [pedidoActual, setPedidoActual] = useState(pedido);
 
-const esComprador = user?.uid === pedidoActual?.comprador?.uid;
+const [transportista, setTransportista] = useState("");
+const [trackingNumber, setTrackingNumber] = useState("");
+const [guardandoTracking, setGuardandoTracking] = useState(false);
+const [editandoTracking, setEditandoTracking] = useState(false);
+const [tipoEnvio, setTipoEnvio] = useState("particular");
 
+const esComprador = user?.uid === pedidoActual?.comprador?.uid;
 const esVendedor = user?.uid === pedidoActual?.vendedor?.uid;
 
 
 useEffect(() => {
+
     setPedidoActual(pedido);
+
+    setTransportista(
+        pedido?.transportista || ""
+    );
+
+    setTrackingNumber(
+        pedido?.trackingNumber || ""
+    );
+
 }, [pedido]);
 
     if(!pedidoActual) return null;
@@ -370,6 +371,97 @@ const enviarReseña = async () => {
 };
 
 
+const guardarTracking = async () => {
+
+    if (!transportista.trim()) {
+
+        alert(
+            "Ingresá el nombre del transportista."
+        );
+
+        return;
+
+    }
+
+    if (!trackingNumber.trim()) {
+
+        alert(
+            "Ingresá el número de seguimiento."
+        );
+
+        return;
+
+    }
+
+    try {
+
+        setGuardandoTracking(true);
+
+        const token =
+            await auth.currentUser.getIdToken();
+
+        const response = await axios.put(
+
+            `${import.meta.env.VITE_API_URL}/api/orders/${pedidoActual._id}/tracking`,
+
+            {
+
+                transportista,
+
+                trackingNumber
+
+            },
+
+            {
+
+                headers: {
+
+                    Authorization:
+                    `Bearer ${token}`
+
+                }
+
+            }
+
+        );
+
+        setPedidoActual(response.data);
+
+          onActualizarPedido?.(
+            response.data
+          );
+
+          setEditandoTracking(false);
+
+          alert(
+            "Seguimiento actualizado correctamente."
+          );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        alert(
+
+            error.response?.data?.message ||
+
+            "No se pudo actualizar el seguimiento."
+
+        );
+
+    }
+
+    finally {
+
+        setGuardandoTracking(false);
+
+    }
+
+};
+
+
 return (
 
     <div className="drawer-overlay">
@@ -398,6 +490,215 @@ return (
                     aprobarPago={aprobarPago}
                     rechazarPago={rechazarPago}
                 />
+
+                <div className="drawer-card">
+
+    <div className="drawer-card-title">
+
+        🚚 Seguimiento del envío
+
+    </div>
+
+    <div className="drawer-card-content">
+
+        {esVendedor ? (
+
+            pedidoActual?.transportista &&
+            pedidoActual?.trackingNumber &&
+            !editandoTracking ? (
+
+                <>
+
+                    <div className="drawer-info-item">
+
+                        <strong>
+                            Transportista
+                        </strong>
+
+                        <span>
+                            {pedidoActual.transportista}
+                        </span>
+
+                    </div>
+
+                    <div className="drawer-info-item">
+
+                        <strong>
+                            Número de seguimiento
+                        </strong>
+
+                        <span className="tracking-number">
+
+                            {pedidoActual.trackingNumber}
+
+                        </span>
+
+                    </div>
+
+                    <p>
+
+                        🟢 Seguimiento registrado correctamente.
+
+                    </p>
+
+                    <button
+                        type="button"
+                        onClick={() => setEditandoTracking(true)}
+                    >
+
+                        ✏️ Modificar datos
+
+                    </button>
+
+                </>
+
+            ) : (
+
+                <>
+
+                    <label>
+                        Transportista
+                    </label>
+
+                    <input
+                        type="text"
+                        value={transportista}
+                        onChange={(e) =>
+                            setTransportista(e.target.value)
+                        }
+                        placeholder="Ej: Andreani, OCA, Correo Argentino..."
+                    />
+
+                    <label>
+                        Número de seguimiento
+                    </label>
+
+                    <input
+                        type="text"
+                        value={trackingNumber}
+                        onChange={(e) =>
+                            setTrackingNumber(e.target.value)
+                        }
+                        placeholder="Ingresá el número de seguimiento"
+                    />
+
+                    <button
+                        type="button"
+                        onClick={guardarTracking}
+                        disabled={guardandoTracking}
+                    >
+
+                        {guardandoTracking
+                            ? "Guardando..."
+                            : "💾 Guardar seguimiento"
+                        }
+
+                    </button>
+
+                    {editandoTracking && (
+
+                        <button
+                            type="button"
+                            onClick={() => {
+
+                                setTransportista(
+                                    pedidoActual?.transportista || ""
+                                );
+
+                                setTrackingNumber(
+                                    pedidoActual?.trackingNumber || ""
+                                );
+
+                                setEditandoTracking(false);
+
+                            }}
+                        >
+
+                            ↩️ Cancelar modificación
+
+                        </button>
+
+                    )}
+
+                </>
+
+            )
+
+        ) : (
+
+            pedidoActual?.transportista &&
+            pedidoActual?.trackingNumber ? (
+
+                <>
+
+                    <div className="drawer-info-item">
+
+                        <strong>
+                            Transportista
+                        </strong>
+
+                        <span>
+                            {pedidoActual.transportista}
+                        </span>
+
+                    </div>
+
+                    <div className="drawer-info-item">
+
+                        <strong>
+                            Número de seguimiento
+                        </strong>
+
+                        <span className="tracking-number">
+
+                            {pedidoActual.trackingNumber}
+
+                        </span>
+
+                    </div>
+
+                    <div className="tracking-status">
+
+                        🟢 Datos de seguimiento disponibles
+
+                    </div>
+
+                    <button
+                        type="button"
+                        disabled
+                        title="Se habilitará cuando exista una URL real del transportista."
+                    >
+
+                        🔗 Seguir envío
+
+                    </button>
+
+                    <small>
+
+                        El seguimiento externo estará disponible
+                        cuando el transportista proporcione un enlace
+                        válido para este envío.
+
+                    </small>
+
+                </>
+
+            ) : (
+
+                <p>
+
+                    📦 El vendedor todavía no
+                    cargó los datos de seguimiento.
+
+                </p>
+
+            )
+
+        )}
+
+    </div>
+
+</div>
 
                 {esVendedor && (
 

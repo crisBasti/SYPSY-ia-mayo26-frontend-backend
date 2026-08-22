@@ -2628,6 +2628,8 @@ background:#d1d5db;
 
     box-shadow:0 10px 25px rgba(0,0,0,.08);
 
+    color:rgb(0, 0, 0)
+
 }
 
 .payment-price{
@@ -2644,9 +2646,25 @@ background:#d1d5db;
 
 .payment-text{
 
-    color:#666;
+    color:#000000;
 
     line-height:1.5;
+
+}
+
+.payment-status{
+
+    background:#2664af;
+
+    color:#ffffff;
+
+    padding:8px 14px;
+
+    border-radius:999px;
+
+    font-size:13px;
+
+    font-weight:700;
 
 }
 

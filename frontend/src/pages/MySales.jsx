@@ -77,14 +77,24 @@ function MySales() {
             }
 
             <OrderDrawer
+              pedido={pedidoSeleccionado}
+              onClose={() => setPedidoSeleccionado(null)}
+              onActualizarPedido={(pedidoActualizado) => {
 
-                pedido={pedidoSeleccionado}
+                setPedidos((prev) =>
+                  prev.map((pedido) =>
+                    pedido._id === pedidoActualizado._id
+                      ? pedidoActualizado
+                      : pedido
+                  )
+                );
 
-                onClose={()=>setPedidoSeleccionado(null)}
+               setPedidoSeleccionado(pedidoActualizado);
 
+              }}
             />
 
-        </div>
+            </div>
 
     );
 

@@ -524,6 +524,148 @@ if (
 };
 
 
+// =====================================
+// ACTUALIZAR DATOS DE ENVÍO
+// =====================================
+
+export const actualizarTracking = async (req, res) => {
+
+    try {
+
+        const {
+            tipoEnvio,
+            transportista,
+            trackingNumber
+        } = req.body;
+
+        const pedido = await Order.findById(req.params.id);
+
+        if (!pedido) {
+
+            return res.status(404).json({
+                message: "Pedido no encontrado."
+            });
+
+        }
+
+        // Solo el vendedor propietario puede modificar
+        // los datos de envío
+        if (pedido.vendedor.uid !== req.user.uid) {
+
+            return res.status(403).json({
+                message:
+                    "Solo el vendedor puede actualizar los datos de envío."
+            });
+
+        }
+
+        // =====================================
+        // ENVÍO PARTICULAR
+        // =====================================
+
+        if (tipoEnvio === "particular") {
+
+            pedido.tipoEnvio = "particular";
+
+            pedido.transportista = "";
+
+            pedido.trackingNumber = "";
+
+            pedido.historial.push({
+
+                estado: pedido.estado,
+
+                fecha: new Date(),
+
+                descripcion:
+                    "Modalidad de envío configurada como entrega particular."
+
+            });
+
+        }
+
+        // =====================================
+        // ENVÍO CON TRANSPORTISTA
+        // =====================================
+
+        else if (tipoEnvio === "transportista") {
+
+            if (!transportista?.trim()) {
+
+                return res.status(400).json({
+
+                    message:
+                        "Debes indicar el transportista."
+
+                });
+
+            }
+
+            if (!trackingNumber?.trim()) {
+
+                return res.status(400).json({
+
+                    message:
+                        "Debes indicar el número de seguimiento."
+
+                });
+
+            }
+
+            pedido.tipoEnvio = "transportista";
+
+            pedido.transportista =
+                transportista.trim();
+
+            pedido.trackingNumber =
+                trackingNumber.trim();
+
+            pedido.historial.push({
+
+                estado: pedido.estado,
+
+                fecha: new Date(),
+
+                descripcion:
+                    `Seguimiento actualizado: ${transportista.trim()} - ${trackingNumber.trim()}`
+
+            });
+
+        }
+
+        else {
+
+            return res.status(400).json({
+
+                message:
+                    "Debes seleccionar una modalidad de envío."
+
+            });
+
+        }
+
+        await pedido.save();
+
+        res.json(pedido);
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        res.status(500).json({
+
+            message: error.message
+
+        });
+
+    }
+
+};
+
+
+
 const obtenerDescripcionEstado = (estado) => {
 
   const mapa = {

@@ -232,7 +232,18 @@ codigoValidado:{
 
 },
 
+tipoEnvio: {
+    type: String,
+    enum : ["transportista", "particular"],
+    default : "particular"
+},
+
 transportista: {
+    type: String,
+    default: ""
+},
+
+trackingNumber: {
     type: String,
     default: ""
 },

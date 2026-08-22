@@ -864,74 +864,156 @@ function ProductFormSeller({ addProduct }) {
 
                 <h3 style={styles.sectionTitle}>
 
-                    🚚 ¿Cómo puede recibirlo el comprador?
+    🚚 Opciones de entrega
 
-                </h3>
+</h3>
 
+<p style={styles.helpText}>
 
-                <p style={styles.helpText}>
+    Elegí cómo podrá recibir el producto el comprador.
+    Podés seleccionar una opción o ambas.
 
-                    Elegí una o ambas opciones disponibles.
+</p>
 
-                </p>
+<p style={styles.helpText}>
+
+    💡 <strong>
+        Importante:
+    </strong>{" "}
+
+    Elegir "Envío a domicilio" no significa que
+    debas utilizar un correo específico ni que
+    necesites obligatoriamente un número de
+    seguimiento.
+
+</p>
 
 
                 <div style={styles.deliveryGrid}>
 
+    {/* ==========================================
+        ENVÍO A DOMICILIO
+    ========================================== */}
 
-                    {/* ENVÍO */}
+    <button
+        type="button"
+        onClick={() =>
+            toggleModalidad("envio")
+        }
+        aria-pressed={envioSeleccionado}
+        style={{
+            ...styles.deliveryOption,
+            ...(envioSeleccionado
+                ? styles.deliverySelected
+                : {})
+        }}
+    >
 
-                    <button
-                        type="button"
-                        onClick={() =>
-                            toggleModalidad("envio")
-                        }
-                        
-                    >
+        <span style={styles.deliveryIcon}>
+            🚚
+        </span>
 
-                        <span>
-                            🚚
-                        </span>
+        <strong>
+            Envío a domicilio
+        </strong>
 
-                        <strong>
-                            Envío a domicilio
-                        </strong>
+        <small style={styles.deliveryDescription}>
 
-                        <small>
-                            El producto llega al domicilio
-                            del comprador.
-                        </small>
+            El vendedor envía el producto hasta
+            el domicilio indicado por el comprador.
 
-                    </button>
+        </small>
 
+        <small style={styles.deliveryExplanation}>
 
-                    {/* RETIRO */}
+            📌 Podés ofrecer envío gratis, cobrar
+            un precio fijo o permitir que SYPSY
+            calcule el costo según la distancia.
 
-                    <button
-                        type="button"
-                        onClick={() =>
-                            toggleModalidad("retiro")
-                        }
-                        
-                    >
+        </small>
 
-                        <span>
-                            📦
-                        </span>
+        <small style={styles.deliveryExplanation}>
 
-                        <strong>
-                            Retiro en persona
-                        </strong>
+            📦 El envío puede realizarse mediante
+            correo, transporte, mensajería o de
+            forma particular. No es obligatorio
+            contar con número de seguimiento.
 
-                        <small>
-                            El comprador retira el producto
-                            en el punto indicado por el vendedor.
-                        </small>
+        </small>
 
-                    </button>
+        {envioSeleccionado && (
+
+            <span style={styles.selectedBadge}>
+
+                ✓ Seleccionado
+
+            </span>
+
+        )}
+
+    </button>
 
 
-                </div>
+    {/* ==========================================
+        RETIRO EN PERSONA
+    ========================================== */}
+
+    <button
+        type="button"
+        onClick={() =>
+            toggleModalidad("retiro")
+        }
+        aria-pressed={retiroSeleccionado}
+        style={{
+            ...styles.deliveryOption,
+            ...(retiroSeleccionado
+                ? styles.deliverySelected
+                : {})
+        }}
+    >
+
+        <span style={styles.deliveryIcon}>
+            📦
+        </span>
+
+        <strong>
+            Retiro en persona
+        </strong>
+
+        <small style={styles.deliveryDescription}>
+
+            El comprador retira el producto
+            personalmente.
+
+        </small>
+
+        <small style={styles.deliveryExplanation}>
+
+            📍 El vendedor indicará el punto o zona
+            donde se realizará el retiro.
+
+        </small>
+
+        <small style={styles.deliveryExplanation}>
+
+            🤝 No se utiliza envío, transportista
+            ni número de seguimiento.
+
+        </small>
+
+        {retiroSeleccionado && (
+
+            <span style={styles.selectedBadge}>
+
+                ✓ Seleccionado
+
+            </span>
+
+        )}
+
+    </button>
+
+</div>
 
 
                 {/* ======================================
@@ -944,8 +1026,16 @@ function ProductFormSeller({ addProduct }) {
                         <div style={styles.subSection}>
 
                             <h4>
-                                🚚 Configuración del envío
+                              🚚 ¿Cómo querés cobrar el envío?
                             </h4>
+
+                              <p style={styles.helpText}>
+
+                                Elegí una de las siguientes alternativas
+                                para definir quién paga y cómo se calcula
+                                el costo del envío.
+
+                              </p>
 
 
                             <label style={styles.checkboxRow}>
@@ -968,6 +1058,18 @@ function ProductFormSeller({ addProduct }) {
                                 </span>
 
                             </label>
+
+                            {formData.logistica.envio.gratis && (
+
+                              <p style={styles.infoText}>
+
+                                🎁 Vos asumís el costo del envío.
+                                El comprador no pagará un importe adicional
+                                por recibir el producto.
+
+                              </p>
+
+                            )}
 
 
                             {
@@ -995,6 +1097,18 @@ function ProductFormSeller({ addProduct }) {
                                             </span>
 
                                         </label>
+
+                                        {formData.logistica.envio.costoCalculado && (
+
+                                          <p style={styles.infoText}>
+                                    
+                                            📍 El costo se calculará considerando
+                                            la distancia entre la ubicación del vendedor
+                                            y la dirección de entrega del comprador.
+                                    
+                                          </p>
+
+                                        )}
 
 
                                         {
@@ -1025,11 +1139,12 @@ function ProductFormSeller({ addProduct }) {
                                                     />
 
                                                     <small
-                                                        style={styles.helpText}
+                                                      style={styles.helpText}
                                                     >
 
-                                                        Este importe será cobrado
-                                                        por el envío.
+                                                      💰 Este será el importe que pagará el
+                                                      comprador por el envío, independientemente
+                                                      de la distancia.
 
                                                     </small>
 
@@ -1486,45 +1601,60 @@ const styles = {
 
     deliveryOption: {
 
-        border:
-            "2px solid var(--border)",
+    border:
+        "2px solid var(--border)",
 
-        background:
-            "var(--bg)",
+    background:
+        "var(--bg)",
 
-        borderRadius:
-            "12px",
+    borderRadius:
+        "12px",
 
-        padding:
-            "16px",
+    padding:
+        "18px",
 
-        display:
-            "flex",
+    display:
+        "flex",
 
-        flexDirection:
-            "column",
+    flexDirection:
+        "column",
 
-        gap:
-            "7px",
+    gap:
+        "9px",
 
-        cursor:
-            "pointer",
+    cursor:
+        "pointer",
 
-        textAlign:
-            "left"
+    textAlign:
+        "left",
 
-    },
+    transition:
+        "all 0.2s ease",
+
+    position:
+        "relative",
+
+    width:
+        "100%",
+
+    boxSizing:
+        "border-box"
+
+},
 
 
     deliverySelected: {
 
-        border:
-            "2px solid var(--accent)",
+    border:
+        "2px solid var(--accent)",
 
-        boxShadow:
-            "0 0 0 2px rgba(0,0,0,0.05)"
+    background:
+        "rgba(59,130,246,0.06)",
 
-    },
+    boxShadow:
+        "0 0 0 3px rgba(59,130,246,0.12)"
+
+},
 
 
     deliveryIcon: {
@@ -1533,6 +1663,60 @@ const styles = {
             "28px"
 
     },
+
+    deliveryDescription: {
+
+    fontSize:
+        "14px",
+
+    lineHeight:
+        "1.5",
+
+    color:
+        "var(--text)"
+
+},
+
+deliveryExplanation: {
+
+    fontSize:
+        "13px",
+
+    lineHeight:
+        "1.5",
+
+    color:
+        "#64748b"
+
+},
+
+selectedBadge: {
+
+    alignSelf:
+        "flex-start",
+
+    marginTop:
+        "4px",
+
+    padding:
+        "5px 9px",
+
+    borderRadius:
+        "999px",
+
+    background:
+        "var(--accent)",
+
+    color:
+        "white",
+
+    fontSize:
+        "12px",
+
+    fontWeight:
+        "700"
+
+},
 
 
     subSection: {
