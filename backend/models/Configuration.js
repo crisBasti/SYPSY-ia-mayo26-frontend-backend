@@ -17,7 +17,7 @@ const configurationSchema = new mongoose.Schema({
         default:8
     },
 
-    mercadoPago:{
+    mercadoPago: {
 
     alias:{
         type:String,
@@ -37,6 +37,49 @@ const configurationSchema = new mongoose.Schema({
     qr:{
         type:String,
         default:""
+    }
+
+},
+
+// ==========================================
+// CONFIGURACIÓN DE RECOMPENSAS RSPY
+// ==========================================
+
+recompensasRSPY: {
+
+    activa: {
+        type: Boolean,
+        default: false
+    },
+
+    compraFinalizada: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+
+    ventaFinalizada: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+
+    maximoPorOperacion: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+
+    maximoDiario: {
+        type: Number,
+        default: 0,
+        min: 0
+    },
+
+    maximoMensual: {
+        type: Number,
+        default: 0,
+        min: 0
     }
 
 }

@@ -132,6 +132,24 @@ function AdminSidebar({ section, setSection }) {
 
 </button>
 
+<button
+
+    className={
+        section === "rewards"
+            ? "activo"
+            : ""
+    }
+
+    onClick={() =>
+        setSection("rewards")
+    }
+
+>
+
+    🪙 Recompensas RSPY
+
+</button>
+
       <button
 
     className={section === "settings" ? "activo" : ""}

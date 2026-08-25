@@ -5,6 +5,7 @@ import { executeAction } from "../services/orderStateMachine.js";
 import Product from "../models/Product.js";
 import UserProfile from "../models/UserProfile.js";
 import Promotion from "../models/Promotion.js";
+import { aplicarReglaRSPY } from "../services/rewardRuleService.js";
 
 
 
@@ -842,6 +843,89 @@ pedido.historial.push({
 });
 
 await pedido.save();
+
+
+// =====================================
+// RECOMPENSA RSPY POR COMPRA
+// =====================================
+
+try {
+
+    await aplicarReglaRSPY({
+
+        uid:
+            pedido.comprador.uid,
+
+        evento:
+            "compra",
+
+        monto:
+            pedido.total,
+
+        referencia:
+            pedido.numeroPedido,
+
+        referenciaUnica:
+            `COMPRA-${pedido._id}`,
+
+        concepto:
+            `Recompensa RSPY por compra ${pedido.numeroPedido}`,
+
+        origen:
+            "compra",
+
+        usuarioOperacion: {
+
+            uid:
+                req.user.uid || "",
+
+            email:
+                req.user.email || "",
+
+            nombre:
+                req.user.name ||
+                req.user.nombre ||
+                ""
+
+        },
+
+        metadata: {
+
+            pedidoId:
+                pedido._id.toString(),
+
+            numeroPedido:
+                pedido.numeroPedido,
+
+            producto:
+                pedido.producto?.toString() || "",
+
+            vendedorUid:
+                pedido.vendedor.uid,
+
+            total:
+                pedido.total
+
+        },
+
+        pedidoFinalizado:
+            true,
+
+        pagoVerificado:
+            true
+
+    });
+
+}
+catch (error) {
+
+    console.error(
+        "Error aplicando recompensa RSPY por compra:",
+        error
+    );
+
+}
+
 
 // Incrementar ventas realizadas del vendedor
 const perfilVendedor = await UserProfile.findOne({

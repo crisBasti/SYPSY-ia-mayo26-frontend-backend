@@ -22,6 +22,7 @@ import ProductFormSeller from "./components/seller/ProductFormSeller";
 import Payments from "./pages/admin/Payments";
 import MonetizationCenter from "./pages/MonetizationCenter";
 import OrderPayment from "./pages/OrderPayment";
+import RewardWallet from "./pages/RewardWallet";
 
 
 function App() {
@@ -134,6 +135,8 @@ function App() {
           />
 
           <Route path="/micuenta/monetizacion" element={<MonetizationCenter />} />
+
+          <Route path="/rewards" element={<RewardWallet />} />
 
           <Route path="*" element={<NotFound />} />
 

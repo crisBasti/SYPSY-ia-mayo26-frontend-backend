@@ -1,0 +1,278 @@
+.reward-wallet {
+
+    max-width: 1000px;
+
+    margin: 30px auto;
+
+    padding: 20px;
+
+    color: #000000;
+
+}
+
+
+.reward-wallet-header {
+
+    margin-bottom: 25px;
+    color: #ffffff;
+
+}
+
+
+.reward-wallet-header h1 {
+
+    margin: 0 0 8px;
+
+    font-size: 32px;
+
+}
+
+
+.reward-wallet-header p {
+
+    margin: 0;
+
+    color: #6c757d;
+
+}
+
+
+/* ==========================================
+   SALDO
+========================================== */
+
+.reward-balance-card {
+
+    background: #ffffff;
+
+    border-radius: 20px;
+
+    padding: 30px;
+
+    text-align: center;
+
+    box-shadow:
+        0 8px 24px rgba(0,0,0,.08);
+
+    margin-bottom: 20px;
+
+}
+
+
+.reward-balance-label {
+
+    display: block;
+
+    color: #6c757d;
+
+    margin-bottom: 10px;
+
+}
+
+
+.reward-balance {
+
+    display: block;
+
+    font-size: 42px;
+
+}
+
+
+/* ==========================================
+   RESUMEN
+========================================== */
+
+.reward-summary {
+
+    display: grid;
+
+    grid-template-columns:
+        repeat(2, 1fr);
+
+    gap: 20px;
+
+    margin-bottom: 25px;
+
+}
+
+
+.reward-summary-card {
+
+    background: #ffffff;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 6px 18px rgba(0,0,0,.07);
+
+}
+
+
+.reward-summary-card span {
+
+    display: block;
+
+    color: #6c757d;
+
+    margin-bottom: 8px;
+
+}
+
+
+.reward-summary-card strong {
+
+    font-size: 22px;
+
+}
+
+
+/* ==========================================
+   HISTORIAL
+========================================== */
+
+.reward-history {
+
+    background: #ffffff;
+
+    border-radius: 18px;
+
+    padding: 25px;
+
+    box-shadow:
+        0 6px 18px rgba(0,0,0,.07);
+
+}
+
+
+.reward-history h2 {
+
+    margin-top: 0;
+
+}
+
+
+.reward-movement {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 16px 0;
+
+    border-bottom:
+        1px solid #eeeeee;
+
+}
+
+
+.reward-movement:last-child {
+
+    border-bottom: none;
+
+}
+
+
+.reward-movement strong {
+
+    font-size: 17px;
+
+}
+
+
+.reward-movement p {
+
+    margin: 5px 0 0;
+
+    color: #6c757d;
+
+}
+
+
+.reward-movement small {
+
+    color: #6c757d;
+
+    text-align: right;
+
+}
+
+
+.reward-empty {
+
+    text-align: center;
+
+    padding: 30px 10px;
+
+    color: #6c757d;
+
+}
+
+
+.reward-empty p {
+
+    margin-bottom: 6px;
+
+}
+
+
+/* ==========================================
+   MOBILE
+========================================== */
+
+@media (max-width: 700px) {
+
+    .reward-wallet {
+
+        margin: 15px auto;
+
+        padding: 15px;
+
+    }
+
+
+    .reward-wallet-header h1 {
+
+        font-size: 26px;
+
+    }
+
+
+    .reward-balance {
+
+        font-size: 34px;
+
+    }
+
+
+    .reward-summary {
+
+        grid-template-columns: 1fr;
+
+    }
+
+
+    .reward-movement {
+
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 8px;
+
+    }
+
+
+    .reward-movement small {
+
+        text-align: left;
+
+    }
+
+}

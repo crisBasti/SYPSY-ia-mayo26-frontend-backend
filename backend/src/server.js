@@ -17,8 +17,10 @@ import financeRoutes from "../routes/financeRoutes.js";
 import userProfileRoutes from "../routes/userProfileRoutes.js";
 import reviewRoutes from "../routes/reviewRoutes.js";
 import promotionRoutes from "../routes/promotionRoutes.js";
+import rewardRoutes from "../routes/rewardRoutes.js";
 import { iniciarSchedulerPromociones } from "../services/promotionScheduler.js";
 import favoriteRoutes from "../routes/favoriteRoutes.js";
+
 
 
 connectDB();
@@ -50,6 +52,7 @@ app.use("/api/configuration", configurationRoutes);
 app.use("/api/finance", financeRoutes);
 app.use("/api/profile", userProfileRoutes);
 app.use("/api/favorites", favoriteRoutes);
+app.use("/api/rewards", rewardRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/promotions", promotionRoutes);
 

@@ -3,6 +3,7 @@ import logo from "../assets/logo.png";
 import "../styles/navbar.css";
 import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
+import { getMyRewards } from "../services/rewardService";
 
 function Navbar({ search, setSearch }) {
 
@@ -10,87 +11,130 @@ function Navbar({ search, setSearch }) {
 
   const [ubicacion, setUbicacion] = useState(null);
 
-  const { user, logout } = useContext(AuthContext);
+  const [saldoRSPY, setSaldoRSPY] = useState(0);
+
+  const { user, logout } =
+    useContext(AuthContext);
+
+
+  // ==========================================
+  // CARGAR DATOS DEL USUARIO
+  // ==========================================
 
   useEffect(() => {
 
-  const cargarUbicacion = async () => {
+    const cargarDatosUsuario = async () => {
 
-    if (!user) {
+      if (!user) {
 
-      setUbicacion(null);
+        setUbicacion(null);
+        setSaldoRSPY(0);
 
-      return;
-
-    }
-
-    try {
-
-      const token =
-        await user.getIdToken();
-
-      const response =
-        await fetch(
-          `${import.meta.env.VITE_API_URL}/api/profile`,
-          {
-            headers: {
-              Authorization:
-                `Bearer ${token}`
-            }
-          }
-        );
-
-      if (!response.ok) {
-
-        throw new Error(
-          "No se pudo obtener el perfil"
-        );
+        return;
 
       }
 
-      const data =
-        await response.json();
 
-      setUbicacion({
+      try {
 
-        provincia:
-          data.direccion?.provincia || "",
+        const token =
+          await user.getIdToken();
 
-        ciudad:
-          data.direccion?.ciudad || "",
 
-        barrio:
-          data.direccion?.barrio || "",
+        // ======================================
+        // PERFIL + RSPY
+        // ======================================
 
-        lat:
-          data.ubicacion?.lat || null,
+        const [perfilResponse, rewardData] =
+          await Promise.all([
 
-        lng:
-          data.ubicacion?.lng || null
+            fetch(
+              `${import.meta.env.VITE_API_URL}/api/profile`,
+              {
+                headers: {
+                  Authorization:
+                    `Bearer ${token}`
+                }
+              }
+            ),
 
-      });
+            getMyRewards(token)
 
-    } catch (error) {
+          ]);
 
-      console.error(
-        "Error cargando ubicación:",
-        error
-      );
 
-    }
+        // ======================================
+        // UBICACIÓN
+        // ======================================
 
-  };
+        if (perfilResponse.ok) {
 
-  cargarUbicacion();
+          const data =
+            await perfilResponse.json();
 
-}, [user]);
+
+          setUbicacion({
+
+            provincia:
+              data.direccion?.provincia || "",
+
+            ciudad:
+              data.direccion?.ciudad || "",
+
+            barrio:
+              data.direccion?.barrio || "",
+
+            lat:
+              data.ubicacion?.lat || null,
+
+            lng:
+              data.ubicacion?.lng || null
+
+          });
+
+        }
+
+
+        // ======================================
+        // RSPY
+        // ======================================
+
+        setSaldoRSPY(
+          Number(rewardData?.saldo) || 0
+        );
+
+
+      } catch (error) {
+
+        console.error(
+          "Error cargando datos del usuario:",
+          error
+        );
+
+        setSaldoRSPY(0);
+
+      }
+
+    };
+
+
+    cargarDatosUsuario();
+
+  }, [user]);
+
 
   return (
     <>
-      {/* NAV SUPERIOR */}
+
+      {/* ===================================== */}
+      {/* NAV SUPERIOR                         */}
+      {/* ===================================== */}
+
       <nav className="navbar">
 
+
         <div className="navbar-logo">
+
           <img
             src={logo}
             alt="SYPSY Logo"
@@ -100,31 +144,59 @@ function Navbar({ search, setSearch }) {
           <span className="navbar-slogan">
             LO QUE QUERÉS YA!
           </span>
+
         </div>
 
-                <div className="auth-section">
-                  {user ? (
-                <>
-                <span className="user-name">
-                  👋 {user?.displayName?.split(" ")[0]}
-                </span>
 
-                  <Link
-                    to="/admin"
-                    title="Panel"
-                  >
-                    ⚙️
-                  </Link>
+        {/* ================================= */}
+        {/* AUTENTICACIÓN + RSPY              */}
+        {/* ================================= */}
 
-                  <button
-                    title="Salir"
-                    onClick={logout}
-                  >
-                    🚪
-                  </button>
-                </>
-          ) : (
+        <div className="auth-section">
+
+          {user ? (
+
             <>
+
+              <span className="user-name">
+                👋 {user?.displayName?.split(" ")[0]}
+              </span>
+
+
+              {/* ============================ */}
+              {/* SALDO RSPY                   */}
+              {/* ============================ */}
+
+              <Link
+                to="/rewards"
+                className="navbar-rspy"
+                title="Mis recompensas RSPY"
+              >
+                🪙 {saldoRSPY} RSPY
+              </Link>
+
+
+              <Link
+                to="/admin"
+                title="Panel"
+              >
+                ⚙️
+              </Link>
+
+
+              <button
+                title="Salir"
+                onClick={logout}
+              >
+                🚪
+              </button>
+
+            </>
+
+          ) : (
+
+            <>
+
               <Link to="/login">
                 Login
               </Link>
@@ -132,9 +204,17 @@ function Navbar({ search, setSearch }) {
               <Link to="/register">
                 Registro
               </Link>
+
             </>
+
           )}
+
         </div>
+
+
+        {/* ================================= */}
+        {/* MENÚ                              */}
+        {/* ================================= */}
 
         <button
           className="menu-btn"
@@ -146,7 +226,12 @@ function Navbar({ search, setSearch }) {
         </button>
 
 
+        {/* ================================= */}
+        {/* BUSCADOR                          */}
+        {/* ================================= */}
+
         <div className="navbar-search">
+
           <input
             type="text"
             placeholder="Buscar en SYPSY..."
@@ -155,11 +240,17 @@ function Navbar({ search, setSearch }) {
               setSearch(e.target.value)
             }
           />
+
         </div>
+
+
+        {/* ================================= */}
+        {/* UBICACIÓN                         */}
+        {/* ================================= */}
 
         <div className="location-bar">
 
-         📍{" "}
+          📍{" "}
 
           {ubicacion?.ciudad
             ? ubicacion.ciudad
@@ -169,13 +260,20 @@ function Navbar({ search, setSearch }) {
 
       </nav>
 
-      {/* BARRA DE CATEGORÍAS */}
+
+      {/* ===================================== */}
+      {/* BARRA DE CATEGORÍAS                  */}
+      {/* ===================================== */}
+
       <div
         className={`categories-bar ${
           menuOpen ? "active" : ""
         }`}
       >
-        <Link to="/">🏠 Home</Link>
+
+        <Link to="/">
+          🏠 Home
+        </Link>
 
         <Link to="/categoria/Indumentaria">
           👕 Indumentaria
@@ -194,8 +292,10 @@ function Navbar({ search, setSearch }) {
         </Link>
 
       </div>
+
     </>
   );
+
 }
 
 export default Navbar;
