@@ -1,25 +1,21 @@
 export default function generarUbicacionProducto(producto, distancia) {
 
-    // Si está suficientemente cerca,
-    // no mostramos ciudad/provincia.
-    if (distancia != null && distancia <= 20) {
-        return null;
-    }
-
-    const ciudad = producto?.ubicacion?.ciudad?.trim();
-    const provincia = producto?.ubicacion?.provincia?.trim();
-
-    if (ciudad && provincia) {
-        return `${ciudad}, ${provincia}`;
-    }
-
-    if (ciudad) {
-        return ciudad;
-    }
-
-    if (provincia) {
-        return provincia;
-    }
-
+  // Si puede llegar hoy, no mostramos ubicación.
+  if (distancia != null && distancia <= 5) {
     return null;
+  }
+
+  const provincia = producto?.ubicacion?.provincia?.trim();
+
+  if (provincia) {
+    return provincia;
+  }
+
+  const ciudad = producto?.ubicacion?.ciudad?.trim();
+
+  if (ciudad) {
+    return ciudad;
+  }
+
+  return null;
 }

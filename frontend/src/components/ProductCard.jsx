@@ -204,14 +204,6 @@ function ProductCard({
 
 <div className="product-card-meta">
 
-  {distancia && (
-
-    <span className="product-meta-badge distance">
-      📍 A {distancia} km
-    </span>
-
-  )}
-
   {distancia && distancia <= 5 && (
 
     <span className="product-meta-badge delivery">
@@ -232,6 +224,27 @@ function ProductCard({
     </span>
 
   ))}
+
+</div>
+
+{ubicacionProducto && (
+  <div className="product-card-location">
+    📍 {ubicacionProducto}
+  </div>
+)}
+
+
+<div className="product-card-info">
+
+  <h3 className="product-card-title">
+    {product.nombre}
+  </h3>
+
+  {product.vendedor?.name && (
+    <p className="product-card-seller">
+      {product.vendedor.name}
+    </p>
+  )}
 
 </div>
 
@@ -299,14 +312,6 @@ function ProductCard({
 
               📍 {ubicacionProducto}
 
-            </div>
-
-          )}
-
-          {distancia && (
-
-            <div className="product-distance">
-              📍 A {distancia} km de vos
             </div>
 
           )}

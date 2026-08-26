@@ -8,27 +8,19 @@ export default function generarMensajeVenta(producto, distancia) {
 
     if (distancia != null) {
 
-        if (distancia < 1) {
+        if (distancia <= 5) {
 
             mensajes.push({
                 tipo: "success",
-                icono: "📍",
-                texto: "En tu zona"
+                icono: "⚡",
+                texto: "Llega hoy"
             });
 
-        } else if (distancia <= 3) {
-
-            mensajes.push({
-                tipo: "success",
-                icono: "🚚",
-                texto: "Te llega hoy"
-            });
-
-        } else if (distancia <= 8) {
+        } else if (distancia <= 10) {
 
             mensajes.push({
                 tipo: "primary",
-                icono: "⚡",
+                icono: "🚀",
                 texto: "Entrega rápida"
             });
 
@@ -37,7 +29,23 @@ export default function generarMensajeVenta(producto, distancia) {
             mensajes.push({
                 tipo: "info",
                 icono: "📦",
-                texto: "Llega en el día"
+                texto: "Entrega local"
+            });
+
+        } else if (distancia <= 40) {
+
+            mensajes.push({
+                tipo: "warning",
+                icono: "🛵",
+                texto: "Envío disponible"
+            });
+
+        } else {
+
+            mensajes.push({
+                tipo: "info",
+                icono: "🚚",
+                texto: "Envío a tu zona"
             });
 
         }
@@ -51,13 +59,9 @@ export default function generarMensajeVenta(producto, distancia) {
     if (producto.stock <= 2) {
 
         mensajes.push({
-
-            tipo:"danger",
-
-            icono:"🔥",
-
-            texto:"Quedan pocas unidades"
-
+            tipo: "danger",
+            icono: "🔥",
+            texto: "Quedan pocas unidades"
         });
 
     }
@@ -67,25 +71,16 @@ export default function generarMensajeVenta(producto, distancia) {
     // =====================
 
     const dias =
-
         (Date.now() -
-
-        new Date(producto.createdAt))
-
-        /
-
+        new Date(producto.createdAt)) /
         86400000;
 
-    if(dias<7){
+    if (dias < 7) {
 
         mensajes.push({
-
-            tipo:"warning",
-
-            icono:"🆕",
-
-            texto:"Publicado recientemente"
-
+            tipo: "warning",
+            icono: "🆕",
+            texto: "Publicado recientemente"
         });
 
     }
@@ -94,48 +89,35 @@ export default function generarMensajeVenta(producto, distancia) {
     // PROMOCIÓN
     // =====================
 
-    if(producto.nivelPromocion===3){
+    if (producto.nivelPromocion === 3) {
 
         mensajes.push({
-
-            tipo:"premium",
-
-            icono:"👑",
-
-            texto:"Producto Premium"
-
+            tipo: "premium",
+            icono: "👑",
+            texto: "Producto Premium"
         });
 
     }
 
-    if(producto.nivelPromocion===2){
+    if (producto.nivelPromocion === 2) {
 
         mensajes.push({
-
-            tipo:"premium",
-
-            icono:"🚀",
-
-            texto:"Más vendido"
-
+            tipo: "premium",
+            icono: "🚀",
+            texto: "Más vendido"
         });
 
     }
 
-    if(producto.nivelPromocion===1){
+    if (producto.nivelPromocion === 1) {
 
         mensajes.push({
-
-            tipo:"premium",
-
-            icono:"⭐",
-
-            texto:"Promocionado"
-
+            tipo: "premium",
+            icono: "⭐",
+            texto: "Promocionado"
         });
 
     }
 
-    return mensajes.slice(0,2);
-
+    return mensajes.slice(0, 2);
 }

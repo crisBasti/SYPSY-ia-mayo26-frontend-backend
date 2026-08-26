@@ -2528,3 +2528,40 @@ transform:none;
     0 10px 25px
     rgba(37,99,235,.3);
 }
+
+.product-card-info {
+  padding: 8px 15px 0;
+  background: #111827;
+}
+
+.product-card-title {
+  margin: 0;
+  color: #ffffff;
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+.product-card-seller {
+  margin: 5px 0 0;
+  color: #94a3b8;
+  font-size: .82rem;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+@media (max-width: 480px) {
+
+  .product-card-info {
+    padding: 7px 11px 0;
+  }
+
+  .product-card-title {
+    font-size: .85rem;
+  }
+
+  .product-card-seller {
+    font-size: .7rem;
+  }
+
+}
