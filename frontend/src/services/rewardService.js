@@ -26,20 +26,50 @@ export const getMyRewards = async (token) => {
 
 
 // ==========================================
-// ADMIN — OBTENER REGLAS
+// ADMIN - OBTENER HISTORIAL RSPY DE USUARIO
+// ==========================================
+
+export const getUserRewardTransactions = async (
+    uid,
+    token
+) => {
+
+    const response =
+        await axios.get(
+
+            `${API_URL}/admin/${uid}/transactions`,
+
+            {
+                headers: {
+                    Authorization:
+                        `Bearer ${token}`
+                }
+            }
+
+        );
+
+    return response.data;
+};
+
+
+// ==========================================
+// ADMIN - OBTENER REGLAS RSPY
 // ==========================================
 
 export const getRewardRules = async (token) => {
 
     const response =
         await axios.get(
+
             `${API_URL}/rules`,
+
             {
                 headers: {
                     Authorization:
                         `Bearer ${token}`
                 }
             }
+
         );
 
     return response.data;
@@ -47,31 +77,7 @@ export const getRewardRules = async (token) => {
 
 
 // ==========================================
-// ADMIN — OBTENER UNA REGLA
-// ==========================================
-
-export const getRewardRule = async (
-    id,
-    token
-) => {
-
-    const response =
-        await axios.get(
-            `${API_URL}/rules/${id}`,
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${token}`
-                }
-            }
-        );
-
-    return response.data;
-};
-
-
-// ==========================================
-// ADMIN — CREAR REGLA
+// ADMIN - CREAR REGLA RSPY
 // ==========================================
 
 export const createRewardRule = async (
@@ -81,89 +87,18 @@ export const createRewardRule = async (
 
     const response =
         await axios.post(
+
             `${API_URL}/rules`,
+
             data,
+
             {
                 headers: {
                     Authorization:
                         `Bearer ${token}`
                 }
             }
-        );
 
-    return response.data;
-};
-
-
-// ==========================================
-// ADMIN — ACTUALIZAR REGLA
-// ==========================================
-
-export const updateRewardRule = async (
-    id,
-    data,
-    token
-) => {
-
-    const response =
-        await axios.put(
-            `${API_URL}/rules/${id}`,
-            data,
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${token}`
-                }
-            }
-        );
-
-    return response.data;
-};
-
-
-// ==========================================
-// ADMIN — ACTIVAR / DESACTIVAR
-// ==========================================
-
-export const toggleRewardRule = async (
-    id,
-    token
-) => {
-
-    const response =
-        await axios.patch(
-            `${API_URL}/rules/${id}/status`,
-            {},
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${token}`
-                }
-            }
-        );
-
-    return response.data;
-};
-
-
-// ==========================================
-// ADMIN — ELIMINAR REGLA
-// ==========================================
-
-export const deleteRewardRule = async (
-    id,
-    token
-) => {
-
-    const response =
-        await axios.delete(
-            `${API_URL}/rules/${id}`,
-            {
-                headers: {
-                    Authorization:
-                        `Bearer ${token}`
-                }
-            }
         );
 
     return response.data;

@@ -1,4 +1,5 @@
 import Reward from "../models/Reward.js";
+import RewardTransaction from "../models/RewardTransaction.js";
 
 
 // ==========================================
@@ -52,6 +53,46 @@ export const obtenerMisRecompensas = async (req, res) => {
 
             message:
                 "No se pudieron obtener las recompensas."
+
+        });
+
+    }
+
+};
+
+
+// ==========================================
+// ADMIN - HISTORIAL DE TRANSACCIONES RSPY
+// ==========================================
+
+export const obtenerTransaccionesUsuario = async (req, res) => {
+
+    try {
+
+        const { uid } = req.params;
+
+        const transacciones =
+            await RewardTransaction
+                .find({ uid })
+                .sort({
+                    createdAt: -1
+                });
+
+        res.json(transacciones);
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error obteniendo transacciones RSPY:",
+            error
+        );
+
+        res.status(500).json({
+
+            message:
+                "No se pudieron obtener las transacciones RSPY."
 
         });
 

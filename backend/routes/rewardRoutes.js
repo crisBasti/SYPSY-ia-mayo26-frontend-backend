@@ -5,7 +5,8 @@ import adminOnly from "../middleware/adminOnly.js";
 
 
 import {
-    obtenerMisRecompensas
+    obtenerMisRecompensas,
+    obtenerTransaccionesUsuario
 } from "../controllers/rewardController.js";
 
 import {
@@ -34,6 +35,18 @@ router.get(
     "/mine",
     authFirebase,
     obtenerMisRecompensas
+);
+
+
+// =====================================================
+// ADMIN - HISTORIAL DE TRANSACCIONES RSPY
+// =====================================================
+
+router.get(
+    "/admin/:uid/transactions",
+    authFirebase,
+    adminOnly,
+    obtenerTransaccionesUsuario
 );
 
 
@@ -105,6 +118,9 @@ router.delete(
     adminOnly,
     eliminarRegla
 );
+
+
+
 
 
 export default router;

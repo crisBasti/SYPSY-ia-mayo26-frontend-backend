@@ -1,4 +1,5 @@
 import User from "../models/User.js";
+import Reward from "../models/Reward.js";
 
 export const createUser = async (
   req,
@@ -98,14 +99,75 @@ export const getUsers = async (req, res) => {
 
         const users = await User
             .find()
-            .sort({ createdAt: -1 });
+            .sort({ createdAt: -1 })
+            .lean();
 
-        res.json(users);
+
+        // ==========================================
+        // OBTENER SALDOS RSPY
+        // ==========================================
+
+        const uids = users
+            .map(user => user.uid)
+            .filter(Boolean);
+
+
+        const rewards = await Reward.find({
+
+            uid: {
+                $in: uids
+            }
+
+        })
+        .select("uid saldo")
+        .lean();
+
+
+        // ==========================================
+        // MAPA DE SALDOS RSPY
+        // ==========================================
+
+        const rewardsMap = new Map(
+
+            rewards.map(reward => [
+
+                reward.uid,
+
+                reward.saldo || 0
+
+            ])
+
+        );
+
+
+        // ==========================================
+        // UNIR USUARIO + RSPY
+        // ==========================================
+
+        const usersWithRewards = users.map(user => ({
+
+            ...user,
+
+            rspy: rewardsMap.get(user.uid) || 0
+
+        }));
+
+
+        res.json(usersWithRewards);
+
 
     } catch (error) {
 
+        console.error(
+            "Error obteniendo usuarios:",
+            error
+        );
+
+
         res.status(500).json({
+
             message: error.message
+
         });
 
     }

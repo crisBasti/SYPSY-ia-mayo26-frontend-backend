@@ -1,9 +1,6 @@
 import { useEffect, useState } from "react";
 import { auth } from "../../firebase";
-import {
-    getRewardRules,
-    createRewardRule
-} from "../../services/rewardService";
+import { getRewardRules, createRewardRule } from "../../services/rewardService";
 
 function AdminRewards() {
 
