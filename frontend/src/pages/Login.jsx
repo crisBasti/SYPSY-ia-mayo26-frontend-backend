@@ -11,6 +11,7 @@ function Login() {
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [mostrarPassword, setMostrarPassword] = useState(false);
 
 const handleLogin = async (e) => {
 
@@ -65,12 +66,31 @@ const handleLogin = async (e) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
         />
-        <input
-          type="password"
-          placeholder="Contraseña"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-        />
+        <div className="password-field">
+
+  <input
+    type={mostrarPassword ? "text" : "password"}
+    placeholder="Contraseña"
+    value={password}
+    onChange={(e) => setPassword(e.target.value)}
+  />
+
+  <button
+    type="button"
+    className="password-toggle"
+    onClick={() =>
+      setMostrarPassword(!mostrarPassword)
+    }
+    aria-label={
+      mostrarPassword
+        ? "Ocultar contraseña"
+        : "Mostrar contraseña"
+    }
+  >
+    {mostrarPassword ? "🙈" : "👁️"}
+  </button>
+
+</div>
         <button type="submit">
           Ingresar
         </button>
