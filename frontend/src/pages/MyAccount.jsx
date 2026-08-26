@@ -1,6 +1,14 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { auth } from "../firebase";
+import {
+    auth
+} from "../firebase";
+
+import {
+    EmailAuthProvider,
+    reauthenticateWithCredential,
+    updatePassword
+} from "firebase/auth";
 
 function MyAccount() {
 
@@ -50,6 +58,27 @@ function MyAccount() {
     });
 
     const [guardando, setGuardando] = useState(false);
+
+    const [passwordActual, setPasswordActual] =
+    useState("");
+
+const [passwordNueva, setPasswordNueva] =
+    useState("");
+
+const [passwordNuevaRepetida, setPasswordNuevaRepetida] =
+    useState("");
+
+const [cambiandoPassword, setCambiandoPassword] =
+    useState(false);
+
+const [mostrarPasswordActual, setMostrarPasswordActual] =
+    useState(false);
+
+const [mostrarPasswordNueva, setMostrarPasswordNueva] =
+    useState(false);
+
+const [mostrarPasswordRepetida, setMostrarPasswordRepetida] =
+    useState(false);
 
     useEffect(()=>{
 
@@ -254,6 +283,155 @@ function MyAccount() {
     }
 
 };
+
+const cambiarPassword = async () => {
+
+    if (
+        !passwordActual ||
+        !passwordNueva ||
+        !passwordNuevaRepetida
+    ) {
+
+        alert(
+            "Completá todos los campos de contraseña."
+        );
+
+        return;
+    }
+
+
+    if (
+        passwordNueva !==
+        passwordNuevaRepetida
+    ) {
+
+        alert(
+            "Las nuevas contraseñas no coinciden."
+        );
+
+        return;
+    }
+
+
+    const passwordRegex =
+        /^(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&.#_-])[A-Za-z\d@$!%*?&.#_-]{8,}$/;
+
+
+    if (
+        !passwordRegex.test(
+            passwordNueva
+        )
+    ) {
+
+        alert(
+            "La nueva contraseña debe tener mínimo 8 caracteres, una mayúscula, un número y un símbolo."
+        );
+
+        return;
+    }
+
+
+    if (
+        passwordNueva ===
+        passwordActual
+    ) {
+
+        alert(
+            "La nueva contraseña debe ser diferente de la actual."
+        );
+
+        return;
+    }
+
+
+    try {
+
+        setCambiandoPassword(true);
+
+
+        const user =
+            auth.currentUser;
+
+
+        if (!user) {
+
+            throw new Error(
+                "No hay un usuario autenticado."
+            );
+
+        }
+
+
+        const credential =
+            EmailAuthProvider.credential(
+                user.email,
+                passwordActual
+            );
+
+
+        await reauthenticateWithCredential(
+            user,
+            credential
+        );
+
+
+        await updatePassword(
+            user,
+            passwordNueva
+        );
+
+
+        setPasswordActual("");
+        setPasswordNueva("");
+        setPasswordNuevaRepetida("");
+
+
+        alert(
+            "Contraseña actualizada correctamente."
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(
+            "Error cambiando contraseña:",
+            error
+        );
+
+
+        if (
+            error.code ===
+            "auth/wrong-password" ||
+            error.code ===
+            "auth/invalid-credential"
+        ) {
+
+            alert(
+                "La contraseña actual es incorrecta."
+            );
+
+        }
+
+        else {
+
+            alert(
+                "No se pudo cambiar la contraseña."
+            );
+
+        }
+
+    }
+
+    finally {
+
+        setCambiandoPassword(false);
+
+    }
+
+};
+
+
 
     return(
 
@@ -471,6 +649,177 @@ function MyAccount() {
             }
         />
     </div>
+
+</div>
+
+<div className="account-section">
+
+    <h3>🔐 Seguridad de la cuenta</h3>
+
+    <p>
+        Cambiá tu contraseña utilizando primero
+        tu contraseña actual.
+    </p>
+
+
+    <div className="form-group">
+
+        <label>
+            Contraseña actual
+        </label>
+
+        <div className="password-field">
+
+            <input
+                type={
+                    mostrarPasswordActual
+                        ? "text"
+                        : "password"
+                }
+                value={passwordActual}
+                onChange={(e) =>
+                    setPasswordActual(
+                        e.target.value
+                    )
+                }
+                placeholder="Contraseña actual"
+            />
+
+            <button
+                type="button"
+                className="password-toggle"
+                onClick={() =>
+                    setMostrarPasswordActual(
+                        !mostrarPasswordActual
+                    )
+                }
+                aria-label={
+                    mostrarPasswordActual
+                        ? "Ocultar contraseña"
+                        : "Mostrar contraseña"
+                }
+            >
+                {mostrarPasswordActual
+                    ? "🙈"
+                    : "👁️"}
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div className="form-group">
+
+        <label>
+            Nueva contraseña
+        </label>
+
+        <div className="password-field">
+
+            <input
+                type={
+                    mostrarPasswordNueva
+                        ? "text"
+                        : "password"
+                }
+                value={passwordNueva}
+                onChange={(e) =>
+                    setPasswordNueva(
+                        e.target.value
+                    )
+                }
+                placeholder="Nueva contraseña"
+            />
+
+            <button
+                type="button"
+                className="password-toggle"
+                onClick={() =>
+                    setMostrarPasswordNueva(
+                        !mostrarPasswordNueva
+                    )
+                }
+                aria-label={
+                    mostrarPasswordNueva
+                        ? "Ocultar contraseña"
+                        : "Mostrar contraseña"
+                }
+            >
+                {mostrarPasswordNueva
+                    ? "🙈"
+                    : "👁️"}
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <div className="form-group">
+
+        <label>
+            Repetir nueva contraseña
+        </label>
+
+        <div className="password-field">
+
+            <input
+                type={
+                    mostrarPasswordRepetida
+                        ? "text"
+                        : "password"
+                }
+                value={passwordNuevaRepetida}
+                onChange={(e) =>
+                    setPasswordNuevaRepetida(
+                        e.target.value
+                    )
+                }
+                placeholder="Repetir nueva contraseña"
+            />
+
+            <button
+                type="button"
+                className="password-toggle"
+                onClick={() =>
+                    setMostrarPasswordRepetida(
+                        !mostrarPasswordRepetida
+                    )
+                }
+                aria-label={
+                    mostrarPasswordRepetida
+                        ? "Ocultar contraseña"
+                        : "Mostrar contraseña"
+                }
+            >
+                {mostrarPasswordRepetida
+                    ? "🙈"
+                    : "👁️"}
+            </button>
+
+        </div>
+
+    </div>
+
+
+    <small>
+        La contraseña debe tener mínimo 8 caracteres,
+        una mayúscula, un número y un símbolo.
+    </small>
+
+
+    <button
+        type="button"
+        onClick={cambiarPassword}
+        disabled={cambiandoPassword}
+    >
+
+        {cambiandoPassword
+            ? "Cambiando contraseña..."
+            : "🔐 Cambiar contraseña"}
+
+    </button>
 
 </div>
 

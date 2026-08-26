@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { signInWithEmailAndPassword } from "firebase/auth";
+import {
+  signInWithEmailAndPassword,
+  sendPasswordResetEmail
+} from "firebase/auth";
+
 import { auth } from "../firebase";
 import "../styles/auth.css";
 
@@ -12,6 +16,7 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [mostrarPassword, setMostrarPassword] = useState(false);
+
 
 const handleLogin = async (e) => {
 
@@ -51,6 +56,46 @@ const handleLogin = async (e) => {
       "Correo o contraseña incorrectos."
     );
   }
+};
+
+
+const handleForgotPassword = async () => {
+
+  if (!email) {
+
+    alert(
+      "Ingresá tu correo electrónico para recuperar la contraseña."
+    );
+
+    return;
+  }
+
+  try {
+
+    await sendPasswordResetEmail(
+      auth,
+      email
+    );
+
+    alert(
+      "Te enviamos un correo para restablecer tu contraseña. Revisá también la carpeta de spam."
+    );
+
+  }
+
+  catch (error) {
+
+    console.error(
+      "Error recuperando contraseña:",
+      error
+    );
+
+    alert(
+      "No se pudo enviar el correo de recuperación."
+    );
+
+  }
+
 };
 
   return (
@@ -94,6 +139,14 @@ const handleLogin = async (e) => {
         <button type="submit">
           Ingresar
         </button>
+
+<button
+  type="button"
+  className="forgot-password-button"
+  onClick={handleForgotPassword}
+>
+  ¿Olvidaste tu contraseña?
+</button>
       </form>
     </div>
   );
