@@ -1,6 +1,7 @@
 import Promotion from "../models/Promotion.js";
 import Product from "../models/Product.js";
 import { PROMOTION_PLANS } from "../config/promotionPlans.js";
+import { gastarRSPY } from "../services/rewardService.js";
 
 
 
@@ -748,6 +749,107 @@ export const obtenerPromocionPorId = async (req, res) => {
 
             message: error.message
 
+        });
+
+    }
+
+};
+
+
+// =====================================
+// PAGAR PROMOCIÓN CON RSPY
+// =====================================
+
+export const pagarPromocionConRSPY = async (req, res) => {
+
+    try {
+
+        const promocion = await Promotion.findById(req.params.id);
+
+        if (!promocion) {
+            return res.status(404).json({
+                message: "Promoción no encontrada"
+            });
+        }
+
+        if (promocion.sellerUid !== req.user.uid) {
+            return res.status(403).json({
+                message: "No autorizado"
+            });
+        }
+
+        if (promocion.estado !== "pendiente_pago") {
+            return res.status(400).json({
+                message: "La promoción no está disponible para pago"
+            });
+        }
+
+        // =====================================
+        // COSTO
+        // =====================================
+        const costo = promocion.plan.precio;
+
+        // =====================================
+        // DESCONTAR RSPY
+        // =====================================
+        await gastarRSPY({
+
+            uid: req.user.uid,
+
+            cantidad: costo,
+
+            concepto: "Pago promoción",
+
+            origen: "promocion",
+
+            referencia: promocion._id.toString(),
+
+            referenciaUnica: `promo-${promocion._id}`
+
+        });
+
+        // =====================================
+        // ACTIVAR PROMOCIÓN
+        // =====================================
+
+        const fechaInicio = new Date();
+
+        const fechaFin = new Date(
+            fechaInicio.getTime() +
+            promocion.plan.duracionHoras * 60 * 60 * 1000
+        );
+
+        promocion.estado = "activo";
+        promocion.paymentStatus = "paid_rspy";
+        promocion.fechaInicio = fechaInicio;
+        promocion.fechaFin = fechaFin;
+        promocion.spent = costo;
+
+        await promocion.save();
+
+        await Product.findByIdAndUpdate(
+            promocion.productId,
+            {
+                promocionado: true,
+                estadoPromocion: "activa",
+                nivelPromocion:
+                    PROMOTION_PLANS[promocion.plan.nombre].nivel,
+                fechaPromocionInicio: fechaInicio,
+                fechaPromocionFin: fechaFin
+            }
+        );
+
+        res.json({
+            message: "Promoción activada con RSPY",
+            promocion
+        });
+
+    }
+
+    catch (error) {
+
+        res.status(500).json({
+            message: error.message
         });
 
     }

@@ -2570,6 +2570,8 @@ background:#d1d5db;
     max-width:100%;
 
     background:#fff;
+    
+    color : #111827; 
 
     padding:30px;
 
@@ -2941,5 +2943,119 @@ background:#d1d5db;
     line-height:1.6;
 
     border-radius:10px;
+
+}
+
+
+/* ==========================================
+   CONTENEDOR PAGO RSPY
+   ========================================== */
+
+.rspy-payment-section {
+
+    margin-top: 16px;
+
+    padding-top: 14px;
+
+    border-top: 1px solid #eeeeee;
+
+}
+
+
+
+/* ==========================================
+   PAGO DE PROMOCIÓN CON RSPY
+   ========================================== */
+
+.rspy-pay-btn {
+
+    width: 100%;
+
+    margin-top: 14px;
+
+    padding: 13px 18px;
+
+    border: none;
+
+    border-radius: 12px;
+
+    background: linear-gradient(
+        135deg,
+        #7b2cff,
+        #5b18d6
+    );
+
+    color: #ffffff;
+
+    font-size: 15px;
+
+    font-weight: 700;
+
+    cursor: pointer;
+
+    box-shadow:
+        0 6px 16px rgba(91, 24, 214, 0.25);
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease,
+        opacity 0.2s ease;
+
+}
+
+
+.rspy-pay-btn:hover {
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 9px 22px rgba(91, 24, 214, 0.35);
+
+}
+
+
+.rspy-pay-btn:active {
+
+    transform: translateY(0);
+
+}
+
+
+.rspy-pay-btn:disabled {
+
+    opacity: 0.6;
+
+    cursor: not-allowed;
+
+    transform: none;
+
+    box-shadow: none;
+
+}
+
+
+/* ==========================================
+   INFORMACIÓN SOBRE SALDO RSPY
+   ========================================== */
+
+.rspy-balance-info {
+
+    margin-top: 10px;
+
+    padding: 10px 12px;
+
+    border-radius: 10px;
+
+    background: rgba(123, 44, 255, 0.08);
+
+    border: 1px solid rgba(123, 44, 255, 0.15);
+
+    color: #5b18d6;
+
+    font-size: 13px;
+
+    line-height: 1.4;
+
+    text-align: center;
 
 }

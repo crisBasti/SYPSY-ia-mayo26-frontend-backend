@@ -72,3 +72,23 @@ export const verificarPagoPromocion = async (id, accion, token) => {
     return response.data;
 
 };
+
+
+export const pagarPromocionRSPY = async (id, token) => {
+
+    const res = await fetch(
+        `${import.meta.env.VITE_API_URL}/api/promotions/${id}/pagar-rspy`,
+        {
+            method: "POST",
+            headers: {
+                Authorization: `Bearer ${token}`
+            }
+        }
+    );
+
+    if (!res.ok) {
+        throw new Error("Error al pagar con RSPY");
+    }
+
+    return res.json();
+};

@@ -19,6 +19,7 @@ import {
 import { verifyFirebaseToken } from "../middleware/authMiddleware.js";
 import multer from "multer";
 import { storage } from "../config/cloudinary.js";
+import { pagarPromocionConRSPY } from "../controllers/promotionController.js";
 
 const upload = multer({
     storage
@@ -58,6 +59,7 @@ router.post("/:productId/impression", registrarImpresion);
 
 router.post("/:productId/click", registrarClick);
 
+router.post("/:id/pagar-rspy", verifyFirebaseToken, pagarPromocionConRSPY);
 
 
 

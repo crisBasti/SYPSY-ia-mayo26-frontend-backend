@@ -2,8 +2,7 @@
 import { useState } from "react";
 import { auth } from "../../firebase";
 import { subirComprobantePromocion } from "../../services/promotionService";
-
-
+import { pagarPromocionRSPY } from "../../services/promotionService";
 
 
 
@@ -229,6 +228,53 @@ const costoPorClick =
         ${campaign.plan?.precio}
 
     </span>
+
+    <div className="rspy-payment-section">
+
+    <button
+        className="rspy-pay-btn"
+        onClick={async () => {
+
+            try {
+
+                const token =
+                    await auth.currentUser.getIdToken();
+
+                await pagarPromocionRSPY(
+                    campaign._id,
+                    token
+                );
+
+                alert(
+                    "🚀 Promoción activada con RSPY"
+                );
+
+                window.location.reload();
+
+            } catch (err) {
+
+                alert(err.message);
+
+            }
+
+        }}
+    >
+        🟣 Pagar con RSPY
+    </button>
+
+
+    {campaign.estado === "pendiente_pago" && (
+
+        <p className="rspy-balance-info">
+
+            Podés pagar esta promoción
+            usando tus RSPY.
+
+        </p>
+
+    )}
+
+</div>
 
     <span className="summary-description">
 
