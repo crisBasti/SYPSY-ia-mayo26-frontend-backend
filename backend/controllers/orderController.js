@@ -245,7 +245,7 @@ await crearNotificacion({
         nuevoPedido._id,
 
     referenciaTipo:
-        "pedido",
+        "venta",
 
     accion:
         "ver_pedido",
@@ -1232,7 +1232,7 @@ export const verificarPago = async (req, res) => {
             pedido._id,
 
         referenciaTipo:
-            "pedido",
+            "compra",
 
         accion:
             "ver_pedido",
@@ -1273,7 +1273,7 @@ export const verificarPago = async (req, res) => {
             pedido._id,
 
         referenciaTipo:
-            "pedido",
+            "compra",
 
         accion:
             "ver_pedido",
@@ -1456,7 +1456,7 @@ await crearNotificacion({
         pedido._id,
 
     referenciaTipo:
-        "pedido",
+        "venta",
 
     accion:
         "ver_pedido",

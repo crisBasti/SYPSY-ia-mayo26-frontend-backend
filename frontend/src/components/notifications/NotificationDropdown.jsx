@@ -88,13 +88,22 @@ function NotificationDropdown({ onClose }) {
 
             if (notificacion.accion === "ver_pedido") {
 
-              onClose();
+    onClose();
 
-              navigate(
-                `/micuenta?section=orders&orderId=${notificacion.referencia}`
-              );
+    if (notificacion.referenciaTipo === "venta") {
 
-            }
+        navigate(
+            `/micuenta?section=sales&orderId=${notificacion.referencia}`
+        );
+
+    } else {
+
+        navigate(
+            `/micuenta?section=orders&orderId=${notificacion.referencia}`
+        );
+
+    }
+}
 
         }
 

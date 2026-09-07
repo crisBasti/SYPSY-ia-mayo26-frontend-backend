@@ -403,17 +403,17 @@ function OrderPayment() {
 
                         <button
 
-                            className="buy-btn"
+                          className="buy-btn"
 
                             onClick={() =>
-                                navigate(
-                                    "/micuenta"
-                                )
+                              navigate(
+                                `/micuenta?section=orders&orderId=${pedido._id}`
+                              )
                             }
 
-                        >
+                       >
 
-                            📦 Ver mis compras
+                         📦 Ver mi pedido
 
                         </button>
 
