@@ -5,6 +5,9 @@ import { AuthContext } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 import { getMyRewards } from "../services/rewardService";
 
+import NotificationBell from "./notifications/NotificationBell";
+import NotificationDropdown from "./notifications/NotificationDropdown";
+
 function Navbar({ search, setSearch }) {
 
   const [menuOpen, setMenuOpen] = useState(false);
@@ -13,8 +16,9 @@ function Navbar({ search, setSearch }) {
 
   const [saldoRSPY, setSaldoRSPY] = useState(0);
 
-  const { user, logout } =
-    useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
+
+  const [mostrarNotificaciones, setMostrarNotificaciones] = useState(false);
 
 
   // ==========================================
@@ -210,6 +214,28 @@ function Navbar({ search, setSearch }) {
           )}
 
         </div>
+
+        <div className="notification-container">
+
+    <NotificationBell
+        onClick={() =>
+            setMostrarNotificaciones(
+                prev => !prev
+            )
+        }
+    />
+
+    {mostrarNotificaciones && (
+
+        <NotificationDropdown
+            onClose={() =>
+                setMostrarNotificaciones(false)
+            }
+        />
+
+    )}
+
+</div>
 
 
         {/* ================================= */}

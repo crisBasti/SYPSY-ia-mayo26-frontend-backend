@@ -20,6 +20,7 @@ import promotionRoutes from "../routes/promotionRoutes.js";
 import rewardRoutes from "../routes/rewardRoutes.js";
 import { iniciarSchedulerPromociones } from "../services/promotionScheduler.js";
 import favoriteRoutes from "../routes/favoriteRoutes.js";
+import notificationRoutes from "../routes/notificationRoutes.js";
 
 
 
@@ -35,7 +36,7 @@ app.use(
       "https://www.sypsy.com.ar",
       "https://sypsy.com.ar",
     ],
-    methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
     allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
@@ -55,6 +56,8 @@ app.use("/api/favorites", favoriteRoutes);
 app.use("/api/rewards", rewardRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/promotions", promotionRoutes);
+app.use("/api/notifications", notificationRoutes);
+
 
 app.get("/", (req, res) => {
   res.json({

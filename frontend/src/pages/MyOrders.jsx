@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import { auth } from "../firebase";
 import OrderCard from "../components/admin/OrderCard";
@@ -10,11 +11,31 @@ function MyOrders() {
 
     const [pedidoSeleccionado, setPedidoSeleccionado] = useState(null);
 
+    const [searchParams] = useSearchParams();
+
     useEffect(() => {
 
-        cargarPedidos();
+    cargarPedidos();
 
-    }, []);
+}, []);
+
+useEffect(() => {
+
+    const orderId = searchParams.get("orderId");
+
+    if(!orderId || pedidos.length === 0) return;
+
+    const pedido = pedidos.find(
+        (item) => item._id === orderId
+    );
+
+    if(pedido){
+
+        setPedidoSeleccionado(pedido);
+
+    }
+
+}, [searchParams, pedidos]);
 
     const cargarPedidos = async () => {
 

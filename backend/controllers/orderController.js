@@ -6,6 +6,11 @@ import Product from "../models/Product.js";
 import UserProfile from "../models/UserProfile.js";
 import Promotion from "../models/Promotion.js";
 import { aplicarReglaRSPY } from "../services/rewardRuleService.js";
+import {
+    crearNotificacion,
+    crearNotificacionAdministradores
+} from "../services/notificationService.js";
+
 
 
 
@@ -220,6 +225,48 @@ const nuevoPedido = new Order({
 
 
     await nuevoPedido.save();
+
+    // =====================================
+// NOTIFICACIÓN AL VENDEDOR
+// =====================================
+
+await crearNotificacion({
+
+    recipientUid: vendedor.uid,
+
+    tipo: "pedido_nuevo",
+
+    titulo: "🛒 Nuevo pedido recibido",
+
+    mensaje:
+        `Recibiste un nuevo pedido de ${comprador.nombre} ${comprador.apellido}.`,
+
+    referencia:
+        nuevoPedido._id,
+
+    referenciaTipo:
+        "pedido",
+
+    accion:
+        "ver_pedido",
+
+    metadata: {
+
+        pedidoId:
+            nuevoPedido._id.toString(),
+
+        numeroPedido:
+            nuevoPedido.numeroPedido,
+
+        productoId:
+            nuevoPedido.producto.toString(),
+
+        total:
+            nuevoPedido.total
+
+    }
+
+});
 
 
     await Product.findByIdAndUpdate(
@@ -1081,6 +1128,52 @@ export const subirComprobantePago = async (req, res) => {
 
         await pedido.save();
 
+
+        // =====================================
+        // NOTIFICAR A LOS ADMINISTRADORES
+        // =====================================
+
+await crearNotificacionAdministradores({
+
+    tipo: "pago_pendiente",
+
+    titulo: "💳 Nuevo pago pendiente",
+
+    mensaje:
+        `El pedido ${pedido.numeroPedido} tiene un comprobante de pago pendiente de verificación.`,
+
+    referencia:
+        pedido._id.toString(),
+
+    referenciaTipo:
+        "pedido",
+
+    accion:
+        "verificar_pago",
+
+    metadata: {
+
+        pedidoId:
+            pedido._id.toString(),
+
+        numeroPedido:
+            pedido.numeroPedido,
+
+        compradorUid:
+            pedido.comprador.uid,
+
+        vendedorUid:
+            pedido.vendedor.uid,
+
+        total:
+            pedido.total
+
+    }
+
+});
+
+
+
         res.json({
             message: "Comprobante recibido",
             pedido
@@ -1117,17 +1210,87 @@ export const verificarPago = async (req, res) => {
 
         if (accion === "APROBAR") {
 
-            pedido.estadoPago = "retenido";
+    pedido.estadoPago = "retenido";
 
-            pedido.fechaVerificacion = new Date();
+    pedido.fechaVerificacion = new Date();
+
+    await crearNotificacion({
+
+        recipientUid:
+            pedido.comprador.uid,
+
+        tipo:
+            "pago_aprobado",
+
+        titulo:
+            "✅ Pago aprobado",
+
+        mensaje:
+            `El pago del pedido ${pedido.numeroPedido} fue aprobado por SYPSY.`,
+
+        referencia:
+            pedido._id,
+
+        referenciaTipo:
+            "pedido",
+
+        accion:
+            "ver_pedido",
+
+        metadata: {
+
+            pedidoId:
+                pedido._id.toString(),
+
+            numeroPedido:
+                pedido.numeroPedido
 
         }
+
+    });
+
+}
 
         if (accion === "RECHAZAR") {
 
-            pedido.estadoPago = "rechazado";
+    pedido.estadoPago = "rechazado";
+
+    await crearNotificacion({
+
+        recipientUid:
+            pedido.comprador.uid,
+
+        tipo:
+            "pago_rechazado",
+
+        titulo:
+            "❌ Pago rechazado",
+
+        mensaje:
+            `El comprobante del pedido ${pedido.numeroPedido} fue rechazado. Revisá el pedido para conocer los próximos pasos.`,
+
+        referencia:
+            pedido._id,
+
+        referenciaTipo:
+            "pedido",
+
+        accion:
+            "ver_pedido",
+
+        metadata: {
+
+            pedidoId:
+                pedido._id.toString(),
+
+            numeroPedido:
+                pedido.numeroPedido
 
         }
+
+    });
+
+}
 
         await pedido.save();
 
@@ -1270,6 +1433,47 @@ export const dejarReseña = async (req,res)=>{
         };
 
         await pedido.save();
+
+        // =====================================
+// NOTIFICACIÓN AL VENDEDOR
+// =====================================
+
+await crearNotificacion({
+
+    recipientUid:
+        pedido.vendedor.uid,
+
+    tipo:
+        "nueva_resena",
+
+    titulo:
+        "⭐ Recibiste una nueva reseña",
+
+    mensaje:
+        `Un comprador calificó tu venta con ${puntuacion} estrellas.`,
+
+    referencia:
+        pedido._id,
+
+    referenciaTipo:
+        "pedido",
+
+    accion:
+        "ver_pedido",
+
+    metadata: {
+
+        pedidoId:
+            pedido._id.toString(),
+
+        numeroPedido:
+            pedido.numeroPedido,
+
+        puntuacion
+
+    }
+
+});
 
         const perfil = await UserProfile.findOne({
 
