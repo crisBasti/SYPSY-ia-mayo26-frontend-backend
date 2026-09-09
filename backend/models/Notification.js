@@ -38,6 +38,8 @@ const notificationSchema = new mongoose.Schema(
                 "producto_aprobado",
                 "producto_rechazado",
 
+                "consulta_disponibilidad",
+
                 "nuevo_like",
                 "nueva_resena",
 

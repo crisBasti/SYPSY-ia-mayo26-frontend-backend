@@ -298,7 +298,11 @@ function Navbar({ search, setSearch }) {
       >
 
         <Link to="/">
-          🏠 Home
+          🏠 Inicio
+        </Link>
+
+        <Link to="/productos">
+          🛍️ Todos
         </Link>
 
         <Link to="/categoria/Indumentaria">

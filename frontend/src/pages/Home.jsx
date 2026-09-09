@@ -1,395 +1,612 @@
-import { useContext, useState, useEffect } from "react";
-import { ProductsContext } from "../context/ProductsContext";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
-import AdvertisementCarousel from "../components/AdvertisementCarousel";
-import { getAdvertisementsService } from "../services/advertisementService";
-import { useAuth } from "../context/AuthContext";
-import { registrarImpresion, registrarClick } from "../services/promotionService";
-import { crearPedidoService } from "../services/orderService";
-import { auth } from "../firebase";
-import { useLocation } from "../context/LocationContext";
-import calcularDistancia from "../utils/calcularDistancia";
-import ProductCard from "../components/ProductCard";
 
+function Home() {
+  return (
+    <>
+      <Helmet>
 
+        <title>
+          SYPSY | Lo que querés ya
+        </title>
 
+        <meta
+          name="description"
+          content="SYPSY es el marketplace donde podés comprar, vender y participar de un ecosistema con recompensas RSPY."
+        />
 
-function Home({ search }) {
-  const { productos, fetchProducts } = useContext(ProductsContext);
+        <meta
+          name="keywords"
+          content="SYPSY, marketplace, comprar, vender, productos, servicios, RSPY, recompensas"
+        />
 
-  const { user } = useAuth();
+        <meta
+          property="og:title"
+          content="SYPSY | Lo que querés ya"
+        />
 
-  const navigate = useNavigate();
+        <meta
+          property="og:description"
+          content="Comprá, vendé y participá en el ecosistema SYPSY."
+        />
 
-  const location = useLocation();
-  
-useEffect(() => {
+        <meta
+          property="og:url"
+          content="https://www.sypsy.com.ar"
+        />
 
-    const loadData = async () => {
+        <meta
+          property="og:type"
+          content="website"
+        />
 
-        await fetchProducts();
+      </Helmet>
 
-        try {
 
-            const ads = await getAdvertisementsService();
+      <main className="home-page">
 
-            setAdvertisements(ads);
 
-        } catch (error) {
+        {/* =====================================
+            HERO
+        ====================================== */}
 
-            console.error(error);
+        <section className="home-hero">
 
-        }
+          <div className="home-hero-content">
 
-    };
+            <span className="home-eyebrow">
+              EL MARKETPLACE QUE TE CONECTA
+            </span>
 
-    loadData();
+            <h1>
+              <strong>SYPSY</strong>
+              <span>LO QUE QUERÉS YA!</span>
+            </h1>
 
-}, []);
+            <p className="home-hero-text">
 
+              Un lugar para encontrar productos y servicios,
+              vender lo que ofrecés y formar parte de una comunidad
+              donde <strong>participar también tiene recompensa.</strong>
 
-/* const [selectedProduct, setSelectedProduct] = useState(null);
-const [imgIndex, setImgIndex] = useState({}); */
+            </p>
 
-  const [categoriaActiva, setCategoriaActiva] = useState("Todos");
-  const [showConfirmBuy, setShowConfirmBuy] = useState(false);
-  const [productToBuy, setProductToBuy] = useState(null);
-  const [advertisements, setAdvertisements] = useState([]);
 
+            <div className="home-hero-actions">
 
-const handleComprar = async (product) => {
+              <Link
+                to="/productos"
+                className="home-btn home-btn-primary"
+              >
+                Explorar SYPSY
+                <span>→</span>
+              </Link>
 
-    if (user?.uid === product.vendedor?.uid) {
 
-        alert(
-            "No puedes comprar tus propios productos."
-        );
+              <Link
+                to="/register"
+                className="home-btn home-btn-secondary"
+              >
+                Quiero vender
+              </Link>
 
-        return;
+            </div>
 
-    }
 
-    try {
+            <div className="home-hero-note">
 
-        const token =
-            await auth.currentUser.getIdToken();
+              <span>✓</span>
+              Comprá · Vendé · Participá · Recibí recompensas
 
-        const pedido = {
+            </div>
 
-            vendedor: product.vendedor,
+          </div>
 
-            producto: product._id,
 
-            precio: product.precio,
+          <div className="home-hero-visual">
 
-            cantidad: 1,
+            <div className="home-floating-card home-card-main">
 
-            costoEnvio: 0
+              <div className="home-card-icon">
+                🛍️
+              </div>
 
-        };
+              <div>
+                <strong>
+                  Comprá y vendé
+                </strong>
 
-        const resultado =
-            await crearPedidoService(
-                pedido,
-                token
-            );
+                <span>
+                  Todo en un mismo lugar
+                </span>
+              </div>
 
-        setShowConfirmBuy(false);
-        setProductToBuy(null);
+            </div>
 
-        navigate(
-            `/pagar-pedido/${resultado._id}`
-        );
 
-    } catch (error) {
+            <div className="home-floating-card home-card-rspy">
 
-        console.error(
-            "Error creando pedido:",
-            error
-        );
+              <div className="home-rspy-icon">
+                🪙
+              </div>
 
-        alert(
-            error.response?.data?.message ||
-            "Error creando pedido"
-        );
+              <div>
+                <strong>
+                  RSPY
+                </strong>
 
-    }
+                <span>
+                  Recompensas SYPSY
+                </span>
+              </div>
 
-};
+            </div>
 
-/*
-  const nextImage = (productId, total) => {
-  setImgIndex((prev) => ({
-    ...prev,
-    [productId]:
-      ((prev[productId] || 0) + 1) % total
-  }));
-};
 
-const prevImage = (productId, total) => {
-  setImgIndex((prev) => ({
-    ...prev,
-    [productId]:
-      ((prev[productId] || 0) - 1 + total) % total
-  }));
-};
+            <div className="home-orbit">
 
-*/
+              <span>SYPSY</span>
 
-  // =========================
-  // CATEGORÍAS
-  // =========================
-  const categorias = [
-    "Todos",
-    ...new Set(productos.map((p) => p.categoria))
-  ];
+            </div>
 
-  // =========================
-  // FILTRO
-  // =========================
-  const filteredProducts = productos.filter((product) => {
+          </div>
 
-    const textoBusqueda = search.toLowerCase();
+        </section>
 
-    return (
 
-        product.nombre.toLowerCase().includes(textoBusqueda) ||
 
-        product.descripcion.toLowerCase().includes(textoBusqueda) ||
+        {/* =====================================
+            QUÉ ES SYPSY
+        ====================================== */}
 
-        product.categoria.toLowerCase().includes(textoBusqueda)
+        <section className="home-section home-about">
 
-    ) && (
+          <div className="home-section-heading">
 
-        categoriaActiva === "Todos" ||
+            <span className="home-section-label">
+              CONOCÉ SYPSY
+            </span>
 
-        product.categoria === categoriaActiva
+            <h2>
+              Mucho más que un lugar para comprar
+            </h2>
 
-    );
+            <p>
+              SYPSY conecta personas, vendedores, emprendedores
+              y oportunidades en un mismo ecosistema.
+            </p>
 
-})
+          </div>
 
-.sort((a, b) => {
 
-    // 1) Promociones primero
-    if ((a.nivelPromocion || 0) !== (b.nivelPromocion || 0)) {
+          <div className="home-about-grid">
 
-        return (b.nivelPromocion || 0) - (a.nivelPromocion || 0);
+            <article className="home-info-card">
 
-    }
+              <div className="home-info-icon">
+                🔎
+              </div>
 
-    // 2) Luego ordenar por cercanía
-    const distanciaA = calcularDistancia(
+              <h3>
+                Encontrá
+              </h3>
 
-        location?.lat,
-        location?.lng,
-        a?.ubicacion?.lat,
-        a?.ubicacion?.lng
+              <p>
+                Buscá productos y servicios de distintos vendedores
+                desde un mismo lugar.
+              </p>
 
-    );
+            </article>
 
-    const distanciaB = calcularDistancia(
 
-        location?.lat,
-        location?.lng,
-        b?.ubicacion?.lat,
-        b?.ubicacion?.lng
+            <article className="home-info-card">
 
-    );
+              <div className="home-info-icon">
+                🛒
+              </div>
 
+              <h3>
+                Comprá
+              </h3>
 
-    
+              <p>
+                Elegí lo que necesitás, generá tu pedido y seguí
+                el proceso desde tu cuenta.
+              </p>
 
-    if (distanciaA && distanciaB) {
+            </article>
 
-        return distanciaA - distanciaB;
 
-    }
+            <article className="home-info-card">
 
-    // 3) Si ninguno tiene ubicación, mostrar primero los más nuevos
-    return new Date(b.createdAt) - new Date(a.createdAt);
+              <div className="home-info-icon">
+                🚀
+              </div>
 
-});
+              <h3>
+                Vendé
+              </h3>
 
+              <p>
+                Publicá tus productos, recibí pedidos y gestioná
+                tus ventas desde SYPSY.
+              </p>
 
+            </article>
 
+          </div>
 
+        </section>
 
-    return (
-  <>
-    <Helmet>
 
-      <title>
-        SYPSY | Marketplace de productos y servicios en Argentina
-      </title>
 
-      <meta
-        name="description"
-        content="Comprá y vendé productos, servicios y oportunidades en SYPSY. Marketplace argentino con vendedores verificados y contacto directo por WhatsApp."
-      />
+        {/* =====================================
+            CÓMO FUNCIONA
+        ====================================== */}
 
-      <meta
-        name="keywords"
-        content="marketplace, ecommerce, argentina, comprar, vender, productos, servicios, whatsapp, sypsy"
-      />
+        <section
+          className="home-section home-how"
+          id="como-funciona"
+        >
 
-      <meta
-        property="og:title"
-        content="SYPSY | Marketplace de productos y servicios"
-      />
+          <div className="home-section-heading">
 
-      <meta
-        property="og:description"
-        content="Comprá y vendé productos y servicios con contacto directo por WhatsApp."
-      />
+            <span className="home-section-label">
+              SIMPLE Y DIRECTO
+            </span>
 
-      <meta
-        property="og:url"
-        content="https://www.sypsy.com.ar"
-      />
+            <h2>
+              ¿Cómo funciona SYPSY?
+            </h2>
 
-      <meta
-        property="og:type"
-        content="website"
-      />
+            <p>
+              Diseñamos el proceso para que encontrar,
+              comprar o vender sea lo más simple posible.
+            </p>
 
-    </Helmet>
+          </div>
 
-    <div className="advertisement-container">
 
-      <AdvertisementCarousel
-        position="home_top"
-        advertisements={advertisements}
-      />
+          <div className="home-steps">
 
-      <AdvertisementCarousel
 
-        position="home_middle"
+            <article className="home-step">
 
-        advertisements={advertisements}
+              <div className="home-step-number">
+                01
+              </div>
 
-      />
+              <div className="home-step-icon">
+                🔍
+              </div>
 
-      {/* =========================
-            GRID DE PRODUCTOS
-      ========================= */}
+              <h3>
+                Buscá
+              </h3>
 
-<div className="home-products-grid">
+              <p>
+                Explorá las categorías y encontrá
+                lo que necesitás.
+              </p>
 
-  {filteredProducts.map((product) => (
+            </article>
 
-    <ProductCard
-      key={product._id}
-      product={product}
-      onImpression={registrarImpresion}
-      onClick={() => registrarClick(product._id)}
-    />
 
-  ))}
+            <article className="home-step">
 
-</div>
+              <div className="home-step-number">
+                02
+              </div>
 
-      <AdvertisementCarousel
+              <div className="home-step-icon">
+                👤
+              </div>
 
-        position="home_bottom"
+              <h3>
+                Elegí
+              </h3>
 
-        advertisements={advertisements}
+              <p>
+                Conocé el producto, al vendedor y
+                las opciones disponibles.
+              </p>
 
-      />
+            </article>
 
-      {showConfirmBuy && productToBuy && (
 
-<div className="confirm-buy-overlay">
+            <article className="home-step">
 
-    <div className="confirm-buy-box">
+              <div className="home-step-number">
+                03
+              </div>
 
-        <h2>
-            🛒 Confirmar compra
-        </h2>
+              <div className="home-step-icon">
+                💳
+              </div>
 
-        <p>
+              <h3>
+                Comprá
+              </h3>
 
-            Estás por comprar:
+              <p>
+                Generá tu pedido y realizá el proceso
+                de pago correspondiente.
+              </p>
 
-        </p>
+            </article>
 
-        <h3>
 
-            {productToBuy.nombre}
+            <article className="home-step">
 
-        </h3>
+              <div className="home-step-number">
+                04
+              </div>
 
-        <p>
+              <div className="home-step-icon">
+                🎁
+              </div>
 
-            Precio:
+              <h3>
+                Participá
+              </h3>
 
-            <strong>
+              <p>
+                Comprando o vendiendo podés formar parte
+                del sistema de recompensas RSPY.
+              </p>
 
-                ${productToBuy.precio}
+            </article>
 
-            </strong>
+          </div>
 
-        </p>
+        </section>
 
-        <p>
 
-            Si confirmás,
 
-            se creará el pedido y el vendedor será notificado.
+        {/* =====================================
+            RSPY
+        ====================================== */}
 
-        </p>
+        <section className="home-rspy-section">
 
-        <small>
+          <div className="home-rspy-content">
 
-            🔒 Tus datos personales permanecerán ocultos hasta que SYPSY valide el pago.
+            <span className="home-section-label home-rspy-label">
+              ECOSISTEMA SYPSY
+            </span>
 
-        </small>
+            <h2>
+              🪙 RSPY
+            </h2>
 
-        <div className="confirm-actions">
+            <h3>
+              Participar en SYPSY tiene recompensa.
+            </h3>
 
-            <button
+            <p>
 
-                className="cancel-btn"
+              RSPY es nuestro sistema de recompensas.
+              La idea es reconocer la participación dentro
+              del ecosistema SYPSY.
 
-                onClick={()=>{
+            </p>
 
-                    setShowConfirmBuy(false);
+            <p>
 
-                    setProductToBuy(null);
+              <strong>
+                Comprar y vender en SYPSY puede permitirte
+                recibir recompensas RSPY,
+              </strong>
 
-                }}
+              de acuerdo con las reglas y condiciones
+              establecidas por la plataforma.
 
+            </p>
+
+
+            <div className="home-rspy-benefits">
+
+              <div>
+                <span>🛍️</span>
+                <strong>
+                  Compradores
+                </strong>
+                <small>
+                  Participan del sistema de recompensas.
+                </small>
+              </div>
+
+
+              <div>
+                <span>🏪</span>
+                <strong>
+                  Vendedores
+                </strong>
+                <small>
+                  También pueden recibir recompensas
+                  por su actividad.
+                </small>
+              </div>
+
+
+              <div>
+                <span>🌐</span>
+                <strong>
+                  Comunidad
+                </strong>
+                <small>
+                  Más participación, más posibilidades
+                  dentro del ecosistema.
+                </small>
+              </div>
+
+            </div>
+
+          </div>
+
+          <div className="home-rspy-visual">
+
+            <div className="home-rspy-coin">
+              <span>RSPY</span>
+            </div>
+
+            <div className="home-rspy-ring ring-one"></div>
+            <div className="home-rspy-ring ring-two"></div>
+
+          </div>
+
+        </section>
+
+
+
+        {/* =====================================
+            PARA VENDEDORES
+        ====================================== */}
+
+        <section className="home-section home-seller">
+
+          <div className="home-seller-content">
+
+            <span className="home-section-label">
+              ¿QUERÉS VENDER?
+            </span>
+
+            <h2>
+              Convertí lo que ofrecés
+              en una oportunidad.
+            </h2>
+
+            <p>
+
+              Publicá tus productos o servicios,
+              gestioná tus ventas y aprovechá las
+              herramientas que SYPSY pone a tu disposición.
+
+            </p>
+
+
+            <div className="home-seller-list">
+
+              <div>
+                <span>✓</span>
+                Publicá tus productos
+              </div>
+
+              <div>
+                <span>✓</span>
+                Recibí y gestioná pedidos
+              </div>
+
+              <div>
+                <span>✓</span>
+                Accedé a promociones y herramientas
+              </div>
+
+              <div>
+                <span>✓</span>
+                Participá del sistema RSPY
+              </div>
+
+            </div>
+
+
+            <Link
+              to="/register"
+              className="home-btn home-btn-primary"
             >
+              Crear mi cuenta
+              <span>→</span>
+            </Link>
 
-                Cancelar
+          </div>
 
-            </button>
 
-            <button
-              className="buy-btn"
-              onClick={() =>
-                handleComprar(productToBuy)
-              }
+          <div className="home-seller-panel">
 
+            <div className="home-panel-top">
+              <span>MI ACTIVIDAD</span>
+              <span className="home-panel-status">
+                SYPSY
+              </span>
+            </div>
+
+            <div className="home-panel-line"></div>
+
+            <div className="home-panel-items">
+
+              <div>
+                <span>📦</span>
+                <strong>
+                  Productos
+                </strong>
+              </div>
+
+              <div>
+                <span>🛍️</span>
+                <strong>
+                  Ventas
+                </strong>
+              </div>
+
+              <div>
+                <span>🪙</span>
+                <strong>
+                  RSPY
+                </strong>
+              </div>
+
+            </div>
+
+          </div>
+
+        </section>
+
+
+
+        {/* =====================================
+            CTA FINAL
+        ====================================== */}
+
+        <section className="home-final-cta">
+
+          <span>
+            SYPSY
+          </span>
+
+          <h2>
+            Lo que querés, ya.
+          </h2>
+
+          <p>
+            Descubrí productos, encontrá oportunidades,
+            vendé lo que ofrecés y formá parte del ecosistema SYPSY.
+          </p>
+
+
+          <div className="home-final-actions">
+
+            <Link
+              to="/productos"
+              className="home-btn home-btn-light"
             >
+                Explorar SYPSY
+              <span>→</span>
+            </Link>
 
-              💳 Confirmar y pagar
 
-            </button>
+            <Link
+              to="/register"
+              className="home-btn home-btn-outline"
+            >
+              Registrarme
+            </Link>
 
-        </div>
+          </div>
 
-    </div>
+        </section>
 
-</div>
 
-)
-}
-
-      
-
-    </div>
+      </main>
     </>
   );
 }

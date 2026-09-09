@@ -8,6 +8,7 @@ import generarMensajeVenta from "../utils/generarMensajeVenta";
 import FavoriteButton from "./FavoriteButton";
 import { slugify } from "../utils/slugify";
 import generarUbicacionProducto from "../utils/generarUbicacionProducto";
+import { consultarDisponibilidad } from "../services/availabilityService";
 
 function ProductCard({
   product,
@@ -22,6 +23,9 @@ function ProductCard({
 }) {
 
   const [currentImage, setCurrentImage] = useState(0);
+
+  const [consultandoDisponibilidad, setConsultandoDisponibilidad] =
+  useState(false);
 
   const location = useLocation();
 
@@ -64,6 +68,48 @@ function ProductCard({
     }
 
   };
+
+
+  const handleConsultarDisponibilidad = async (e) => {
+
+  e.preventDefault();
+  e.stopPropagation();
+
+  if (consultandoDisponibilidad) {
+    return;
+  }
+
+  try {
+
+    setConsultandoDisponibilidad(true);
+
+    const resultado =
+      await consultarDisponibilidad(product._id);
+
+    alert(
+      resultado.message ||
+      "Consulta enviada al vendedor."
+    );
+
+  } catch (error) {
+
+    console.error(
+      "Error consultando disponibilidad:",
+      error
+    );
+
+    alert(
+      error.message ||
+      "No se pudo consultar la disponibilidad."
+    );
+
+  } finally {
+
+    setConsultandoDisponibilidad(false);
+
+  }
+
+};
 
   return (
 
@@ -262,6 +308,20 @@ function ProductCard({
 </div>
 
       </Link>
+
+
+      {!modoVendedor && (
+  <button
+    type="button"
+    className="availability-consult-btn"
+    onClick={handleConsultarDisponibilidad}
+    disabled={consultandoDisponibilidad}
+  >
+    {consultandoDisponibilidad
+      ? "Consultando..."
+      : "💬 Consultar disponibilidad"}
+  </button>
+)}
 
 
       {/* ==================================================

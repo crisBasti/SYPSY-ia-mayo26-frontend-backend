@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import {
     obtenerMisNotificaciones,
     marcarNotificacionComoLeida,
-    marcarTodasComoLeidas
+    marcarTodasComoLeidas,
+    responderConsultaDisponibilidad
 } from "../../services/notificationService";
 
 
@@ -61,10 +62,55 @@ function NotificationDropdown({ onClose }) {
     }, []);
 
 
+    const responderDisponibilidad = async (
+        notificacion,
+        estado
+    ) => {
+
+        try {
+
+            await responderConsultaDisponibilidad(
+                notificacion.referencia,
+                estado
+            );
+
+            setNotificaciones(
+                prev =>
+                    prev.map(item =>
+                        item._id === notificacion._id
+                            ? {
+                                ...item,
+                                leida: true,
+                                accion: null
+                            }
+                            : item
+                    )
+            );
+
+        }
+
+        catch (error) {
+
+            console.error(
+                "Error respondiendo disponibilidad:",
+                error
+            );
+
+            alert(
+                error.message ||
+                "No se pudo responder la consulta."
+            );
+
+        }
+
+    };
+
+
     const manejarClick = async (notificacion) => {
 
         try {
 
+            // Marcar como leída
             if (!notificacion.leida) {
 
                 await marcarNotificacionComoLeida(
@@ -86,24 +132,67 @@ function NotificationDropdown({ onClose }) {
             }
 
 
+            // Notificación relacionada con un pedido
             if (notificacion.accion === "ver_pedido") {
 
-    onClose();
+                onClose();
 
-    if (notificacion.referenciaTipo === "venta") {
+                if (
+                    notificacion.referenciaTipo === "venta"
+                ) {
 
-        navigate(
-            `/micuenta?section=sales&orderId=${notificacion.referencia}`
-        );
+                    navigate(
+                        `/micuenta?section=sales&orderId=${notificacion.referencia}`
+                    );
 
-    } else {
+                } else {
 
-        navigate(
-            `/micuenta?section=orders&orderId=${notificacion.referencia}`
-        );
+                    navigate(
+                        `/micuenta?section=orders&orderId=${notificacion.referencia}`
+                    );
 
-    }
-}
+                }
+
+                return;
+            }
+
+
+            // Producto confirmado como disponible
+            if (
+                notificacion.accion === "comprar_producto"
+            ) {
+
+                const productoId =
+                    notificacion.metadata?.productoId;
+
+                if (!productoId) {
+
+                    console.error(
+                        "La notificación no contiene productoId."
+                    );
+
+                    return;
+                }
+
+                onClose();
+
+                navigate(
+                    `/producto/${productoId}`
+                );
+
+                return;
+            }
+
+
+            // Producto informado como no disponible
+            if (
+                notificacion.accion === "ver_consulta"
+            ) {
+
+                onClose();
+
+                return;
+            }
 
         }
 
@@ -198,9 +287,7 @@ function NotificationDropdown({ onClose }) {
                     notificaciones.length === 0 && (
 
                     <div className="notification-empty">
-
                         No tenés notificaciones.
-
                     </div>
 
                 )}
@@ -210,8 +297,7 @@ function NotificationDropdown({ onClose }) {
                     notificaciones.map(
                         notificacion => (
 
-                        <button
-                            type="button"
+                        <div
                             key={notificacion._id}
                             className={`
                                 notification-item
@@ -221,38 +307,73 @@ function NotificationDropdown({ onClose }) {
                                         : ""
                                 }
                             `}
-                            onClick={() =>
-                                manejarClick(
-                                    notificacion
-                                )
-                            }
                         >
 
-                            <div className="notification-item-title">
+                            <button
+                                type="button"
+                                className="notification-content"
+                                onClick={() =>
+                                    manejarClick(
+                                        notificacion
+                                    )
+                                }
+                            >
 
-                                {notificacion.titulo}
+                                <div className="notification-item-title">
+                                    {notificacion.titulo}
+                                </div>
 
-                            </div>
+                                <div className="notification-item-message">
+                                    {notificacion.mensaje}
+                                </div>
+
+                                <div className="notification-item-date">
+                                    {new Date(
+                                        notificacion.createdAt
+                                    ).toLocaleString(
+                                        "es-AR"
+                                    )}
+                                </div>
+
+                            </button>
 
 
-                            <div className="notification-item-message">
+                            {notificacion.accion ===
+                                "responder_disponibilidad" && (
 
-                                {notificacion.mensaje}
+                                <div className="availability-actions">
 
-                            </div>
+                                    <button
+                                        type="button"
+                                        className="availability-btn available"
+                                        onClick={() =>
+                                            responderDisponibilidad(
+                                                notificacion,
+                                                "disponible"
+                                            )
+                                        }
+                                    >
+                                        🟢 Disponible
+                                    </button>
 
+                                    <button
+                                        type="button"
+                                        className="availability-btn unavailable"
+                                        onClick={() =>
+                                            responderDisponibilidad(
+                                                notificacion,
+                                                "no_disponible"
+                                            )
+                                        }
+                                    >
+                                        🔴 No disponible
+                                    </button>
 
-                            <div className="notification-item-date">
+                                </div>
 
-                                {new Date(
-                                    notificacion.createdAt
-                                ).toLocaleString(
-                                    "es-AR"
-                                )}
+                            )}
 
-                            </div>
-
-                        </button>
+                        </div>
 
                     )
                 )}

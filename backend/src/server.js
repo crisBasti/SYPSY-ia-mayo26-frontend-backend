@@ -21,6 +21,7 @@ import rewardRoutes from "../routes/rewardRoutes.js";
 import { iniciarSchedulerPromociones } from "../services/promotionScheduler.js";
 import favoriteRoutes from "../routes/favoriteRoutes.js";
 import notificationRoutes from "../routes/notificationRoutes.js";
+import availabilityRoutes from "../routes/availabilityRoutes.js";
 
 
 
@@ -57,6 +58,7 @@ app.use("/api/rewards", rewardRoutes);
 app.use("/api/reviews", reviewRoutes);
 app.use("/api/promotions", promotionRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/consultas-disponibilidad", availabilityRoutes);
 
 
 app.get("/", (req, res) => {

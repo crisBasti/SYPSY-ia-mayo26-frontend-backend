@@ -159,3 +159,55 @@ export const marcarTodasComoLeidas = async () => {
     return await response.json();
 
 };
+
+
+
+// =====================================================
+// RESPONDER CONSULTA DE DISPONIBILIDAD
+// =====================================================
+
+export const responderConsultaDisponibilidad = async (
+    consultaId,
+    estado,
+    respuesta = null
+) => {
+
+    const token =
+        await auth.currentUser.getIdToken();
+
+    const response =
+        await fetch(
+            `${API_URL}/api/consultas-disponibilidad/${consultaId}/responder`,
+            {
+                method: "PUT",
+
+                headers: {
+                    "Content-Type": "application/json",
+
+                    Authorization:
+                        `Bearer ${token}`
+                },
+
+                body: JSON.stringify({
+                    estado,
+                    respuesta
+                })
+            }
+        );
+
+    if (!response.ok) {
+
+        const data =
+            await response.json();
+
+        throw new Error(
+            data.message ||
+            data.mensaje ||
+            "Error respondiendo consulta de disponibilidad."
+        );
+
+    }
+
+    return await response.json();
+
+};

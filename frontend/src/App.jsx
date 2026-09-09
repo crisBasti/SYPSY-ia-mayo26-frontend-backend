@@ -23,6 +23,7 @@ import Payments from "./pages/admin/Payments";
 import MonetizationCenter from "./pages/MonetizationCenter";
 import OrderPayment from "./pages/OrderPayment";
 import RewardWallet from "./pages/RewardWallet";
+import CatalogPage from "./pages/CatalogPage";
 
 
 function App() {
@@ -45,6 +46,15 @@ function App() {
             path="/"
             element={
               <Home
+                search={search}
+              />
+            }
+          />
+
+          <Route
+            path="/productos"
+            element={
+              <CatalogPage
                 search={search}
               />
             }
