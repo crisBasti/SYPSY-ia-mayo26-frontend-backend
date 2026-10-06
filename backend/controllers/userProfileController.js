@@ -108,7 +108,15 @@ export const getPublicProfile = async (req, res) => {
 
             calificacionPromedio: profile.calificacionPromedio,
 
-            cantidadCalificaciones: profile.cantidadCalificaciones
+            cantidadCalificaciones: profile.cantidadCalificaciones,
+
+            direccion: {
+
+                ciudad: profile.direccion?.ciudad || "",
+
+                provincia: profile.direccion?.provincia || ""
+
+            }
 
         });
 

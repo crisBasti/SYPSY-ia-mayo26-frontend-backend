@@ -46,27 +46,32 @@ logistica: {
 
     envio: {
 
-        disponible: {
-            type: Boolean,
-            default: false
-        },
-
-        gratis: {
-            type: Boolean,
-            default: false
-        },
-
-        costoFijo: {
-            type: Number,
-            default: 0
-        },
-
-        costoCalculado: {
-            type: Boolean,
-            default: false
-        }
-
+    disponible: {
+        type: Boolean,
+        default: false
     },
+
+    gratis: {
+        type: Boolean,
+        default: false
+    },
+
+    costoFijo: {
+        type: Number,
+        default: 0
+    },
+
+    costoCalculado: {
+        type: Boolean,
+        default: false
+    },
+
+    aCargoComprador: {
+        type: Boolean,
+        default: false
+    }
+
+},
 
     retiro: {
 

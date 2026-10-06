@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { Helmet } from "react-helmet-async";
+import { useAuth } from "../context/AuthContext";
 
 function Home() {
+  const { user } = useAuth();
+
   return (
     <>
       <Helmet>
@@ -84,7 +87,7 @@ function Home() {
 
 
               <Link
-                to="/register"
+                to={user ? "/micuenta?section=publish" : "/register"}
                 className="home-btn home-btn-secondary"
               >
                 Quiero vender

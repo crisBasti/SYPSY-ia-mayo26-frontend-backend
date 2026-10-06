@@ -1,37 +1,26 @@
 import { useState, useEffect } from "react";
 import { auth } from "../../firebase";
 import { useAuth } from "../../context/AuthContext";
-
 import { useParams, useNavigate } from "react-router-dom";
 import axios from "axios";
-
 import { createProductService } from "../../services/productService";
 
 function ProductFormSeller({ addProduct }) {
 
     const { user } = useAuth();
-
     const { id } = useParams();
-
     const navigate = useNavigate();
-
 
     // =====================================================
     // ESTADO DEL FORMULARIO
     // =====================================================
 
-    const [formData, setFormData] = useState({
-
+    const estadoInicial = {
         nombre: "",
-
         descripcion: "",
-
         precio: "",
-
         categoria: "",
-
         stock: "",
-
         condicion: "nuevo",
 
         logistica: {
@@ -39,38 +28,30 @@ function ProductFormSeller({ addProduct }) {
             modalidades: [],
 
             envio: {
-
                 disponible: false,
-
                 gratis: false,
-
                 costoFijo: 0,
-
-                costoCalculado: false
-
+                costoCalculado: false,
+                aCargoComprador: false
             },
 
             retiro: {
-
                 disponible: false
-
             },
 
             tiempoEntrega: {
-
                 tipo: "dias",
-
                 minimo: 1,
-
                 maximo: 3
-
             }
 
         },
 
         images: []
+    };
 
-    });
+
+    const [formData, setFormData] = useState(estadoInicial);
 
 
     // =====================================================
@@ -80,9 +61,7 @@ function ProductFormSeller({ addProduct }) {
     useEffect(() => {
 
         if (id) {
-
             cargarProducto();
-
         }
 
     }, [id]);
@@ -93,18 +72,12 @@ function ProductFormSeller({ addProduct }) {
         try {
 
             const response = await axios.get(
-
                 `${import.meta.env.VITE_API_URL}/api/products`
-
             );
-
 
             const producto = response.data.find(
-
                 p => p._id === id
-
             );
-
 
             if (!producto) return;
 
@@ -146,7 +119,10 @@ function ProductFormSeller({ addProduct }) {
                             producto.logistica?.envio?.costoFijo ?? 0,
 
                         costoCalculado:
-                            producto.logistica?.envio?.costoCalculado || false
+                            producto.logistica?.envio?.costoCalculado || false,
+
+                        aCargoComprador:
+                            producto.logistica?.envio?.aCargoComprador || false
 
                     },
 
@@ -279,7 +255,7 @@ function ProductFormSeller({ addProduct }) {
     // CONFIGURACIÓN DEL ENVÍO
     // =====================================================
 
-    const actualizarEnvio = (campo, valor) => {
+    const seleccionarModoEnvio = (modo) => {
 
         setFormData(prev => ({
 
@@ -293,7 +269,44 @@ function ProductFormSeller({ addProduct }) {
 
                     ...prev.logistica.envio,
 
-                    [campo]: valor
+                    gratis:
+                        modo === "gratis",
+
+                    costoCalculado:
+                        modo === "calculado",
+
+                    aCargoComprador:
+                        modo === "comprador",
+
+                    costoFijo:
+                        modo === "fijo"
+                            ? prev.logistica.envio.costoFijo
+                            : 0
+
+                }
+
+            }
+
+        }));
+
+    };
+
+
+    const actualizarCostoFijo = (valor) => {
+
+        setFormData(prev => ({
+
+            ...prev,
+
+            logistica: {
+
+                ...prev.logistica,
+
+                envio: {
+
+                    ...prev.logistica.envio,
+
+                    costoFijo: valor
 
                 }
 
@@ -418,7 +431,7 @@ function ProductFormSeller({ addProduct }) {
         ) {
 
             alert(
-                "Completa correctamente todos los campos."
+                "Completá correctamente todos los campos."
             );
 
             return;
@@ -458,7 +471,7 @@ function ProductFormSeller({ addProduct }) {
         if (modalidades.length === 0) {
 
             alert(
-                "Seleccioná al menos una forma de entrega: envío a domicilio o retiro en persona."
+                "Seleccioná al menos una forma de entrega."
             );
 
             return;
@@ -467,31 +480,35 @@ function ProductFormSeller({ addProduct }) {
 
 
         // ---------------------------------------------
-        // VALIDAR COSTO DE ENVÍO
+        // VALIDAR COSTO FIJO
         // ---------------------------------------------
+
+        const envio =
+            formData.logistica.envio;
+
 
         if (
 
-            formData.logistica.envio.disponible &&
+            envio.disponible &&
 
-            !formData.logistica.envio.gratis &&
+            !envio.gratis &&
 
-            !formData.logistica.envio.costoCalculado &&
+            !envio.costoCalculado &&
+
+            !envio.aCargoComprador &&
 
             (
 
-                formData.logistica.envio.costoFijo === "" ||
+                envio.costoFijo === "" ||
 
-                Number(
-                    formData.logistica.envio.costoFijo
-                ) < 0
+                Number(envio.costoFijo) < 0
 
             )
 
         ) {
 
             alert(
-                "Indicá el costo fijo del envío, seleccioná envío gratis o elegí calcularlo según distancia."
+                "Indicá el precio fijo del envío."
             );
 
             return;
@@ -499,227 +516,183 @@ function ProductFormSeller({ addProduct }) {
         }
 
 
-        const token =
-            await auth.currentUser.getIdToken();
+        try {
+
+            const token =
+                await auth.currentUser.getIdToken();
 
 
-        // =================================================
-        // EDICIÓN
-        // =================================================
+            // =================================================
+            // EDICIÓN
+            // =================================================
 
-        if (id) {
+            if (id) {
 
-            await axios.put(
+                await axios.put(
 
-                `${import.meta.env.VITE_API_URL}/api/products/${id}`,
+                    `${import.meta.env.VITE_API_URL}/api/products/${id}`,
 
-                {
+                    {
 
-                    nombre:
-                        formData.nombre,
+                        nombre:
+                            formData.nombre,
 
-                    descripcion:
-                        formData.descripcion,
+                        descripcion:
+                            formData.descripcion,
 
-                    precio:
-                        Number(formData.precio),
+                        precio:
+                            Number(formData.precio),
 
-                    categoria:
-                        formData.categoria,
+                        categoria:
+                            formData.categoria,
 
-                    stock:
-                        Number(formData.stock),
+                        stock:
+                            Number(formData.stock),
 
-                    condicion:
-                        formData.condicion,
+                        condicion:
+                            formData.condicion,
 
-                    logistica:
-                        formData.logistica
+                        logistica:
+                            formData.logistica
 
-                },
+                    },
 
-                {
+                    {
 
-                    headers: {
+                        headers: {
 
-                        Authorization:
-                            `Bearer ${token}`
+                            Authorization:
+                                `Bearer ${token}`
+
+                        }
 
                     }
 
-                }
+                );
 
-            );
+            }
+
+
+            // =================================================
+            // CREACIÓN
+            // =================================================
+
+            else {
+
+                const productData =
+                    new FormData();
+
+
+                productData.append(
+                    "nombre",
+                    formData.nombre
+                );
+
+
+                productData.append(
+                    "descripcion",
+                    formData.descripcion
+                );
+
+
+                productData.append(
+                    "precio",
+                    formData.precio
+                );
+
+
+                productData.append(
+                    "categoria",
+                    formData.categoria
+                );
+
+
+                productData.append(
+                    "stock",
+                    formData.stock
+                );
+
+
+                productData.append(
+                    "condicion",
+                    formData.condicion
+                );
+
+
+                productData.append(
+                    "logistica",
+                    JSON.stringify(
+                        formData.logistica
+                    )
+                );
+
+
+                productData.append(
+                    "vendedor",
+                    JSON.stringify({
+
+                        uid:
+                            user.uid,
+
+                        email:
+                            user.email,
+
+                        name:
+                            user.displayName ||
+                            "Usuario"
+
+                    })
+                );
+
+
+                formData.images?.forEach(
+                    (file) => {
+
+                        productData.append(
+                            "images",
+                            file
+                        );
+
+                    }
+                );
+
+
+                await createProductService(
+                    productData,
+                    token
+                );
+
+            }
+
+
+            // =================================================
+            // FINALIZAR
+            // =================================================
+
+            navigate("/micuenta");
+
+            setFormData(estadoInicial);
 
         }
 
+        catch (error) {
 
-        // =================================================
-        // CREACIÓN
-        // =================================================
-
-        else {
-
-            const productData =
-                new FormData();
-
-
-            productData.append(
-                "nombre",
-                formData.nombre
+            console.error(
+                "Error guardando producto:",
+                error
             );
 
-
-            productData.append(
-                "descripcion",
-                formData.descripcion
-            );
-
-
-            productData.append(
-                "precio",
-                formData.precio
-            );
-
-
-            productData.append(
-                "categoria",
-                formData.categoria
-            );
-
-
-            productData.append(
-                "stock",
-                formData.stock
-            );
-
-
-            productData.append(
-                "condicion",
-                formData.condicion
-            );
-
-
-            // IMPORTANTE:
-            // El backend recibe logística como JSON
-            // dentro de FormData.
-
-            productData.append(
-                "logistica",
-                JSON.stringify(
-                    formData.logistica
-                )
-            );
-
-
-            productData.append(
-
-                "vendedor",
-
-                JSON.stringify({
-
-                    uid:
-                        user.uid,
-
-                    email:
-                        user.email,
-
-                    name:
-                        user.displayName ||
-                        "Usuario"
-
-                })
-
-            );
-
-
-            formData.images?.forEach(
-                (file) => {
-
-                    productData.append(
-                        "images",
-                        file
-                    );
-
-                }
-            );
-
-
-            await createProductService(
-
-                productData,
-
-                token
-
+            alert(
+                "No se pudo guardar el producto. Intentá nuevamente."
             );
 
         }
-
-
-        // =================================================
-        // FINALIZAR
-        // =================================================
-
-        navigate("/micuenta");
-
-
-        setFormData({
-
-            nombre: "",
-
-            descripcion: "",
-
-            precio: "",
-
-            categoria: "",
-
-            stock: "",
-
-            condicion: "nuevo",
-
-            logistica: {
-
-                modalidades: [],
-
-                envio: {
-
-                    disponible: false,
-
-                    gratis: false,
-
-                    costoFijo: 0,
-
-                    costoCalculado: false
-
-                },
-
-                retiro: {
-
-                    disponible: false
-
-                },
-
-                tiempoEntrega: {
-
-                    tipo: "dias",
-
-                    minimo: 1,
-
-                    maximo: 3
-
-                }
-
-            },
-
-            images: []
-
-        });
 
     };
 
 
     // =====================================================
-    // RENDER
+    // ESTADOS VISUALES
     // =====================================================
 
     const envioSeleccionado =
@@ -733,6 +706,24 @@ function ProductFormSeller({ addProduct }) {
             "retiro"
         );
 
+
+    const envio =
+        formData.logistica.envio;
+
+
+    const modoEnvio =
+        envio.gratis
+            ? "gratis"
+            : envio.aCargoComprador
+                ? "comprador"
+                : envio.costoCalculado
+                    ? "calculado"
+                    : "fijo";
+
+
+    // =====================================================
+    // RENDER
+    // =====================================================
 
     return (
 
@@ -863,483 +854,466 @@ function ProductFormSeller({ addProduct }) {
             <div style={styles.section}>
 
                 <h3 style={styles.sectionTitle}>
+                    🚚 Opciones de entrega
+                </h3>
 
-    🚚 Opciones de entrega
 
-</h3>
-
-<p style={styles.helpText}>
-
-    Elegí cómo podrá recibir el producto el comprador.
-    Podés seleccionar una opción o ambas.
-
-</p>
-
-<p style={styles.helpText}>
-
-    💡 <strong>
-        Importante:
-    </strong>{" "}
-
-    Elegir "Envío a domicilio" no significa que
-    debas utilizar un correo específico ni que
-    necesites obligatoriamente un número de
-    seguimiento.
-
-</p>
+                <p style={styles.helpText}>
+                    Elegí cómo podrá recibir el producto el comprador.
+                    Podés seleccionar una o ambas opciones.
+                </p>
 
 
                 <div style={styles.deliveryGrid}>
 
-    {/* ==========================================
-        ENVÍO A DOMICILIO
-    ========================================== */}
+                    {/* ======================================
+                        ENVÍO
+                    ====================================== */}
 
-    <button
-        type="button"
-        onClick={() =>
-            toggleModalidad("envio")
-        }
-        aria-pressed={envioSeleccionado}
-        style={{
-            ...styles.deliveryOption,
-            ...(envioSeleccionado
-                ? styles.deliverySelected
-                : {})
-        }}
-    >
+                    <button
+                        type="button"
+                        onClick={() =>
+                            toggleModalidad("envio")
+                        }
+                        aria-pressed={envioSeleccionado}
+                        style={{
+                            ...styles.deliveryOption,
+                            ...(envioSeleccionado
+                                ? styles.deliverySelected
+                                : {})
+                        }}
+                    >
 
-        <span style={styles.deliveryIcon}>
-            🚚
-        </span>
+                        <span style={styles.deliveryIcon}>
+                            🚚
+                        </span>
 
-        <strong>
-            Envío a domicilio
-        </strong>
+                        <strong>
+                            Envío a domicilio
+                        </strong>
 
-        <small style={styles.deliveryDescription}>
+                        <small style={styles.deliveryDescription}>
+                            El producto se entrega en el domicilio
+                            indicado por el comprador.
+                        </small>
 
-            El vendedor envía el producto hasta
-            el domicilio indicado por el comprador.
+                        {envioSeleccionado && (
 
-        </small>
+                            <span style={styles.selectedBadge}>
+                                ✓ Seleccionado
+                            </span>
 
-        <small style={styles.deliveryExplanation}>
+                        )}
 
-            📌 Podés ofrecer envío gratis, cobrar
-            un precio fijo o permitir que SYPSY
-            calcule el costo según la distancia.
-
-        </small>
-
-        <small style={styles.deliveryExplanation}>
-
-            📦 El envío puede realizarse mediante
-            correo, transporte, mensajería o de
-            forma particular. No es obligatorio
-            contar con número de seguimiento.
-
-        </small>
-
-        {envioSeleccionado && (
-
-            <span style={styles.selectedBadge}>
-
-                ✓ Seleccionado
-
-            </span>
-
-        )}
-
-    </button>
+                    </button>
 
 
-    {/* ==========================================
-        RETIRO EN PERSONA
-    ========================================== */}
+                    {/* ======================================
+                        RETIRO
+                    ====================================== */}
 
-    <button
-        type="button"
-        onClick={() =>
-            toggleModalidad("retiro")
-        }
-        aria-pressed={retiroSeleccionado}
-        style={{
-            ...styles.deliveryOption,
-            ...(retiroSeleccionado
-                ? styles.deliverySelected
-                : {})
-        }}
-    >
+                    <button
+                        type="button"
+                        onClick={() =>
+                            toggleModalidad("retiro")
+                        }
+                        aria-pressed={retiroSeleccionado}
+                        style={{
+                            ...styles.deliveryOption,
+                            ...(retiroSeleccionado
+                                ? styles.deliverySelected
+                                : {})
+                        }}
+                    >
 
-        <span style={styles.deliveryIcon}>
-            📦
-        </span>
+                        <span style={styles.deliveryIcon}>
+                            📦
+                        </span>
 
-        <strong>
-            Retiro en persona
-        </strong>
+                        <strong>
+                            Retiro en persona
+                        </strong>
 
-        <small style={styles.deliveryDescription}>
+                        <small style={styles.deliveryDescription}>
+                            El comprador retira el producto
+                            personalmente.
+                        </small>
 
-            El comprador retira el producto
-            personalmente.
+                        {retiroSeleccionado && (
 
-        </small>
+                            <span style={styles.selectedBadge}>
+                                ✓ Seleccionado
+                            </span>
 
-        <small style={styles.deliveryExplanation}>
+                        )}
 
-            📍 El vendedor indicará el punto o zona
-            donde se realizará el retiro.
+                    </button>
 
-        </small>
-
-        <small style={styles.deliveryExplanation}>
-
-            🤝 No se utiliza envío, transportista
-            ni número de seguimiento.
-
-        </small>
-
-        {retiroSeleccionado && (
-
-            <span style={styles.selectedBadge}>
-
-                ✓ Seleccionado
-
-            </span>
-
-        )}
-
-    </button>
-
-</div>
+                </div>
 
 
                 {/* ======================================
                     CONFIGURACIÓN DEL ENVÍO
                 ====================================== */}
 
-                {
-                    envioSeleccionado && (
+                {envioSeleccionado && (
 
-                        <div style={styles.subSection}>
+                    <div style={styles.subSection}>
 
-                            <h4>
-                              🚚 ¿Cómo querés cobrar el envío?
-                            </h4>
-
-                              <p style={styles.helpText}>
-
-                                Elegí una de las siguientes alternativas
-                                para definir quién paga y cómo se calcula
-                                el costo del envío.
-
-                              </p>
+                        <h4 style={styles.subTitle}>
+                            💰 ¿Cómo se gestiona el costo del envío?
+                        </h4>
 
 
-                            <label style={styles.checkboxRow}>
+                        <p style={styles.helpText}>
+                            Elegí una sola opción.
+                        </p>
+
+
+                        <div style={styles.shippingOptions}>
+
+                            {/* ENVÍO GRATIS */}
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    seleccionarModoEnvio("gratis")
+                                }
+                                style={{
+                                    ...styles.shippingOption,
+                                    ...(modoEnvio === "gratis"
+                                        ? styles.shippingSelected
+                                        : {})
+                                }}
+                            >
+
+                                <span style={styles.shippingIcon}>
+                                    🎁
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Envío gratis
+                                    </strong>
+
+                                    <small>
+                                        Vos asumís el costo del envío.
+                                    </small>
+
+                                </div>
+
+                            </button>
+
+
+                            {/* SYPSY CALCULA */}
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    seleccionarModoEnvio("calculado")
+                                }
+                                style={{
+                                    ...styles.shippingOption,
+                                    ...(modoEnvio === "calculado"
+                                        ? styles.shippingSelected
+                                        : {})
+                                }}
+                            >
+
+                                <span style={styles.shippingIcon}>
+                                    🤖
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        SYPSY calcula el costo
+                                    </strong>
+
+                                    <small>
+                                        El costo se calculará según las
+                                        tarifas y zonas disponibles.
+                                    </small>
+
+                                </div>
+
+                            </button>
+
+
+                            {/* PRECIO FIJO */}
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    seleccionarModoEnvio("fijo")
+                                }
+                                style={{
+                                    ...styles.shippingOption,
+                                    ...(modoEnvio === "fijo"
+                                        ? styles.shippingSelected
+                                        : {})
+                                }}
+                            >
+
+                                <span style={styles.shippingIcon}>
+                                    💰
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Precio fijo
+                                    </strong>
+
+                                    <small>
+                                        Establecés cuánto pagará el comprador
+                                        por el envío.
+                                    </small>
+
+                                </div>
+
+                            </button>
+
+
+                            {/* A CARGO DEL COMPRADOR */}
+
+                            <button
+                                type="button"
+                                onClick={() =>
+                                    seleccionarModoEnvio("comprador")
+                                }
+                                style={{
+                                    ...styles.shippingOption,
+                                    ...(modoEnvio === "comprador"
+                                        ? styles.shippingSelected
+                                        : {})
+                                }}
+                            >
+
+                                <span style={styles.shippingIcon}>
+                                    👤
+                                </span>
+
+                                <div>
+
+                                    <strong>
+                                        Envío a cargo del comprador
+                                    </strong>
+
+                                    <small>
+                                        El comprador asume el costo del envío
+                                        y coordina su modalidad con el vendedor.
+                                    </small>
+
+                                </div>
+
+                            </button>
+
+                        </div>
+
+
+                        {/* INFORMACIÓN DEL MODO SELECCIONADO */}
+
+                        {modoEnvio === "gratis" && (
+
+                            <div style={styles.infoBox}>
+                                🎁 El comprador no pagará un costo adicional
+                                por el envío.
+                            </div>
+
+                        )}
+
+
+                        {modoEnvio === "calculado" && (
+
+                            <div style={styles.infoBox}>
+                                🤖 SYPSY calculará el costo utilizando las
+                                tarifas y zonas configuradas por administración.
+                            </div>
+
+                        )}
+
+
+                        {modoEnvio === "comprador" && (
+
+                            <div style={styles.infoBox}>
+                                👤 El costo del envío queda a cargo del comprador.
+                                El vendedor y comprador podrán coordinar la forma
+                                de envío.
+                            </div>
+
+                        )}
+
+
+                        {modoEnvio === "fijo" && (
+
+                            <div style={styles.fixedShippingBox}>
+
+                                <label style={styles.label}>
+                                    💰 Precio fijo del envío
+                                </label>
 
                                 <input
-                                    type="checkbox"
-                                    checked={
-                                        formData.logistica.envio.gratis
-                                    }
+                                    style={styles.input}
+                                    type="number"
+                                    min="0"
+                                    placeholder="Ej: 3500"
+                                    value={envio.costoFijo}
                                     onChange={(e) =>
-                                        actualizarEnvio(
-                                            "gratis",
-                                            e.target.checked
+                                        actualizarCostoFijo(
+                                            e.target.value
                                         )
                                     }
                                 />
 
-                                <span>
-                                    🎁 Ofrecer envío gratis
-                                </span>
+                                <small style={styles.helpText}>
+                                    Este será el importe que pagará el comprador
+                                    por el envío.
+                                </small>
 
-                            </label>
+                            </div>
 
-                            {formData.logistica.envio.gratis && (
+                        )}
 
-                              <p style={styles.infoText}>
+                    </div>
 
-                                🎁 Vos asumís el costo del envío.
-                                El comprador no pagará un importe adicional
-                                por recibir el producto.
-
-                              </p>
-
-                            )}
-
-
-                            {
-                                !formData.logistica.envio.gratis && (
-
-                                    <>
-
-                                        <label style={styles.checkboxRow}>
-
-                                            <input
-                                                type="checkbox"
-                                                checked={
-                                                    formData.logistica.envio.costoCalculado
-                                                }
-                                                onChange={(e) =>
-                                                    actualizarEnvio(
-                                                        "costoCalculado",
-                                                        e.target.checked
-                                                    )
-                                                }
-                                            />
-
-                                            <span>
-                                                📍 Calcular costo según distancia
-                                            </span>
-
-                                        </label>
-
-                                        {formData.logistica.envio.costoCalculado && (
-
-                                          <p style={styles.infoText}>
-                                    
-                                            📍 El costo se calculará considerando
-                                            la distancia entre la ubicación del vendedor
-                                            y la dirección de entrega del comprador.
-                                    
-                                          </p>
-
-                                        )}
-
-
-                                        {
-                                            !formData.logistica.envio.costoCalculado && (
-
-                                                <div>
-
-                                                    <label style={styles.label}>
-
-                                                        💰 Costo fijo del envío
-
-                                                    </label>
-
-                                                    <input
-                                                        style={styles.input}
-                                                        type="number"
-                                                        min="0"
-                                                        placeholder="Ej: 3500"
-                                                        value={
-                                                            formData.logistica.envio.costoFijo
-                                                        }
-                                                        onChange={(e) =>
-                                                            actualizarEnvio(
-                                                                "costoFijo",
-                                                                e.target.value
-                                                            )
-                                                        }
-                                                    />
-
-                                                    <small
-                                                      style={styles.helpText}
-                                                    >
-
-                                                      💰 Este será el importe que pagará el
-                                                      comprador por el envío, independientemente
-                                                      de la distancia.
-
-                                                    </small>
-
-                                                </div>
-
-                                            )
-
-                                        }
-
-                                    </>
-
-                                )
-
-                            }
-
-
-                            {
-                                formData.logistica.envio.gratis && (
-
-                                    <p style={styles.successText}>
-
-                                        🎁 El vendedor ofrece envío gratis.
-
-                                    </p>
-
-                                )
-
-                            }
-
-
-                            {
-                                formData.logistica.envio.costoCalculado && (
-
-                                    <p style={styles.infoText}>
-
-                                        📍 SYPSY calculará el costo del envío
-                                        según la distancia entre el vendedor
-                                        y el comprador.
-
-                                    </p>
-
-                                )
-
-                            }
-
-                        </div>
-
-                    )
-
-                }
+                )}
 
 
                 {/* ======================================
                     TIEMPO DE ENTREGA
                 ====================================== */}
 
-                {
-                    envioSeleccionado && (
+                {envioSeleccionado && (
 
-                        <div style={styles.subSection}>
+                    <div style={styles.subSection}>
 
-                            <h4>
-                                ⏱️ Tiempo estimado de entrega
-                            </h4>
-
-
-                            <select
-                                style={styles.input}
-                                value={
-                                    formData.logistica.tiempoEntrega.tipo
-                                }
-                                onChange={(e) =>
-                                    actualizarTiempoEntrega(
-                                        "tipo",
-                                        e.target.value
-                                    )
-                                }
-                            >
-
-                                <option value="hoy">
-                                    ⚡ Hoy
-                                </option>
-
-                                <option value="manana">
-                                    📅 Mañana
-                                </option>
-
-                                <option value="dias">
-                                    📦 Entre varios días
-                                </option>
-
-                                <option value="personalizado">
-                                    🕐 Tiempo personalizado
-                                </option>
-
-                            </select>
+                        <h4 style={styles.subTitle}>
+                            ⏱️ Tiempo estimado de entrega
+                        </h4>
 
 
-                            {
-                                formData.logistica.tiempoEntrega.tipo ===
-                                "dias" && (
-
-                                    <div style={styles.timeGrid}>
-
-                                        <div>
-
-                                            <label style={styles.label}>
-                                                Mínimo
-                                            </label>
-
-                                            <input
-                                                style={styles.input}
-                                                type="number"
-                                                min="1"
-                                                value={
-                                                    formData.logistica.tiempoEntrega.minimo
-                                                }
-                                                onChange={(e) =>
-                                                    actualizarTiempoEntrega(
-                                                        "minimo",
-                                                        Number(e.target.value)
-                                                    )
-                                                }
-                                            />
-
-                                        </div>
-
-
-                                        <div>
-
-                                            <label style={styles.label}>
-                                                Máximo
-                                            </label>
-
-                                            <input
-                                                style={styles.input}
-                                                type="number"
-                                                min="1"
-                                                value={
-                                                    formData.logistica.tiempoEntrega.maximo
-                                                }
-                                                onChange={(e) =>
-                                                    actualizarTiempoEntrega(
-                                                        "maximo",
-                                                        Number(e.target.value)
-                                                    )
-                                                }
-                                            />
-
-                                        </div>
-
-                                    </div>
-
-                                )
-
+                        <select
+                            style={styles.input}
+                            value={
+                                formData.logistica.tiempoEntrega.tipo
                             }
+                            onChange={(e) =>
+                                actualizarTiempoEntrega(
+                                    "tipo",
+                                    e.target.value
+                                )
+                            }
+                        >
 
-                        </div>
+                            <option value="hoy">
+                                ⚡ Hoy
+                            </option>
 
-                    )
+                            <option value="manana">
+                                📅 Mañana
+                            </option>
 
-                }
+                            <option value="dias">
+                                📦 Entre varios días
+                            </option>
+
+                            <option value="personalizado">
+                                🕐 Tiempo personalizado
+                            </option>
+
+                        </select>
+
+
+                        {formData.logistica.tiempoEntrega.tipo ===
+                            "dias" && (
+
+                            <div style={styles.timeGrid}>
+
+                                <div>
+
+                                    <label style={styles.label}>
+                                        Mínimo
+                                    </label>
+
+                                    <input
+                                        style={styles.input}
+                                        type="number"
+                                        min="1"
+                                        value={
+                                            formData.logistica.tiempoEntrega.minimo
+                                        }
+                                        onChange={(e) =>
+                                            actualizarTiempoEntrega(
+                                                "minimo",
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                    />
+
+                                </div>
+
+
+                                <div>
+
+                                    <label style={styles.label}>
+                                        Máximo
+                                    </label>
+
+                                    <input
+                                        style={styles.input}
+                                        type="number"
+                                        min="1"
+                                        value={
+                                            formData.logistica.tiempoEntrega.maximo
+                                        }
+                                        onChange={(e) =>
+                                            actualizarTiempoEntrega(
+                                                "maximo",
+                                                Number(e.target.value)
+                                            )
+                                        }
+                                    />
+
+                                </div>
+
+                            </div>
+
+                        )}
+
+                    </div>
+
+                )}
 
 
                 {/* ======================================
                     RETIRO
                 ====================================== */}
 
-                {
-                    retiroSeleccionado && (
+                {retiroSeleccionado && (
 
-                        <div style={styles.retiroInfo}>
+                    <div style={styles.retiroInfo}>
 
-                            📦 <strong>
-                                Retiro en persona habilitado
-                            </strong>
+                        📦 <strong>
+                            Retiro en persona habilitado
+                        </strong>
 
-                            <p>
+                        <p style={styles.helpText}>
 
-                                El comprador podrá elegir retirar
-                                personalmente el producto.
+                            El comprador podrá retirar el producto
+                            personalmente.
 
-                                <br />
+                            <br />
 
-                                SYPSY utilizará la ubicación registrada
-                                del vendedor para mostrar la zona
-                                de retiro.
+                            SYPSY utilizará la ubicación registrada
+                            del vendedor para mostrar la zona de retiro.
 
-                            </p>
+                        </p>
 
-                        </div>
+                    </div>
 
-                    )
-
-                }
+                )}
 
             </div>
 
@@ -1351,9 +1325,7 @@ function ProductFormSeller({ addProduct }) {
             <div style={styles.section}>
 
                 <h3 style={styles.sectionTitle}>
-
                     📸 Imágenes del producto
-
                 </h3>
 
 
@@ -1366,9 +1338,7 @@ function ProductFormSeller({ addProduct }) {
 
 
                 <p style={styles.helpText}>
-
                     Máximo permitido: 5 imágenes.
-
                 </p>
 
 
@@ -1389,9 +1359,7 @@ function ProductFormSeller({ addProduct }) {
                                         eliminarImagen(index)
                                     }
                                 >
-
                                     ✕
-
                                 </button>
 
 
@@ -1601,60 +1569,60 @@ const styles = {
 
     deliveryOption: {
 
-    border:
-        "2px solid var(--border)",
+        border:
+            "2px solid var(--border)",
 
-    background:
-        "var(--bg)",
+        background:
+            "var(--bg)",
 
-    borderRadius:
-        "12px",
+        borderRadius:
+            "12px",
 
-    padding:
-        "18px",
+        padding:
+            "18px",
 
-    display:
-        "flex",
+        display:
+            "flex",
 
-    flexDirection:
-        "column",
+        flexDirection:
+            "column",
 
-    gap:
-        "9px",
+        gap:
+            "9px",
 
-    cursor:
-        "pointer",
+        cursor:
+            "pointer",
 
-    textAlign:
-        "left",
+        textAlign:
+            "left",
 
-    transition:
-        "all 0.2s ease",
+        transition:
+            "all 0.2s ease",
 
-    position:
-        "relative",
+        position:
+            "relative",
 
-    width:
-        "100%",
+        width:
+            "100%",
 
-    boxSizing:
-        "border-box"
+        boxSizing:
+            "border-box"
 
-},
+    },
 
 
     deliverySelected: {
 
-    border:
-        "2px solid var(--accent)",
+        border:
+            "2px solid var(--accent)",
 
-    background:
-        "rgba(59,130,246,0.06)",
+        background:
+            "rgba(59,130,246,0.06)",
 
-    boxShadow:
-        "0 0 0 3px rgba(59,130,246,0.12)"
+        boxShadow:
+            "0 0 0 3px rgba(59,130,246,0.12)"
 
-},
+    },
 
 
     deliveryIcon: {
@@ -1664,59 +1632,48 @@ const styles = {
 
     },
 
+
     deliveryDescription: {
 
-    fontSize:
-        "14px",
+        fontSize:
+            "14px",
 
-    lineHeight:
-        "1.5",
+        lineHeight:
+            "1.5",
 
-    color:
-        "var(--text)"
+        color:
+            "var(--text)"
 
-},
+    },
 
-deliveryExplanation: {
 
-    fontSize:
-        "13px",
+    selectedBadge: {
 
-    lineHeight:
-        "1.5",
+        alignSelf:
+            "flex-start",
 
-    color:
-        "#64748b"
+        marginTop:
+            "4px",
 
-},
+        padding:
+            "5px 9px",
 
-selectedBadge: {
+        borderRadius:
+            "999px",
 
-    alignSelf:
-        "flex-start",
+        background:
+            "var(--accent)",
 
-    marginTop:
-        "4px",
+        color:
+            "white",
 
-    padding:
-        "5px 9px",
+        fontSize:
+            "12px",
 
-    borderRadius:
-        "999px",
+        fontWeight:
+            "700"
 
-    background:
-        "var(--accent)",
-
-    color:
-        "white",
-
-    fontSize:
-        "12px",
-
-    fontWeight:
-        "700"
-
-},
+    },
 
 
     subSection: {
@@ -1729,6 +1686,140 @@ selectedBadge: {
 
         borderRadius:
             "10px",
+
+        background:
+            "rgba(100,116,139,0.06)"
+
+    },
+
+
+    subTitle: {
+
+        marginTop:
+            "0",
+
+        marginBottom:
+            "6px"
+
+    },
+
+
+    shippingOptions: {
+
+        display:
+            "flex",
+
+        flexDirection:
+            "column",
+
+        gap:
+            "10px",
+
+        marginTop:
+            "12px"
+
+    },
+
+
+    shippingOption: {
+
+        display:
+            "flex",
+
+        alignItems:
+            "flex-start",
+
+        gap:
+            "12px",
+
+        width:
+            "100%",
+
+        padding:
+            "14px",
+
+        border:
+            "2px solid var(--border)",
+
+        borderRadius:
+            "10px",
+
+        background:
+            "var(--bg)",
+
+        cursor:
+            "pointer",
+
+        textAlign:
+            "left",
+
+        transition:
+            "all 0.2s ease",
+
+        boxSizing:
+            "border-box"
+
+    },
+
+
+    shippingSelected: {
+
+        border:
+            "2px solid var(--accent)",
+
+        background:
+            "rgba(59,130,246,0.06)"
+
+    },
+
+
+    shippingIcon: {
+
+        fontSize:
+            "24px",
+
+        flexShrink:
+            0
+
+    },
+
+
+    infoBox: {
+
+        marginTop:
+            "12px",
+
+        padding:
+            "12px",
+
+        borderRadius:
+            "8px",
+
+        background:
+            "rgba(59,130,246,0.08)",
+
+        color:
+            "#2563eb",
+
+        fontSize:
+            "14px",
+
+        lineHeight:
+            "1.5"
+
+    },
+
+
+    fixedShippingBox: {
+
+        marginTop:
+            "12px",
+
+        padding:
+            "12px",
+
+        borderRadius:
+            "8px",
 
         background:
             "rgba(100,116,139,0.06)"
@@ -1750,54 +1841,6 @@ selectedBadge: {
     },
 
 
-    checkboxRow: {
-
-        display:
-            "flex",
-
-        alignItems:
-            "center",
-
-        gap:
-            "10px",
-
-        cursor:
-            "pointer",
-
-        marginBottom:
-            "12px"
-
-    },
-
-
-    successText: {
-
-        color:
-            "#15803d",
-
-        fontSize:
-            "14px",
-
-        fontWeight:
-            "600"
-
-    },
-
-
-    infoText: {
-
-        color:
-            "#2563eb",
-
-        fontSize:
-            "14px",
-
-        lineHeight:
-            "1.5"
-
-    },
-
-
     timeGrid: {
 
         display:
@@ -1807,6 +1850,9 @@ selectedBadge: {
             "1fr 1fr",
 
         gap:
+            "12px",
+
+        marginTop:
             "12px"
 
     },

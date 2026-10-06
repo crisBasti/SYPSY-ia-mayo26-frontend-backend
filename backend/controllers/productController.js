@@ -194,84 +194,97 @@ export const updateProduct = async (
     }
 
     const perfil = await UserProfile.findOne({
-    uid: req.user.uid
-});
-
-let logisticaActualizada;
-
-try {
-
-    logisticaActualizada = req.body.logistica
-        ? JSON.parse(req.body.logistica)
-        : undefined;
-
-} catch (error) {
-
-    return res.status(400).json({
-
-        message: "La información de logística no es válida."
-
+      uid: req.user.uid
     });
 
-}
+    let logisticaActualizada;
 
-const datosActualizar = {
+    if (req.body.logistica) {
 
-    ...req.body,
+      try {
 
-    ...(logisticaActualizada && {
+        logisticaActualizada =
+          typeof req.body.logistica === "string"
+            ? JSON.parse(req.body.logistica)
+            : req.body.logistica;
+
+      } catch (error) {
+
+        return res.status(400).json({
+          message:
+            "La información de logística no es válida."
+        });
+
+      }
+
+    }
+
+    const datosActualizar = {
+
+      ...req.body,
+
+      ...(logisticaActualizada && {
         logistica: logisticaActualizada
-    }),
+      }),
 
-    vendedor: {
+      vendedor: {
 
         ...product.vendedor,
 
-        ciudad: perfil?.direccion?.ciudad || "",
+        ciudad:
+          perfil?.direccion?.ciudad || "",
 
-        provincia: perfil?.direccion?.provincia || "",
+        provincia:
+          perfil?.direccion?.provincia || "",
 
-        barrio: perfil?.direccion?.barrio || "",
+        barrio:
+          perfil?.direccion?.barrio || "",
 
-        verificado: perfil?.verificado || false
+        verificado:
+          perfil?.verificado || false
 
-    },
+      },
 
-    ubicacion: {
+      ubicacion: {
 
-        provincia: perfil?.direccion?.provincia || "",
+        provincia:
+          perfil?.direccion?.provincia || "",
 
-        ciudad: perfil?.direccion?.ciudad || "",
+        ciudad:
+          perfil?.direccion?.ciudad || "",
 
-        barrio: perfil?.direccion?.barrio || "",
+        barrio:
+          perfil?.direccion?.barrio || "",
 
-        lat: perfil?.ubicacion?.lat,
+        lat:
+          perfil?.ubicacion?.lat,
 
-        lng: perfil?.ubicacion?.lng
+        lng:
+          perfil?.ubicacion?.lng
 
-    }
+      }
 
-};
+    };
 
-const updatedProduct = await Product.findByIdAndUpdate(
-
-    req.params.id,
-
-    datosActualizar,
-
-    {
-
-        new: true
-
-    }
-
-);
+    const updatedProduct =
+      await Product.findByIdAndUpdate(
+        req.params.id,
+        datosActualizar,
+        {
+          new: true
+        }
+      );
 
     res.json(
       updatedProduct
     );
 
   } catch (error) {
+
+    console.error(
+      "Error actualizando producto:",
+      error
+    );
 
     res.status(500).json({
       message:
