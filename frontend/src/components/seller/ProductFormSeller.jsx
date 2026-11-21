@@ -997,9 +997,9 @@ function ProductFormSeller({ addProduct }) {
                                         Envío gratis
                                     </h2>
 
-                                    <p>
+                                    <h2>
                                         Vos asumís el costo del envío.
-                                    </p>
+                                    </h2>
 
                                 </div>
 
@@ -1031,10 +1031,10 @@ function ProductFormSeller({ addProduct }) {
                                         SYPSY calcula el costo
                                     </h2>
 
-                                    <p>
+                                    <h2>
                                         El costo se calculará según las
                                         tarifas y zonas disponibles.
-                                    </p>
+                                    </h2>
 
                                 </div>
 
@@ -1066,10 +1066,10 @@ function ProductFormSeller({ addProduct }) {
                                         Precio fijo
                                     </h2>
 
-                                    <p>
+                                    <h2>
                                         Establecés cuánto pagará el comprador
                                         por el envío.
-                                    </p>
+                                    </h2>
 
                                 </div>
 
@@ -1101,10 +1101,10 @@ function ProductFormSeller({ addProduct }) {
                                         Envío a cargo del comprador
                                     </h2>
 
-                                    <p>
+                                    <h2>
                                         El comprador asume el costo del envío
                                         y coordina su modalidad con el vendedor.
-                                    </p>
+                                    </h2>
 
                                 </div>
 
