@@ -888,9 +888,9 @@ function ProductFormSeller({ addProduct }) {
                             🚚
                         </span>
 
-                        <strong>
+                        <h2>
                             Envío a domicilio
-                        </strong>
+                        </h2>
 
                         <small style={styles.deliveryDescription}>
                             El producto se entrega en el domicilio
@@ -930,9 +930,9 @@ function ProductFormSeller({ addProduct }) {
                             📦
                         </span>
 
-                        <strong>
+                        <h2>
                             Retiro en persona
-                        </strong>
+                        </h2>
 
                         <small style={styles.deliveryDescription}>
                             El comprador retira el producto
@@ -993,13 +993,13 @@ function ProductFormSeller({ addProduct }) {
 
                                 <div>
 
-                                    <strong>
+                                    <h2>
                                         Envío gratis
-                                    </strong>
+                                    </h2>
 
-                                    <small>
+                                    <p>
                                         Vos asumís el costo del envío.
-                                    </small>
+                                    </p>
 
                                 </div>
 
@@ -1027,14 +1027,14 @@ function ProductFormSeller({ addProduct }) {
 
                                 <div>
 
-                                    <strong>
+                                    <h2>
                                         SYPSY calcula el costo
-                                    </strong>
+                                    </h2>
 
-                                    <small>
+                                    <p>
                                         El costo se calculará según las
                                         tarifas y zonas disponibles.
-                                    </small>
+                                    </p>
 
                                 </div>
 
@@ -1062,14 +1062,14 @@ function ProductFormSeller({ addProduct }) {
 
                                 <div>
 
-                                    <strong>
+                                    <h2>
                                         Precio fijo
-                                    </strong>
+                                    </h2>
 
-                                    <small>
+                                    <p>
                                         Establecés cuánto pagará el comprador
                                         por el envío.
-                                    </small>
+                                    </p>
 
                                 </div>
 
@@ -1097,14 +1097,14 @@ function ProductFormSeller({ addProduct }) {
 
                                 <div>
 
-                                    <strong>
+                                    <h2>
                                         Envío a cargo del comprador
-                                    </strong>
+                                    </h2>
 
-                                    <small>
+                                    <p>
                                         El comprador asume el costo del envío
                                         y coordina su modalidad con el vendedor.
-                                    </small>
+                                    </p>
 
                                 </div>
 
