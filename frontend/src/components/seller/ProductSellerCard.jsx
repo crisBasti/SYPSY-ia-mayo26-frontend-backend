@@ -150,11 +150,9 @@ const cambiarEstado = async () => {
                 </button>
 
                 <button
-                   onClick={() =>
-                      navigate(`/micuenta/producto/${producto._id}?tab=stats`)
-                  }
+                  onClick={() => navigate("/dashboard")}
                 >
-                  📊 Estadísticas
+                   📊 Estadísticas
                 </button>
 
                 <button
